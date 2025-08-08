@@ -31,7 +31,7 @@ jobs:
       - name: Build Project
         run: npm run build
 
-      # 5. Deploys the built files to your Hostinger server via FTP
+     # 5. Deploys the built files to your Hostinger server via FTP
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -39,4 +39,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./out/ 
-          server-dir: public_html/ # <-- THIS IS THE NEW, IMPORTANT LINE
+          server-dir: public_html/
+          log-level: "verbose" # <-- ADD THIS LINE FOR DETAILED LOGS
+          dangerous-clean-slate: true # <-- ADD THIS LINE FOR A CLEAN DEPLOYMENT
