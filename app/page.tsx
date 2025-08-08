@@ -1,23 +1,22 @@
+import Image from 'next/image'; // Import the Image component
+
 export default function Home() {
   return (
     <main>
       <header style={{ position: 'relative', paddingTop: '32px', paddingBottom: '32px' }}>
-        {/* Profile photo centered and circular */}
-        <img
+        {/* Use Image component and provide width/height */}
+        <Image
           src="/certificates/sadu.jpg"
           alt="Sadhu J"
           className="profile-photo"
+          width={180}
+          height={180}
           style={{
-            display: 'block',
-            margin: '0 auto 16px auto',
-            width: '180px',
-            height: '180px',
             objectFit: 'cover',
             borderRadius: '50%',
             boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
           }}
         />
-        {/* Video in top-right corner */}
         <video
           className="profile-video"
           controls
@@ -34,7 +33,6 @@ export default function Home() {
           <source src="/video/VID_20250326_191540.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        {/* Name and summary centered */}
         <h1 style={{ textAlign: 'center' }}>Sadhu{'\u00A0'}J</h1>
         <p style={{ textAlign: 'center' }}>Dynamic and Motivated B.E Student Majoring in Artificial Intelligence and Machine Learning.</p>
       </header>
@@ -58,9 +56,10 @@ export default function Home() {
                 <strong> TensorFlow, OpenCV, Scikit-learn, and Flask</strong>, I’ve successfully built AI models that integrate computer vision,
                 speech recognition, and natural language processing.
             </p>
+            {/* Fix quote errors by using typographic quotes */}
             <ul style={{ fontSize: '18px', lineHeight: 1.8, marginTop: '20px', paddingLeft: '20px' }}>
-                <li> Developed <strong>"Anu AI"</strong> with vision and voice capabilities for PC and Android.</li>
-                <li> Built <strong>"Choti Anu AI"</strong> for ESP32-CAM with offline face recognition and intelligent conversations.</li>
+                <li> Developed <strong>“Anu AI”</strong> with vision and voice capabilities for PC and Android.</li>
+                <li> Built <strong>“Choti Anu AI”</strong> for ESP32-CAM with offline face recognition and intelligent conversations.</li>
                 <li> Experienced in supervised, unsupervised, and reinforcement learning models.</li>
             </ul>
             <p style={{ fontSize: '18px', lineHeight: 1.8, marginTop: '20px' }}>
@@ -69,7 +68,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- EDITED SECTION --- */}
       <section id="education">
         <h2>Education Background</h2>
         <div className="timeline">
@@ -89,7 +87,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- EDITED SECTION --- */}
       <section id="experience">
         <h2>Professional Experience</h2>
         <div className="timeline">
@@ -126,7 +123,7 @@ export default function Home() {
         <h2>My Tools</h2>
         <div id="tools-container">
             <div className="tool-card">
-                <img src="/tools/sample_tool.png" alt="Tool Icon" className="tool-icon" />
+                <Image src="/tools/sample_tool.png" alt="Tool Icon" className="tool-icon" width={64} height={64} />
                 <div className="tool-info">
                     <h3 className="tool-title">Sample Tool Name</h3>
                     <span className="tool-type">Chrome Extension</span>
@@ -143,7 +140,7 @@ export default function Home() {
         <h2>Projects</h2>
         <div id="projects-container">
             <div className="project-card">
-                <img src="/projects/sample_project.jpg" alt="Sample Project Screenshot" className="project-image" />
+                <Image src="/projects/sample_project.jpg" alt="Sample Project Screenshot" className="project-image" width={320} height={180} />
                 <h3 className="project-title">Sample Project Title</h3>
                 <p className="project-description">
                     This is a brief description of your project. Explain what it does, key features, and any highlights you want to mention. Replace this text with your actual project details.

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from 'next/link'; // Import the Link component
+import Image from 'next/image'; // Import the Image component
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -18,7 +20,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <nav className="navbar">
-          <a href="/" className="logo">Sadhu <span>J</span></a>
+          {/* Use Link component for internal navigation */}
+          <Link href="/" className="logo">Sadhu <span>J</span></Link>
           <div className="nav-links">
             <a href="#about">About</a>
             <a href="#education">Education</a>
@@ -42,7 +45,8 @@ export default function RootLayout({
         {/* Certificate Lightbox Modal Structure */}
         <div id="certificate-modal" style={{ display: 'none' }}>
           <span id="certificate-modal-close">×</span>
-          <img id="certificate-modal-img" src="" alt="Certificate" />
+          {/* Use Image component with placeholder dimensions */}
+          <Image id="certificate-modal-img" src="" alt="Certificate" width={1200} height={800} style={{ objectFit: 'contain' }} />
           <div id="certificate-modal-desc"></div>
         </div>
       </body>
