@@ -1,0 +1,41 @@
+# GitHub Actions workflow to build and deploy the Next.js site to Hostinger
+
+name: Deploy to Hostinger
+
+# This action runs on every push to the 'main' branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # Use a standard Linux environment
+
+    steps:
+      # 1. Checks out your repository code so the job can access it
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Sets up the Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Use Node.js version 20
+
+      # 3. Installs all project dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # 4. Builds the Next.js application into static files
+      - name: Build Project
+        run: npm run build
+
+      # 5. Deploys the built files to your Hostinger server via FTP
+      - name: Deploy to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./out/ # The folder Next.js builds to
