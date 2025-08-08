@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Use Node.js version 20
+          node-version: '20'
 
       # 3. Installs all project dependencies
       - name: Install Dependencies
@@ -38,4 +38,5 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./out/ # The folder Next.js builds to
+          local-dir: ./out/ 
+          server-dir: public_html/ # <-- THIS IS THE NEW, IMPORTANT LINE
