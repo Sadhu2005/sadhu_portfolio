@@ -5,7 +5,7 @@ const nextConfig = {
     unoptimized: true,
   },
   // ADD THIS LINE
-  basePath: 'sadhu_portfolio', // Example: '/sadhu_portfolio'
+  basePath: '/sadhu_portfolio', // Example: '/sadhu_portfolio'
 };
 
 export default nextConfig;
