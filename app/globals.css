@@ -871,3 +871,101 @@ footer a:hover {
     display: block;
   }
 }
+
+/* Achievements Page Styles */
+.achievements-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 900px;
+  margin: 2rem auto;
+}
+
+.achievement-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.achievement-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.achievement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+}
+
+.achievement-header h3 {
+  color: var(--primary);
+  margin: 0;
+}
+
+.achievement-date {
+  color: var(--text-light);
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+.achievement-body p {
+  margin-bottom: 0.8rem;
+}
+
+.achievement-outcome strong {
+  color: var(--success);
+}
+
+.achievement-tech strong {
+  color: var(--accent);
+}
+
+.achievement-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--primary-dark);
+  background-color: var(--primary);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.achievement-link:hover {
+  background-color: var(--primary-dark);
+  color: var(--light);
+}
+/* Primary Button Style */
+.button-primary {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.button-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 15px rgba(37, 99, 235, 0.4);
+}
+/* Certifications Page Grid Styles */
+.certifications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+}

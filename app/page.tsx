@@ -1,4 +1,6 @@
-import Image from 'next/image'; // Import the Image component
+import Image from 'next/image';
+ 
+import Link from 'next/link'; // Import the Image component
 
 export default function Home() {
   return (
@@ -152,12 +154,30 @@ export default function Home() {
         <a href="https://github.com/Sadhu2005">
             <button>GitHub</button>
         </a>
+         
+      </section>
+      <section id="achievements-preview">
+        <h2>Achievements</h2>
+        <p style={{textAlign: 'center', maxWidth: '600px', margin: '0 auto 2rem auto'}}>
+          I actively participate in hackathons and coding competitions to challenge myself and build innovative solutions. Click the button below to see a full list of my technical event participation and outcomes.
+        </p>
+        <div style={{ textAlign: 'center' }}>
+          {/* Corrected href path */}
+          <Link href="/achievements" className="button-primary">
+            View All Competitions & Hackathons
+          </Link>
+        </div>
       </section>
 
-      <section id="certifications">
+    <section id="certifications">
         <h2>Certifications</h2>
-        <div id="certificates-container">
-            {/* Certificate items will be dynamically added here later */}
+        <p style={{textAlign: 'center', maxWidth: '600px', margin: '0 auto 2rem auto'}}>
+          I am committed to continuous learning and have earned numerous certifications across AI, Machine Learning, and software development to validate my skills.
+        </p>
+        <div style={{ textAlign: 'center' }}>
+          <Link href="/certifications" className="button-primary">
+            View All Certifications
+          </Link>
         </div>
       </section>
 
