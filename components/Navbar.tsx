@@ -2,22 +2,24 @@
 'use client'; 
 
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Navbar() {
-  // ... (the useEffect hook with all the logic remains the same) ...
-  useEffect(() => {
-    // Mobile menu toggle logic
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    const handleMenuClick = () => {
-      navLinks?.classList.toggle('active');
-    };
-    if (menuToggle) {
-      menuToggle.addEventListener('click', handleMenuClick);
-    }
+  // State to manage if the mobile menu is open or closed
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    // Scroll animation logic
+  // Function to close the menu
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  // Function to toggle the menu
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Effect for handling the scroll animation
+  useEffect(() => {
     const handleScroll = () => {
       const navbar = document.querySelector('.navbar');
       if (window.scrollY > 50) {
@@ -27,32 +29,36 @@ export default function Navbar() {
       }
     };
     window.addEventListener('scroll', handleScroll);
-
-    // Cleanup function to remove event listeners
     return () => {
-      if (menuToggle) {
-        menuToggle.removeEventListener('click', handleMenuClick);
-      }
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-
   return (
     <nav className="navbar">
-      <Link href="/" className="logo">Sadhu <span>J</span></Link>
-      <div className="nav-links">
-        <a href="/#about">About</a>
-        <a href="/#education">Education</a>
-        <a href="/#experience">Experience</a>
-        <a href="/#skills">Skills</a>
-        <a href="/#tools">Tools</a>
-        <a href="/#projects">Projects</a>
-        <Link href="/achievements">Achievements</Link>
-        <Link href="/certifications">Certifications</Link> {/* <-- UPDATED LINK */}
-        <a href="/#contact">Contact</a>
+      {/* When logo is clicked, it closes the menu */}
+      <Link href="/" className="logo" onClick={closeMenu}>
+        Sadhu <span>J</span>
+      </Link>
+      
+      {/* The 'active' class is now controlled by our state */}
+      <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+        {/* Each link will close the menu when clicked */}
+        <a href="/#about" onClick={closeMenu}>About</a>
+        <a href="/#education" onClick={closeMenu}>Education</a>
+        <a href="/#experience" onClick={closeMenu}>Experience</a>
+        <a href="/#skills" onClick={closeMenu}>Skills</a>
+        <a href="/#tools" onClick={closeMenu}>Tools</a>
+        <a href="/#projects" onClick={closeMenu}>Projects</a>
+        <a href="/#achievements-preview" onClick={closeMenu}>Achievements</a>
+        <a href="/#certifications" onClick={closeMenu}>Certifications</a>
+        <a href="/#contact" onClick={closeMenu}>Contact</a>
       </div>
-      <div className="menu-toggle">☰</div>
+      
+      {/* The toggle button now uses the toggleMenu function */}
+      <div className="menu-toggle" onClick={toggleMenu}>
+        ☰
+      </div>
     </nav>
   );
 }

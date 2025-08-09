@@ -1,8 +1,29 @@
 // app/certifications/page.tsx
+'use client'; // This makes the page interactive
+
+import { useState } from 'react';
 import Image from 'next/image';
 
+// This is the Lightbox pop-up component
+function Lightbox({ src, onClose }: { src: string | null; onClose: () => void }) {
+  if (!src) return null;
+
+  return (
+    <div className="lightbox-overlay" onClick={onClose}>
+      <span className="lightbox-close" onClick={onClose}>&times;</span>
+      <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+        <Image src={src} alt="Certificate Preview" width={1200} height={800} style={{ objectFit: 'contain', maxWidth: '90vw', maxHeight: '80vh', width: 'auto', height: 'auto', borderRadius: '8px' }} />
+      </div>
+    </div>
+  );
+}
+
+
 export default function CertificationsPage() {
-  // Array of your certificate data for easier management later
+  // This state keeps track of which certificate is currently open in the lightbox
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+
+  // The full, complete array of your 33 certificates
   const certificates = [
     { src: "/certificates/cr33.jpg", alt: "SYMBIOT-2025 2nd Runner up", desc: "SYMBIOT-2025 2nd Runner up" },
     { src: "/certificates/cr32.jpg", alt: "SYMBIOT-2025 Participation", desc: "SYMBIOT-2025 Participation" },
@@ -40,20 +61,34 @@ export default function CertificationsPage() {
   ];
 
   return (
-    <main>
-      <section id="certifications-page" style={{ paddingTop: '100px' }}>
-        <h2>My Certifications</h2>
-        <div className="certifications-grid">
-          {certificates.map((cert, index) => (
-            <div key={index} className="gallery">
-              <a href={cert.src} target="_blank" rel="noopener noreferrer">
-                <Image src={cert.src} alt={cert.alt} width={400} height={300} style={{ objectFit: 'cover', width: '100%', height: 'auto' }} />
-              </a>
-              <div className="desc">{cert.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-    </main>
+    <>
+      <main>
+        <section id="certifications-page" style={{ paddingTop: '100px' }}>
+          <h2>My Certifications</h2>
+          <div className="certifications-grid">
+            {certificates.map((cert, index) => (
+              <div 
+                key={index} 
+                className="gallery" 
+                onClick={() => setLightboxSrc(cert.src)} 
+                style={{ cursor: 'pointer' }}
+              >
+                <Image 
+                  src={cert.src} 
+                  alt={cert.alt} 
+                  width={400} 
+                  height={300} 
+                  style={{ objectFit: 'cover', width: '100%', height: 'auto' }} 
+                />
+                <div className="desc">{cert.desc}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+      
+      {/* This renders the lightbox when a certificate is clicked */}
+      <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
+    </>
   );
 }

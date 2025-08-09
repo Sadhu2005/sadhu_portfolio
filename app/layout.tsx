@@ -2,7 +2,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar"; // Import the new Navbar component
+import Navbar from "@/components/Navbar";
+import MouseTrail from "@/components/MouseTrail"; // <-- IMPORT IT
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,8 @@ export default function RootLayout({
   return (
     <html lang="en" style={{scrollPaddingTop: '80px'}}>
       <body className={inter.className}>
-        <Navbar /> {/* Use the Navbar component here */}
+        <MouseTrail /> {/* <-- ADD IT HERE */}
+        <Navbar />
         {children}
         <footer>
           <p>GitHub: <a href="https://github.com/Sadhu2005" target="_blank" rel="noopener noreferrer">Sadhu2005</a></p>
