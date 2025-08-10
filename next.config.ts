@@ -4,7 +4,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // The basePath line has been removed
+  // Add this line for GitHub Pages
+  basePath: '/sadhu_portfolio', 
 };
 
 export default nextConfig;
