@@ -1,26 +1,23 @@
 // app/achievements/page.tsx
 'use client'; 
-
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 
-// --- UPGRADED LIGHTBOX COMPONENT ---
-// It now includes logic to automatically pause videos when closed.
 function Lightbox({ src, onClose }: { src: string | null; onClose: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  // This effect runs when the lightbox is closed.
+  
   useEffect(() => {
+    const videoElement = videoRef.current; // Copy ref to a variable inside the effect
     return () => {
-      // If there was a video playing, pause it.
-      if (videoRef.current) {
-        videoRef.current.pause();
+      // Use the variable in the cleanup function
+      if (videoElement) {
+        videoElement.pause();
       }
     };
-  }, [src]); // It re-runs if the source changes.
+  }, [src]);
 
   if (!src) return null;
-
+  
   return (
     <div className="lightbox-overlay" onClick={onClose}>
       <span className="lightbox-close" onClick={onClose}>&times;</span>
@@ -35,11 +32,9 @@ function Lightbox({ src, onClose }: { src: string | null; onClose: () => void })
   );
 }
 
-
 export default function AchievementsPage() {
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
 
-  // Your achievements data with corrected file paths.
   const achievementsData = [
     {
       eventName: "HackTheHive Hackathon",
@@ -47,17 +42,17 @@ export default function AchievementsPage() {
       outcome: "1st Runner-Up & Internship Opportunity",
       description: "Our team, “EvoBot Crew”, secured 1st Runner-Up. We also earned an internship opportunity and a chance to launch our project with expert mentorship and potential investment.",
       techUsed: "AI, Machine Learning, Product Launch Strategy",
-      certificateUrl: "./certificates/placeholder.jpg",
+      certificateUrl: "/event-media/hackthehive-2025/hackthehive10.jpg",
       media: [
-        "./event-media/hackthehive-2025/hackthehive1.jpg",
-        "./event-media/hackthehive-2025/hackthehive2.jpg",
-        "./event-media/hackthehive-2025/hackthehive3.jpg",
-        "./event-media/hackthehive-2025/hackthehive4.jpg",
-        "./event-media/hackthehive-2025/hackthehive5.jpg",
-        "./event-media/hackthehive-2025/hackthehive6.jpg",
-        "./event-media/hackthehive-2025/hackthehive7.jpg",
-        "./event-media/hackthehive-2025/hackthehive8.jpg",
-        "./event-media/hackthehive-2025/hackthehive9.jpg",
+        "/event-media/hackthehive-2025/hackthehive1.jpg",
+        "/event-media/hackthehive-2025/hackthehive2.jpg",
+        "/event-media/hackthehive-2025/hackthehive3.jpg",
+        "/event-media/hackthehive-2025/hackthehive4.jpg",
+        "/event-media/hackthehive-2025/hackthehive5.jpg",
+        "/event-media/hackthehive-2025/hackthehive6.jpg",
+        "/event-media/hackthehive-2025/hackthehive7.jpg",
+        "/event-media/hackthehive-2025/hackthehive8.jpg",
+        "/event-media/hackthehive-2025/hackthehive9.jpg",
       ]
     },
     {
@@ -66,17 +61,16 @@ export default function AchievementsPage() {
       outcome: "2nd Runner-Up",
       description: "Thrilled to announce that our team secured 2nd Runner-Up. As the Team Leader of the D.A.A 5.2 Humanoid Robot project, this was the second time we showcased our robot outside—and both times, I got placed!",
       techUsed: "Raspberry Pi 5, Robotics, Hardware, Team Leadership",
-      certificateUrl: "./certificates/cr33.jpg",
+      certificateUrl: "/certificates/cr33.jpg",
       media: [
-        "./event-media/symbiot-2025/symbiot1.jpg",
-        "./event-media/symbiot-2025/symbiot2.jpg",
-        "./event-media/symbiot-2025/symbiot3.jpg",
-         
-        "./event-media/symbiot-2025/symbiot4.jpg",
-        "./event-media/symbiot-2025/symbiot5.jpg",
-        "./event-media/symbiot-2025/symbiot6.jpg",
-        "./event-media/symbiot-2025/symbiot7.jpg",
-        "./event-media/symbiot-2025/symbiot1.mp4",
+        "/event-media/symbiot-2025/symbiot1.jpg",
+        "/event-media/symbiot-2025/symbiot2.jpg",
+        "/event-media/symbiot-2025/symbiot3.jpg",
+        "/event-media/symbiot-2025/symbiot4.jpg",
+        "/event-media/symbiot-2025/symbiot5.jpg",
+        "/event-media/symbiot-2025/symbiot6.jpg",
+        "/event-media/symbiot-2025/symbiot7.jpg",
+        "/event-media/symbiot-2025/symbiot1.mp4",
       ]
     },
     {
@@ -85,14 +79,14 @@ export default function AchievementsPage() {
       outcome: "Shortlisted Participant",
       description: "Proud to have led Team “CITians”. Within the time limit, we built VisionGuard: AI-based Density & Movement Detection — “Prevent the Panic, Protect the People.”",
       techUsed: "AI, Density Detection, Movement Detection",
-      certificateUrl: "./certificates/cr31.jpg",
+      certificateUrl: "/certificates/cr31.jpg",
       media: [
-        "./event-media/project-omega/project-omega1.jpg",
-        "./event-media/project-omega/project-omega2.jpg",
-        "./event-media/project-omega/project-omega1.mp4",
-        "./event-media/project-omega/project-omega3.jpg",
-        "./event-media/project-omega/project-omega2.mp4",
-        "./event-media/project-omega/project-omega3.mp4",
+        "/event-media/project-omega/project-omega1.jpg",
+        "/event-media/project-omega/project-omega2.jpg",
+        "/event-media/project-omega/project-omega3.jpg",
+        "/event-media/project-omega/project-omega1.mp4",
+        "/event-media/project-omega/project-omega2.mp4",
+        "/event-media/project-omega/project-omega3.mp4",
       ]
     },
     {
@@ -101,12 +95,13 @@ export default function AchievementsPage() {
       outcome: "Participant",
       description: "Participated in the 8th National Level Coding Competition. The “CODE HUNT” event was fun, exciting, and a great learning experience.",
       techUsed: "Competitive Programming, Problem Solving",
-      certificateUrl: "./certificates/cr30.jpg",
+      certificateUrl: "/certificates/cr30.jpg",
       media: [
-        "./event-media/Code-Igniter-2025/code-igniter1.jpg",
-        "./event-media/Code-Igniter-2025/code-igniter2.jpg",
-        "./event-media/Code-Igniter-2025/code-igniter3.jpg",
-        "./event-media/Code-Igniter-2025/code-igniter4.jpg",
+        "/event-media/Code-Igniter-2025/code-igniter1.jpg",
+        "/event-media/Code-Igniter-2025/code-igniter2.jpg",
+        "/event-media/Code-Igniter-2025/code-igniter3.jpg",
+        "/event-media/Code-Igniter-2025/code-igniter4.jpg",
+
       ]
     },
     {
@@ -115,9 +110,9 @@ export default function AchievementsPage() {
       outcome: "Participant",
       description: "Participated in an inter-college IT quiz. Though out of my comfort zone, it was a great learning experience.",
       techUsed: "IT General Knowledge",
-      certificateUrl: "./certificates/cr29.jpg",
+      certificateUrl: "/certificates/cr29.jpg",
       media: [
-        "./event-media/tcs-techbytes-2025/tcs1.jpg",
+        "/event-media/tcs-techbytes-2025/tcs1.jpg",
       ]
     },
     {
@@ -126,13 +121,13 @@ export default function AchievementsPage() {
       outcome: "Participant",
       description: "Had an incredible experience participating in this 28-hour National Level Hackathon. We learned so much from this challenge, from teamwork to innovation.",
       techUsed: "Teamwork, Innovation, Project Development",
-      certificateUrl: "./certificates/cr25.jpg",
+      certificateUrl: "/certificates/cr25.jpg",
       media: [
-        "./event-media/e-minds-2024/e-minds1.jpg",
-        "./event-media/e-minds-2024/e-minds2.jpg",
-        "./event-media/e-minds-2024/e-minds3.jpg",
-        "./event-media/e-minds-2024/e-minds4.jpg",
-        "./event-media/e-minds-2024/e-minds5.jpg",
+        "/event-media/e-minds-2024/e-minds1.jpg",
+        "/event-media/e-minds-2024/e-minds2.jpg",
+        "/event-media/e-minds-2024/e-minds3.jpg",
+        "/event-media/e-minds-2024/e-minds4.jpg",
+        "/event-media/e-minds-2024/e-minds5.jpg",
       ]
     },
     {
@@ -141,13 +136,13 @@ export default function AchievementsPage() {
       outcome: "Third Place",
       description: "Thrilled to share that we secured Third place in the state-level event. This was a proud moment as we showcased our D.A.A 5.2 Robot for the first time.",
       techUsed: "Robotics, Project Presentation, CSE/IEEE",
-      certificateUrl: "./certificates/cr24.jpg",
+      certificateUrl: "/certificates/cr24.jpg",
       media: [
-        "./event-media/micro-vision-2024/micro-vision1.jpg",
-        "./event-media/micro-vision-2024/micro-vision2.jpg",
-        "./event-media/micro-vision-2024/micro-vision3.jpg",
-        "./event-media/micro-vision-2024/micro-vision4.jpg",
-        "./event-media/micro-vision-2024/micro-vision5.jpg",
+        "/event-media/micro-vision-2024/micro-vision1.jpg",
+        "/event-media/micro-vision-2024/micro-vision2.jpg",
+        "/event-media/micro-vision-2024/micro-vision3.jpg",
+        "/event-media/micro-vision-2024/micro-vision4.jpg",
+        "/event-media/micro-vision-2024/micro-vision5.jpg",
       ]
     },
     {
@@ -156,10 +151,12 @@ export default function AchievementsPage() {
       outcome: "First Place",
       description: "Awarded First Place for our outstanding project on Robot 5.2 at the mini-project exhibition organized by the Department of Artificial Intelligence and Machine Learning at Coorg Institute of Technology.",
       techUsed: "Robotics, Hardware Integration",
-      certificateUrl: "./certificates/placeholder.png",
+      certificateUrl: "/certificates/placeholder.png",
       media: [
-        "./event-media/utkarsh-2024/photo1.jpg",
-        "./event-media/utkarsh-2024/photo2.jpg",
+        "/event-media/utkarsh-2024/utkarsh1.jpg",
+        "/event-media/utkarsh-2024/utkarsh2.jpg",
+        "/event-media/utkarsh-2024/utkarsh3.jpg",
+        "/event-media/utkarsh-2024/utkarsh4.jpg",
       ]
     },
   ];
@@ -210,7 +207,6 @@ export default function AchievementsPage() {
           </div>
         </section>
       </main>
-
       <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
     </>
   );

@@ -1,13 +1,11 @@
+// app/page.tsx
 import Image from 'next/image';
 import Link from 'next/link';
-// --- IMPORT ALL NEW ICONS ---
 import { FaLinkedin, FaEnvelope, FaWhatsapp, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 export default function Home() {
   return (
     <main>
-      {/* ... (Your header, about, education, etc. sections are all the same) ... */}
-      
       <header style={{ position: 'relative', paddingTop: '32px', paddingBottom: '32px' }}>
         <Image
           src="/certificates/sadu.jpg"
@@ -15,30 +13,20 @@ export default function Home() {
           className="profile-photo"
           width={180}
           height={180}
-          style={{
-            objectFit: 'cover',
-            borderRadius: '50%',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-          }}
+          style={{ objectFit: 'cover', borderRadius: '50%' }}
         />
         <video
           className="profile-video"
           controls
           width="320"
           poster="/video/VID_20250326_191540.mp4"
-          style={{
-            position: 'absolute',
-            top: '150px',
-            right: '16px',
-            borderRadius: '12px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-          }}
+          style={{ position: 'absolute', top: '150px', right: '16px', borderRadius: '12px' }}
         >
           <source src="/video/VID_20250326_191540.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <h1 style={{ textAlign: 'center' }}>Sadhu{'\u00A0'}J</h1>
-        <p style={{ textAlign: 'center' }}>Dynamic and Motivated B.E Student Majoring in Artificial Intelligence and Machine Learning.</p>
+        <h1>Sadhu{'\u00A0'}J</h1>
+        <p>Dynamic and Motivated B.E Student Majoring in Artificial Intelligence and Machine Learning.</p>
       </header>
 
       <section id="about">
@@ -75,7 +63,7 @@ export default function Home() {
         <h2>Education Background</h2>
         <div className="timeline">
           <div className="timeline-item">
-            <h3>B.E. in Artificial Intelligence and Machine Learning (Present 7<sup>th</sup> Sem)</h3>
+            <h3>B.E. in Artificial Intelligence and Machine Learning (Present 6<sup>th</sup>Sem)</h3>
             <p>Coorg Institute of Technology, Ponnampete Kodagu</p>
             <p>Visvesvaraya Technological University, Belagavi (2022-2026)</p>
           </div>
@@ -90,21 +78,18 @@ export default function Home() {
         </div>
       </section>
 
-       <section id="experience">
+      <section id="experience">
         <h2>Professional Experience</h2>
         <div className="timeline">
-          
-          {/* --- NEWLY UPDATED ROLE --- */}
           <div className="timeline-item">
             <h3>Software Intern, Sitero. <span style={{ color: 'orange' }}> <b> On-site</b></span></h3>
-            <p>4<sup>th</sup> August 2025 - Present</p>
+            <p>August 2025 - Present</p>
             <ul>
-              <li>Engaging in a comprehensive onboarding process within a dynamic and supportive team environment.</li>
+              <li>Engaged in a comprehensive onboarding process within a dynamic and supportive team environment.</li>
               <li>Focusing on CI/CD pipelines, utilizing technologies such as Docker, Jenkins, and Azure DevOps.</li>
               <li>Exploring and implementing AI-driven automation for real-world healthcare solutions.</li>
             </ul>
           </div>
-
           <div className="timeline-item">
             <h3>Machine Learning Intern, AiRobosoft. <span style={{ color: 'orange' }}> <b> On-site</b></span></h3>
             <p>April 2024 - May 2024</p>
@@ -137,7 +122,7 @@ export default function Home() {
       <section id="tools">
         <h2>My Tools</h2>
         <p style={{textAlign: 'center', maxWidth: '600px', margin: '0 auto 2rem auto'}}>
-          I enjoy building small utilities and tools to solve problems and improve workflows. Check out the full list of tools I've developed.
+          I enjoy building small utilities and tools to solve problems and improve workflows. Check out the full list of tools I have developed.
         </p>
         <div style={{ textAlign: 'center' }}>
           <Link href="/tools" className="button-primary">
@@ -182,7 +167,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- NEW AND IMPROVED CONTACT SECTION --- */}
       <section id="contact">
         <h2>Contact Information</h2>
         <div className="contact-container">

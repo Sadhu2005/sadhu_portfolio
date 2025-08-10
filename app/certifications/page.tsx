@@ -25,6 +25,10 @@ export default function CertificationsPage() {
 
   // The full, complete array of your 33 certificates
   const certificates = [
+    { src: "/certificates/cr35.jpg", alt: "LLM, Agentic Ai & More: Career Guidance", desc: "LLM, Agentic Ai & More: Career Guidance" },
+    { src: "/certificates/cr34.jpg", alt: "CoachEd AI Bootcamp", desc: "CoachEd AI Bootcamp" },
+    { src: "/event-media/hackthehive-2025/hackthehive10.jpg", alt: "HackTheHive Hackathon", desc: "HackTheHive Hackathon 1st Runner up" },
+    { src: "/event-media/hackthehive-2025/hackthehive11.jpg", alt: "HackTheHive Hackathon", desc: "HackTheHive Hackathon" },
     { src: "/certificates/cr33.jpg", alt: "SYMBIOT-2025 2nd Runner up", desc: "SYMBIOT-2025 2nd Runner up" },
     { src: "/certificates/cr32.jpg", alt: "SYMBIOT-2025 Participation", desc: "SYMBIOT-2025 Participation" },
     { src: "/certificates/cr31.jpg", alt: "Project OMEGA 2025 Hackathon", desc: "Project OMEGA 2025 - 24h National-Level Hackathon" },
