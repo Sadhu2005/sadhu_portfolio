@@ -8,9 +8,6 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: sadhu_portfolio
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,13 +20,15 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ -f package.json ]; then npm ci; else cd sadhu_portfolio && npm ci; fi
 
       - name: Build static export
         env:
           # For Hostinger root hosting, usually no base path
           BASE_PATH: ''
-        run: npm run build
+        run: |
+          if [ -f package.json ]; then npm run build; else cd sadhu_portfolio && npm run build; fi
 
       - name: Upload via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2
@@ -38,7 +37,7 @@ jobs:
           port: ${{ secrets.SFTP_PORT }}
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          local_path: 'sadhu_portfolio/out/*'
+          local_path: 'out/*'
           remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
           sftp_only: true
           delete_remote_files: false
