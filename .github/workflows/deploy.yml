@@ -30,17 +30,15 @@ jobs:
         run: |
           if [ -f package.json ]; then npm run build; else cd sadhu_portfolio && npm run build; fi
 
-      - name: Upload via SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Upload via SCP (SFTP over SSH)
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: ${{ secrets.SFTP_HOST }}
+          host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
-          protocol: sftp
-          local-dir: out/
-          server-dir: ${{ secrets.SFTP_REMOTE_PATH }}/
-          # safer default: do not delete remote files
-          dangerous-clean-slate: false
+          source: "out/*"
+          target: ${{ secrets.SFTP_REMOTE_PATH }}
+          overwrite: true
 
 
