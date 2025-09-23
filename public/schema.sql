@@ -1,0 +1,45 @@
+-- MySQL schema for portfolio admin
+-- Run this in your Hostinger MySQL database
+
+CREATE TABLE IF NOT EXISTS certificates (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  src VARCHAR(500) NOT NULL,
+  alt VARCHAR(200) DEFAULT '',
+  `desc` TEXT DEFAULT '',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_src (src(100))
+);
+
+CREATE TABLE IF NOT EXISTS achievements (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  eventName VARCHAR(200) NOT NULL,
+  `date` VARCHAR(50) DEFAULT '',
+  outcome VARCHAR(200) DEFAULT '',
+  description TEXT DEFAULT '',
+  techUsed VARCHAR(300) DEFAULT '',
+  certificateUrl VARCHAR(500) DEFAULT '',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_event (eventName(50))
+);
+
+CREATE TABLE IF NOT EXISTS achievement_media (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  achievement_id INT NOT NULL,
+  url VARCHAR(500) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (achievement_id) REFERENCES achievements(id) ON DELETE CASCADE,
+  INDEX idx_achievement (achievement_id)
+);
+
+CREATE TABLE IF NOT EXISTS intro_video (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  src VARCHAR(500) NOT NULL,
+  poster VARCHAR(500) DEFAULT '',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Insert default intro video if none exists
+INSERT IGNORE INTO intro_video (id, src, poster) VALUES (1, '/video/VID_20250326_191540.mp4', '/video/VID_20250326_191540.mp4');

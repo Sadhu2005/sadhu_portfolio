@@ -2,8 +2,42 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaLinkedin, FaEnvelope, FaWhatsapp, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { useState, useEffect } from 'react';
 
 const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
+
+function IntroVideo() {
+  const [videoData, setVideoData] = useState({ src: '/video/VID_20250326_191540.mp4', poster: '/video/VID_20250326_191540.mp4' });
+
+  useEffect(() => {
+    const loadVideo = async () => {
+      try {
+        const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
+        const res = await fetch(`${prefix}/api/intro-video.php`, { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.src) setVideoData(data);
+        }
+      } catch (_) {
+        // keep default
+      }
+    };
+    loadVideo();
+  }, []);
+
+  return (
+    <video
+      className="profile-video"
+      controls
+      width="320"
+      poster={asset(videoData.poster)}
+      style={{ position: 'absolute', top: '150px', right: '16px', borderRadius: '12px' }}
+    >
+      <source src={asset(videoData.src)} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  );
+}
 
 export default function Home() {
   return (
@@ -17,16 +51,7 @@ export default function Home() {
           height={180}
           style={{ objectFit: 'cover', borderRadius: '50%' }}
         />
-        <video
-          className="profile-video"
-          controls
-          width="320"
-          poster={asset('/video/VID_20250326_191540.mp4')}
-          style={{ position: 'absolute', top: '150px', right: '16px', borderRadius: '12px' }}
-        >
-          <source src={asset('/video/VID_20250326_191540.mp4')} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <IntroVideo />
         <h1>Sadhu{'\u00A0'}J</h1>
         <p>Dynamic and Motivated B.E Student Majoring in Artificial Intelligence and Machine Learning.</p>
       </header>

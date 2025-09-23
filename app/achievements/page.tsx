@@ -180,6 +180,16 @@ export default function AchievementsPage() {
     const load = async () => {
       try {
         const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
+        // Try MySQL API first
+        const apiRes = await fetch(`${prefix}/api/achievements.php`, { signal: controller.signal, cache: 'no-store' });
+        if (apiRes.ok) {
+          const data: Achievement[] = await apiRes.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setAchievementsData(data);
+            return;
+          }
+        }
+        // Fallback to JSON
         const res = await fetch(`${prefix}/data/achievements.json`, { signal: controller.signal, cache: 'no-store' });
         if (!res.ok) return;
         const data: Achievement[] = await res.json();

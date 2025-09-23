@@ -75,6 +75,16 @@ export default function CertificationsPage() {
     const load = async () => {
       try {
         const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
+        // Try MySQL API first
+        const apiRes = await fetch(`${prefix}/api/certificates.php`, { signal: controller.signal, cache: 'no-store' });
+        if (apiRes.ok) {
+          const data: Cert[] = await apiRes.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setCertificates(data);
+            return;
+          }
+        }
+        // Fallback to JSON
         const res = await fetch(`${prefix}/data/certificates.json`, { signal: controller.signal, cache: 'no-store' });
         if (!res.ok) return;
         const data: Cert[] = await res.json();
