@@ -86,11 +86,17 @@ export default function CertificationsPage() {
         }
         // Fallback to JSON
         const res = await fetch(`${prefix}/data/certificates.json`, { signal: controller.signal, cache: 'no-store' });
-        if (!res.ok) return;
-        const data: Cert[] = await res.json();
-        if (Array.isArray(data) && data.length > 0) setCertificates(data);
-      } catch (_) {
-        // ignore and keep fallback
+        if (res.ok) {
+          const data: Cert[] = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setCertificates(data);
+            return;
+          }
+        }
+        // If both fail, keep fallback but log for debugging
+        console.log('Using fallback certificates - API and JSON both failed');
+      } catch (error) {
+        console.log('Error loading certificates:', error);
       }
     };
     load();

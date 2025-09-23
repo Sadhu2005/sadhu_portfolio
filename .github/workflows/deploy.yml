@@ -53,5 +53,6 @@ jobs:
           target: ${{ secrets.SFTP_REMOTE_PATH }}
           overwrite: true
           strip_components: 1
+          timeout: 300s
 
 

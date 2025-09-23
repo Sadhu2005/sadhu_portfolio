@@ -234,8 +234,11 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
       ];
       $file = __DIR__ . '/data/certificates.json';
       ensure_subdir('data');
-      if ($row['src'] && append_json_row($file, $row)) { $_SESSION['ok'] = 'Certificate added to JSON'; }
-      else { $_SESSION['err'] = 'Could not update certificates.json'; }
+      if ($row['src'] && append_json_row($file, $row)) { 
+        $_SESSION['ok'] = 'Certificate added to JSON (MySQL not configured)'; 
+      } else { 
+        $_SESSION['err'] = 'Could not update certificates.json: ' . error_get_last()['message']; 
+      }
       header('Location: ' . $_SERVER['REQUEST_URI']);
       exit;
     }
@@ -308,12 +311,12 @@ if ($type === 'cert') {
       echo '<a class="button" href="?type=cert&stage=2" style="display:inline-block;padding:8px 12px;border:1px solid #ddd;border-radius:6px">Go to Stage 2</a>';
     }
   } elseif ($stage === 2) {
-    echo '<h3>Stage 2: Add caption and save</h3>';
+    echo '<h3>Stage 2: Add details and save</h3>';
     echo '<form method="post">'
        . '<input type="hidden" name="action" value="add_certificate" />'
-       . '<label>src</label><input name="c_src" type="text" value="' . htmlspecialchars($lastSrc) . '" required />'
-       . '<label>alt</label><input name="c_alt" type="text" />'
-       . '<label>desc</label><input name="c_desc" type="text" />'
+       . '<label>Image path (src)</label><input name="c_src" type="text" value="' . htmlspecialchars($lastSrc) . '" required />'
+       . '<label>Title (alt)</label><input name="c_alt" type="text" placeholder="Certificate title" />'
+       . '<label>Short description (desc)</label><textarea name="c_desc" rows="3" placeholder="Brief description of the certificate"></textarea>'
        . '<button type="submit">Save certificate</button>'
        . '</form>';
     echo '<div style="margin-top:12px"><a href="?type=cert&stage=1" style="display:inline-block;padding:8px 12px;border:1px solid #ddd;border-radius:6px">Add one more</a></div>';
@@ -434,6 +437,51 @@ if ($pdo) {
   } catch (Exception $e) {
     echo '<p style="color:#b00">Error loading intro video: ' . htmlspecialchars($e->getMessage()) . '</p>';
   }
+}
+
+// Simple management section (works with or without MySQL)
+echo '<h2>4) View Current Data</h2>';
+
+// Show current certificates from JSON
+$certFile = __DIR__ . '/data/certificates.json';
+if (file_exists($certFile)) {
+  echo '<h3>Current Certificates (JSON)</h3>';
+  $certData = json_decode(file_get_contents($certFile), true);
+  if ($certData && is_array($certData)) {
+    foreach ($certData as $index => $cert) {
+      echo '<div style="border:1px solid #ddd;padding:8px;margin:8px 0;border-radius:4px">';
+      echo '<strong>' . htmlspecialchars($cert['alt'] ?? 'No title') . '</strong><br>';
+      echo '<small>src: ' . htmlspecialchars($cert['src'] ?? '') . '</small><br>';
+      echo '<small>desc: ' . htmlspecialchars($cert['desc'] ?? '') . '</small><br>';
+      echo '<small>Index: ' . $index . '</small>';
+      echo '</div>';
+    }
+  } else {
+    echo '<p><em>No certificates in JSON file</em></p>';
+  }
+} else {
+  echo '<h3>Certificates</h3><p><em>No certificates.json file found</em></p>';
+}
+
+// Show current achievements from JSON
+$achFile = __DIR__ . '/data/achievements.json';
+if (file_exists($achFile)) {
+  echo '<h3>Current Achievements (JSON)</h3>';
+  $achData = json_decode(file_get_contents($achFile), true);
+  if ($achData && is_array($achData)) {
+    foreach ($achData as $index => $ach) {
+      echo '<div style="border:1px solid #ddd;padding:8px;margin:8px 0;border-radius:4px">';
+      echo '<strong>' . htmlspecialchars($ach['eventName'] ?? 'No event') . '</strong><br>';
+      echo '<small>Date: ' . htmlspecialchars($ach['date'] ?? '') . ' | Outcome: ' . htmlspecialchars($ach['outcome'] ?? '') . '</small><br>';
+      echo '<small>Tech: ' . htmlspecialchars($ach['techUsed'] ?? '') . '</small><br>';
+      echo '<small>Index: ' . $index . '</small>';
+      echo '</div>';
+    }
+  } else {
+    echo '<p><em>No achievements in JSON file</em></p>';
+  }
+} else {
+  echo '<h3>Achievements</h3><p><em>No achievements.json file found</em></p>';
 }
 
 echo '<p><small>Note: The website reads from MySQL API first, then falls back to JSON files. Changes appear on refresh.</small></p>';
