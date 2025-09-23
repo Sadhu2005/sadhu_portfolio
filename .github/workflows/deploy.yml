@@ -42,21 +42,29 @@ jobs:
             TARGET="${{ secrets.SFTP_REMOTE_PATH }}"
             if [ -d "$TARGET/out" ]; then rm -rf "$TARGET/out"; fi
 
-      - name: Upload via SCP (SFTP over SSH)
+      - name: Upload static export (out/**)
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
-          # Upload static export and PHP admin/API utilities
           source: |
             sadhu_portfolio/out/**
-            sadhu_portfolio/public/admin.php
-            sadhu_portfolio/public/upload.php
-            sadhu_portfolio/public/api/**
-            sadhu_portfolio/public/db.config.php.example
-            sadhu_portfolio/public/schema.sql
+          target: ${{ secrets.SFTP_REMOTE_PATH }}
+          overwrite: true
+          strip_components: 1
+          timeout: 300s
+
+      - name: Upload PHP admin/API utilities (public/**)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USER }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ secrets.SFTP_PORT }}
+          source: |
+            sadhu_portfolio/public/**
           target: ${{ secrets.SFTP_REMOTE_PATH }}
           overwrite: true
           strip_components: 1
