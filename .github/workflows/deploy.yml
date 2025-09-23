@@ -8,6 +8,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sadhu_portfolio
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,11 +23,9 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Install dependencies
-        working-directory: sadhu_portfolio
         run: npm ci
 
       - name: Build static export
-        working-directory: sadhu_portfolio
         env:
           # For Hostinger root hosting, usually no base path
           BASE_PATH: ''
