@@ -51,12 +51,12 @@ jobs:
           port: ${{ secrets.SFTP_PORT }}
           # Upload static export and PHP admin/API utilities
           source: |
-            out/**
-            public/admin.php
-            public/upload.php
-            public/api/**
-            public/db.config.php.example
-            public/schema.sql
+            sadhu_portfolio/out/**
+            sadhu_portfolio/public/admin.php
+            sadhu_portfolio/public/upload.php
+            sadhu_portfolio/public/api/**
+            sadhu_portfolio/public/db.config.php.example
+            sadhu_portfolio/public/schema.sql
           target: ${{ secrets.SFTP_REMOTE_PATH }}
           overwrite: true
           strip_components: 1
