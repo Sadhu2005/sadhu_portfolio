@@ -30,6 +30,18 @@ jobs:
         run: |
           if [ -f package.json ]; then npm run build; else cd sadhu_portfolio && npm run build; fi
 
+      - name: Cleanup remote old out/ folder (safe)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USER }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ secrets.SFTP_PORT }}
+          script: |
+            set -e
+            TARGET="${{ secrets.SFTP_REMOTE_PATH }}"
+            if [ -d "$TARGET/out" ]; then rm -rf "$TARGET/out"; fi
+
       - name: Upload via SCP (SFTP over SSH)
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -37,8 +49,9 @@ jobs:
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
-          source: "out/*"
+          source: "out/**"
           target: ${{ secrets.SFTP_REMOTE_PATH }}
           overwrite: true
+          strip_components: 1
 
 
