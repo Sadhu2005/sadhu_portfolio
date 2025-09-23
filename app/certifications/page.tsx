@@ -1,10 +1,12 @@
 // app/certifications/page.tsx
 'use client'; // This makes the page interactive
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 // This is the Lightbox pop-up component
+const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
+
 function Lightbox({ src, onClose }: { src: string | null; onClose: () => void }) {
   if (!src) return null;
 
@@ -12,19 +14,21 @@ function Lightbox({ src, onClose }: { src: string | null; onClose: () => void })
     <div className="lightbox-overlay" onClick={onClose}>
       <span className="lightbox-close" onClick={onClose}>&times;</span>
       <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-        <Image src={src} alt="Certificate Preview" width={1200} height={800} style={{ objectFit: 'contain', maxWidth: '90vw', maxHeight: '80vh', width: 'auto', height: 'auto', borderRadius: '8px' }} />
+        <Image src={asset(src)} alt="Certificate Preview" width={1200} height={800} style={{ objectFit: 'contain', maxWidth: '90vw', maxHeight: '80vh', width: 'auto', height: 'auto', borderRadius: '8px' }} />
       </div>
     </div>
   );
 }
 
 
+type Cert = { src: string; alt: string; desc: string };
+
 export default function CertificationsPage() {
   // This state keeps track of which certificate is currently open in the lightbox
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
 
-  // The full, complete array of your 33 certificates
-  const certificates = [
+  // Fallback array (used if JSON manifest missing)
+  const fallback: Cert[] = [
     { src: "/certificates/cr35.jpg", alt: "LLM, Agentic Ai & More: Career Guidance", desc: "LLM, Agentic Ai & More: Career Guidance" },
     { src: "/certificates/cr34.jpg", alt: "CoachEd AI Bootcamp", desc: "CoachEd AI Bootcamp" },
     { src: "/event-media/hackthehive-2025/hackthehive10.jpg", alt: "HackTheHive Hackathon", desc: "HackTheHive Hackathon 1st Runner up" },
@@ -64,6 +68,25 @@ export default function CertificationsPage() {
     { src: "/certificates/cr1.jpg", alt: "Kodacy", desc: "30 Day Virtual Internship Kodacy (AI &ML)" },
   ];
 
+  const [certificates, setCertificates] = useState<Cert[]>(fallback);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const load = async () => {
+      try {
+        const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
+        const res = await fetch(`${prefix}/data/certificates.json`, { signal: controller.signal, cache: 'no-store' });
+        if (!res.ok) return;
+        const data: Cert[] = await res.json();
+        if (Array.isArray(data) && data.length > 0) setCertificates(data);
+      } catch (_) {
+        // ignore and keep fallback
+      }
+    };
+    load();
+    return () => controller.abort();
+  }, []);
+
   return (
     <>
       <main>
@@ -78,7 +101,7 @@ export default function CertificationsPage() {
                 style={{ cursor: 'pointer' }}
               >
                 <Image 
-                  src={cert.src} 
+                  src={asset(cert.src)} 
                   alt={cert.alt} 
                   width={400} 
                   height={300} 

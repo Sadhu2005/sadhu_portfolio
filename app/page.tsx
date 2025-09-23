@@ -3,12 +3,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaLinkedin, FaEnvelope, FaWhatsapp, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 
+const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
+
 export default function Home() {
   return (
     <main>
       <header style={{ position: 'relative', paddingTop: '32px', paddingBottom: '32px' }}>
         <Image
-          src="/certificates/sadu.jpg"
+          src={asset('/certificates/sadu.jpg')}
           alt="Sadhu J"
           className="profile-photo"
           width={180}
@@ -19,10 +21,10 @@ export default function Home() {
           className="profile-video"
           controls
           width="320"
-          poster="/video/VID_20250326_191540.mp4"
+          poster={asset('/video/VID_20250326_191540.mp4')}
           style={{ position: 'absolute', top: '150px', right: '16px', borderRadius: '12px' }}
         >
-          <source src="/video/VID_20250326_191540.mp4" type="video/mp4" />
+          <source src={asset('/video/VID_20250326_191540.mp4')} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <h1>Sadhu{'\u00A0'}J</h1>

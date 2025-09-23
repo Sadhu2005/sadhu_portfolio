@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 
+const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
+
 function Lightbox({ src, onClose }: { src: string | null; onClose: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   
@@ -23,19 +25,29 @@ function Lightbox({ src, onClose }: { src: string | null; onClose: () => void })
       <span className="lightbox-close" onClick={onClose}>&times;</span>
       <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
         {src.endsWith('.mp4') ? (
-          <video ref={videoRef} src={src} controls autoPlay muted loop style={{ maxWidth: '90vw', maxHeight: '80vh', borderRadius: '8px' }} />
+          <video ref={videoRef} src={asset(src)} controls autoPlay muted loop style={{ maxWidth: '90vw', maxHeight: '80vh', borderRadius: '8px' }} />
         ) : (
-          <Image src={src} alt="Lightbox content" width={1200} height={800} style={{ objectFit: 'contain', maxWidth: '90vw', maxHeight: '80vh', width: 'auto', height: 'auto', borderRadius: '8px' }} />
+          <Image src={asset(src)} alt="Lightbox content" width={1200} height={800} style={{ objectFit: 'contain', maxWidth: '90vw', maxHeight: '80vh', width: 'auto', height: 'auto', borderRadius: '8px' }} />
         )}
       </div>
     </div>
   );
 }
 
+type Achievement = {
+  eventName: string;
+  date: string;
+  outcome: string;
+  description: string;
+  techUsed: string;
+  certificateUrl: string;
+  media: string[];
+};
+
 export default function AchievementsPage() {
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
 
-  const achievementsData = [
+  const fallback: Achievement[] = [
     {
       eventName: "HackTheHive Hackathon",
       date: "May 2025",
@@ -160,6 +172,25 @@ export default function AchievementsPage() {
       ]
     },
   ];
+
+  const [achievementsData, setAchievementsData] = useState<Achievement[]>(fallback);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const load = async () => {
+      try {
+        const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
+        const res = await fetch(`${prefix}/data/achievements.json`, { signal: controller.signal, cache: 'no-store' });
+        if (!res.ok) return;
+        const data: Achievement[] = await res.json();
+        if (Array.isArray(data) && data.length > 0) setAchievementsData(data);
+      } catch (_) {
+        // ignore and keep fallback
+      }
+    };
+    load();
+    return () => controller.abort();
+  }, []);
 
   return (
     <>
