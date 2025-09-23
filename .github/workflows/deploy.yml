@@ -49,7 +49,14 @@ jobs:
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
-          source: "out/**"
+          # Upload static export and PHP admin/API utilities
+          source: |
+            out/**
+            public/admin.php
+            public/upload.php
+            public/api/**
+            public/db.config.php.example
+            public/schema.sql
           target: ${{ secrets.SFTP_REMOTE_PATH }}
           overwrite: true
           strip_components: 1
