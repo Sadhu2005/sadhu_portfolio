@@ -94,6 +94,13 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
   // Upload file (image/video/json) - for certificates, also store in SQL
   if ($act === 'upload' && isset($_FILES['file'])) {
     $subdir = trim((string)($_POST['subdir']));
+    $folderName = isset($_POST['folder_name']) ? trim($_POST['folder_name']) : '';
+    
+    // If folder name is provided and subdir is event-media, use the folder name
+    if ($folderName && strpos($subdir, 'event-media') === 0) {
+      $subdir = 'event-media/' . $folderName;
+    }
+    
     $targetDir = ensure_subdir($subdir);
     $name = $_POST['name'] ? $_POST['name'] : $_FILES['file']['name'];
     $name = preg_replace('/[^A-Za-z0-9_\-.]/', '_', $name);
@@ -385,6 +392,8 @@ if ($type === 'ach') {
        . '<input type="hidden" name="action" value="upload" />'
        . '<label>Subdir <small>Use <code>certificates</code> for certificate image or <code>event-media/my-event-2025</code> for gallery</small></label>'
        . '<input name="subdir" type="text" placeholder="event-media/my-event-2025" />'
+       . '<label>Folder Name <small>For event-media: e.g. "hackthehive-2025", "symbiot-2025"</small></label>'
+       . '<input name="folder_name" type="text" placeholder="hackthehive-2025" />'
        . '<label>File</label><input name="file" type="file" accept="image/*,video/*" required />'
        . '<label>Save as (optional)</label><input name="name" type="text" placeholder="auto from file" />'
        . '<button type="submit">Upload</button>'
@@ -397,14 +406,14 @@ if ($type === 'ach') {
     echo '<h3>Stage 2: Add details and save</h3>';
     echo '<form method="post">'
        . '<input type="hidden" name="action" value="add_achievement" />'
-       . '<label>eventName</label><input name="a_event" type="text" required />'
-       . '<label>date</label><input name="a_date" type="text" placeholder="May 2025" />'
-       . '<label>outcome</label><input name="a_outcome" type="text" />'
-       . '<label>description</label><textarea name="a_desc" rows="3"></textarea>'
-       . '<label>key skills (techUsed)</label><input name="a_tech" type="text" />'
-       . '<label>certificateUrl</label><input name="a_cert" type="text" value="' . htmlspecialchars($lastSrc) . '" />'
-       . '<label>media (comma separated URLs)</label><textarea name="a_media" rows="3" placeholder="/event-media/my-event/file1.jpg, /event-media/my-event/clip1.mp4"></textarea>'
-       . '<button type="submit">Save achievement</button>'
+       . '<label>Event Name *</label><input name="a_event" type="text" placeholder="HackTheHive Hackathon" required />'
+       . '<label>Date</label><input name="a_date" type="text" placeholder="May 2025" />'
+       . '<label>Outcome *</label><input name="a_outcome" type="text" placeholder="1st Runner-Up & Internship Opportunity" required />'
+       . '<label>Description *</label><textarea name="a_desc" rows="4" placeholder="Our team, "EvoBot Crew", secured 1st Runner-Up. We also earned an internship opportunity..." required></textarea>'
+       . '<label>Key Skills (Tech Used) *</label><input name="a_tech" type="text" placeholder="AI, Machine Learning, Product Launch Strategy" required />'
+       . '<label>Certificate URL</label><input name="a_cert" type="text" value="' . htmlspecialchars($lastSrc) . '" placeholder="/certificates/certificate.jpg" />'
+       . '<label>Media URLs (comma separated)</label><textarea name="a_media" rows="3" placeholder="/event-media/hackthehive-2025/image1.jpg, /event-media/hackthehive-2025/video1.mp4"></textarea>'
+       . '<button type="submit">Save Achievement</button>'
        . '</form>';
     echo '<div style="margin-top:12px"><a href="?type=ach&stage=1" style="display:inline-block;padding:8px 12px;border:1px solid #ddd;border-radius:6px">Add more media or another achievement</a></div>';
   }

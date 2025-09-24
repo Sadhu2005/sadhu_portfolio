@@ -113,8 +113,8 @@ export default function CertificationsPage() {
     return () => controller.abort();
   }, []);
 
-  // Combine static fallback + dynamic certificates
-  const allCertificates = [...fallback, ...dynamicCertificates];
+  // Combine dynamic certificates first, then static fallback
+  const allCertificates = [...dynamicCertificates, ...fallback];
   
   // Debug logging
   console.log('Static certificates (fallback):', fallback.length);
@@ -130,7 +130,7 @@ export default function CertificationsPage() {
           {isLoading && <p>Loading certificates...</p>}
           <div className="certifications-grid">
             {allCertificates.map((cert, index) => {
-              const isDynamic = index >= fallback.length;
+              const isDynamic = index < dynamicCertificates.length;
               return (
                 <div 
                   key={index} 
@@ -147,13 +147,14 @@ export default function CertificationsPage() {
                       position: 'absolute',
                       top: '8px',
                       right: '8px',
-                      background: '#4f46e5',
+                      background: 'var(--primary)',
                       color: 'white',
                       padding: '4px 8px',
                       borderRadius: '4px',
                       fontSize: '0.75rem',
                       fontWeight: 'bold',
-                      zIndex: 10
+                      zIndex: 10,
+                      fontFamily: 'inherit'
                     }}>
                       NEW
                     </div>
@@ -168,15 +169,15 @@ export default function CertificationsPage() {
                 <div className="desc">
                   {cert.caption ? (
                     <>
-                      <div style={{ fontWeight: 'bold', color: '#4f46e5', marginBottom: '4px' }}>
+                      <div style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '4px', fontFamily: 'inherit' }}>
                         {cert.caption}
                       </div>
-                      <div style={{ fontSize: '0.9em', color: '#9ca3af' }}>
+                      <div style={{ fontSize: '0.9em', color: 'var(--text-light)', fontFamily: 'inherit' }}>
                         {cert.desc}
                       </div>
                     </>
                   ) : (
-                    cert.desc
+                    <div style={{ fontFamily: 'inherit' }}>{cert.desc}</div>
                   )}
                 </div>
                 </div>

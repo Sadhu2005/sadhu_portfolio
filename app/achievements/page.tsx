@@ -207,8 +207,8 @@ export default function AchievementsPage() {
     return () => controller.abort();
   }, []);
 
-  // Combine static fallback + dynamic achievements
-  const allAchievements = [...fallback, ...dynamicAchievements];
+  // Combine dynamic achievements first, then static fallback
+  const allAchievements = [...dynamicAchievements, ...fallback];
 
   return (
     <>
@@ -217,7 +217,7 @@ export default function AchievementsPage() {
           <h2>Competitions & Hackathons</h2>
           <div className="achievements-container">
             {allAchievements.map((event, index) => {
-              const isDynamic = index >= fallback.length;
+              const isDynamic = index < dynamicAchievements.length;
               return (
                 <div 
                   key={index} 
@@ -232,13 +232,14 @@ export default function AchievementsPage() {
                       position: 'absolute',
                       top: '12px',
                       right: '12px',
-                      background: '#4f46e5',
+                      background: 'var(--primary)',
                       color: 'white',
                       padding: '4px 8px',
                       borderRadius: '4px',
                       fontSize: '0.75rem',
                       fontWeight: 'bold',
-                      zIndex: 10
+                      zIndex: 10,
+                      fontFamily: 'inherit'
                     }}>
                       NEW
                     </div>
