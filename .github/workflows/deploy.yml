@@ -20,15 +20,13 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Install dependencies
-        run: |
-          if [ -f package.json ]; then npm ci; else cd sadhu_portfolio && npm ci; fi
+        run: npm ci
 
       - name: Build static export
         env:
           # For Hostinger root hosting, usually no base path
           BASE_PATH: ''
-        run: |
-          if [ -f package.json ]; then npm run build; else cd sadhu_portfolio && npm run build; fi
+        run: npm run build
 
       - name: Cleanup remote old out/ folder (safe)
         uses: appleboy/ssh-action@v1.0.3
@@ -50,7 +48,7 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
           source: |
-            sadhu_portfolio/out/**
+            out/**
           target: ${{ secrets.SFTP_REMOTE_PATH }}
           overwrite: true
           strip_components: 1
@@ -64,7 +62,7 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
           source: |
-            sadhu_portfolio/public/**
+            public/**
           target: ${{ secrets.SFTP_REMOTE_PATH }}
           overwrite: true
           strip_components: 1
