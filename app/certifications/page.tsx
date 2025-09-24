@@ -70,6 +70,7 @@ export default function CertificationsPage() {
 
   const [certificates, setCertificates] = useState<Cert[]>(fallback);
   const [dynamicCertificates, setDynamicCertificates] = useState<Cert[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -78,7 +79,9 @@ export default function CertificationsPage() {
         const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
         
         // Load dynamic certificates from MySQL API
-        const apiRes = await fetch(`${prefix}/api/certificates.php`, { signal: controller.signal, cache: 'no-store' });
+        const apiUrl = `${prefix}/api/certificates.php`;
+        console.log('Trying to fetch from:', apiUrl);
+        const apiRes = await fetch(apiUrl, { signal: controller.signal, cache: 'no-store' });
         if (apiRes.ok) {
           const data: Cert[] = await apiRes.json();
           if (Array.isArray(data) && data.length > 0) {
@@ -88,6 +91,7 @@ export default function CertificationsPage() {
           }
         } else {
           console.log('API response not ok:', apiRes.status, apiRes.statusText);
+          console.log('API URL was:', apiUrl);
         }
         
         // Fallback to JSON for dynamic data
@@ -101,6 +105,8 @@ export default function CertificationsPage() {
       } catch (error) {
         console.log('Error loading dynamic certificates:', error);
         // Keep dynamic certificates empty, static fallback will still work
+      } finally {
+        setIsLoading(false);
       }
     };
     load();
@@ -114,12 +120,14 @@ export default function CertificationsPage() {
   console.log('Static certificates (fallback):', fallback.length);
   console.log('Dynamic certificates:', dynamicCertificates.length);
   console.log('Total certificates:', allCertificates.length);
+  console.log('All certificates data:', allCertificates);
 
   return (
     <>
       <main>
         <section id="certifications-page" style={{ paddingTop: '100px' }}>
           <h2>My Certifications</h2>
+          {isLoading && <p>Loading certificates...</p>}
           <div className="certifications-grid">
             {allCertificates.map((cert, index) => {
               const isDynamic = index >= fallback.length;
