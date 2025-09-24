@@ -5,21 +5,32 @@ import Image from 'next/image';
 
 const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
 
-function Lightbox({ src, onClose }: { src: string | null; onClose: () => void }) {
+function Lightbox({ items, index, onClose, onChange }: { items: string[]; index: number; onClose: () => void; onChange: (nextIndex: number) => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  
+
+  const src = items[index];
+
   useEffect(() => {
-    const videoElement = videoRef.current; // Copy ref to a variable inside the effect
+    const videoElement = videoRef.current;
     return () => {
-      // Use the variable in the cleanup function
       if (videoElement) {
         videoElement.pause();
       }
     };
-  }, [src]);
+  }, [index]);
 
-  if (!src) return null;
-  
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') onChange((index + 1) % items.length);
+      if (e.key === 'ArrowLeft') onChange((index - 1 + items.length) % items.length);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [index, items.length, onClose, onChange]);
+
+  if (!items.length) return null;
+
   return (
     <div className="lightbox-overlay" onClick={onClose}>
       <span className="lightbox-close" onClick={onClose}>&times;</span>
@@ -28,6 +39,12 @@ function Lightbox({ src, onClose }: { src: string | null; onClose: () => void })
           <video ref={videoRef} src={asset(src)} controls autoPlay muted loop style={{ maxWidth: '90vw', maxHeight: '80vh', borderRadius: '8px' }} />
         ) : (
           <Image src={asset(src)} alt="Lightbox content" width={1200} height={800} style={{ objectFit: 'contain', maxWidth: '90vw', maxHeight: '80vh', width: 'auto', height: 'auto', borderRadius: '8px' }} />
+        )}
+        {items.length > 1 && (
+          <>
+            <button aria-label="Previous" onClick={() => onChange((index - 1 + items.length) % items.length)} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '4px', padding: '8px 12px', cursor: 'pointer' }}>{'‹'}</button>
+            <button aria-label="Next" onClick={() => onChange((index + 1) % items.length)} style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '4px', padding: '8px 12px', cursor: 'pointer' }}>{'›'}</button>
+          </>
         )}
       </div>
     </div>
@@ -45,7 +62,8 @@ type Achievement = {
 };
 
 export default function AchievementsPage() {
-  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [lightboxItems, setLightboxItems] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState<number>(0);
 
   const fallback: Achievement[] = [
     {
@@ -273,7 +291,7 @@ export default function AchievementsPage() {
                   <p className="achievement-description">{event.description}</p>
                   <p className="achievement-tech"><strong>Key Skills:</strong> {event.techUsed}</p>
                   
-                  <span onClick={() => setLightboxSrc(event.certificateUrl)} className="achievement-link" style={{ cursor: 'pointer' }}>
+                  <span onClick={() => { setLightboxItems([event.certificateUrl, ...event.media]); setLightboxIndex(0); }} className="achievement-link" style={{ cursor: 'pointer' }}>
                     View Certificate
                   </span>
                   
@@ -282,7 +300,7 @@ export default function AchievementsPage() {
                       <h4>Event Gallery</h4>
                       <div className="media-scroller">
                         {event.media.map((mediaUrl, mediaIndex) => (
-                          <div key={mediaIndex} className="media-item" onClick={() => setLightboxSrc(mediaUrl)} style={{ cursor: 'pointer' }}>
+                          <div key={mediaIndex} className="media-item" onClick={() => { setLightboxItems(event.media); setLightboxIndex(mediaIndex); }} style={{ cursor: 'pointer' }}>
                             {mediaUrl.endsWith('.mp4') ? (
                               <div className="video-thumbnail-wrapper">
                                 <video src={mediaUrl} muted loop playsInline title={`Video from ${event.eventName}`} />
@@ -303,7 +321,7 @@ export default function AchievementsPage() {
           </div>
         </section>
       </main>
-      <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
+      <Lightbox items={lightboxItems} index={lightboxIndex} onClose={() => { setLightboxItems([]); }} onChange={(i) => setLightboxIndex(i)} />
     </>
   );
 }

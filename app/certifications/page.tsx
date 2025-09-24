@@ -1,20 +1,27 @@
 // app/certifications/page.tsx
 'use client'; // This makes the page interactive
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 
 // This is the Lightbox pop-up component
 const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
 
-function Lightbox({ src, onClose }: { src: string | null; onClose: () => void }) {
-  if (!src) return null;
+function Lightbox({ items, index, onClose, onChange }: { items: string[]; index: number; onClose: () => void; onChange: (nextIndex: number) => void }) {
+  if (!items.length) return null;
+  const src = items[index];
 
   return (
     <div className="lightbox-overlay" onClick={onClose}>
       <span className="lightbox-close" onClick={onClose}>&times;</span>
       <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
         <Image src={asset(src)} alt="Certificate Preview" width={1200} height={800} style={{ objectFit: 'contain', maxWidth: '90vw', maxHeight: '80vh', width: 'auto', height: 'auto', borderRadius: '8px' }} />
+        {items.length > 1 && (
+          <>
+            <button aria-label="Previous" onClick={() => onChange((index - 1 + items.length) % items.length)} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '4px', padding: '8px 12px', cursor: 'pointer' }}>{'‹'}</button>
+            <button aria-label="Next" onClick={() => onChange((index + 1) % items.length)} style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '4px', padding: '8px 12px', cursor: 'pointer' }}>{'›'}</button>
+          </>
+        )}
       </div>
     </div>
   );
@@ -24,8 +31,13 @@ function Lightbox({ src, onClose }: { src: string | null; onClose: () => void })
 type Cert = { src: string; alt: string; desc: string; caption?: string };
 
 export default function CertificationsPage() {
-  // This state keeps track of which certificate is currently open in the lightbox
-  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  // Lightbox carousel state
+  const [lightboxItems, setLightboxItems] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState<number>(0);
+  const openAt = useCallback((idx: number) => {
+    setLightboxItems(allCertificates.map(c => c.src));
+    setLightboxIndex(idx);
+  }, []);
 
   // Fallback array (used if JSON manifest missing)
   const fallback: Cert[] = [
@@ -146,7 +158,7 @@ export default function CertificationsPage() {
                 <div 
                   key={index} 
                   className="gallery" 
-                  onClick={() => setLightboxSrc(cert.src)} 
+                  onClick={() => openAt(index)} 
                   style={{ 
                     cursor: 'pointer',
                     border: '1px solid #ccc',
@@ -183,7 +195,7 @@ export default function CertificationsPage() {
       </main>
       
       {/* This renders the lightbox when a certificate is clicked */}
-      <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
+      <Lightbox items={lightboxItems} index={lightboxIndex} onClose={() => setLightboxItems([])} onChange={setLightboxIndex} />
     </>
   );
 }

@@ -493,11 +493,15 @@ footer a:hover {
 /* Mouse trail effect */
 .mouse-trail {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 9999;
+    mix-blend-mode: screen;
+    filter: blur(0.5px);
+    transform: translate(-50%, -50%) scale(1);
+    transition: opacity 1.6s linear, transform 1.6s ease-out;
 }
 
 /* Animations */

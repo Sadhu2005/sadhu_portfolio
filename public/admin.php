@@ -126,7 +126,7 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
           $caption = isset($_POST['caption']) ? trim($_POST['caption']) : '';
           $stmt = $pdo->prepare("INSERT INTO certificates (src, alt, `desc`, caption) VALUES (?, ?, ?, ?)");
           $stmt->execute(array($filePath, $name, '', $caption));
-          $_SESSION['ok'] .= ' and added to database';
+          $_SESSION['ok'] = 'Certificate uploaded and added to database';
         } catch (Exception $e) {
           $_SESSION['err'] = 'File uploaded but database error: ' . $e->getMessage();
         }
@@ -493,7 +493,13 @@ if ($pdo) {
         echo '<input type="hidden" name="c_id" value="' . $cert['id'] . '">';
         echo '<button type="submit" onclick="return confirm(\'Delete this certificate?\')" style="background:#b00;color:white;border:none;padding:4px 8px;border-radius:4px">Delete</button>';
         echo '</form>';
-        echo '<button onclick="editCert(' . $cert['id'] . ', \'' . htmlspecialchars($cert['src']) . '\', \'' . htmlspecialchars($cert['alt']) . '\', \'' . htmlspecialchars($cert['desc']) . '\', \'' . htmlspecialchars($cert['caption']) . '\')" style="background:#006;color:white;border:none;padding:4px 8px;border-radius:4px">Edit</button>';
+        echo '<button onclick="editCert(' 
+  . (int)$cert['id'] . ', ' 
+  . json_encode((string)$cert['src']) . ', ' 
+  . json_encode((string)$cert['alt']) . ', ' 
+  . json_encode((string)$cert['desc']) . ', ' 
+  . json_encode((string)$cert['caption']) 
+  . ')" style="background:#006;color:white;border:none;padding:4px 8px;border-radius:4px">Edit</button>';
         echo '</div>';
       }
     } else {
@@ -526,7 +532,16 @@ if ($pdo) {
         echo '<input type="hidden" name="a_id" value="' . $ach['id'] . '">';
         echo '<button type="submit" onclick="return confirm(\'Delete this achievement?\')" style="background:#b00;color:white;border:none;padding:4px 8px;border-radius:4px">Delete</button>';
         echo '</form>';
-        echo '<button onclick="editAchievement(' . $ach['id'] . ', \'' . htmlspecialchars($ach['eventName']) . '\', \'' . htmlspecialchars($ach['date']) . '\', \'' . htmlspecialchars($ach['outcome']) . '\', \'' . htmlspecialchars($ach['description']) . '\', \'' . htmlspecialchars($ach['techUsed']) . '\', \'' . htmlspecialchars($ach['certificateUrl']) . '\', \'' . htmlspecialchars($ach['media_urls']) . '\')" style="background:#006;color:white;border:none;padding:4px 8px;border-radius:4px">Edit</button>';
+        echo '<button onclick="editAchievement(' 
+  . (int)$ach['id'] . ', ' 
+  . json_encode((string)$ach['eventName']) . ', ' 
+  . json_encode((string)$ach['date']) . ', ' 
+  . json_encode((string)$ach['outcome']) . ', ' 
+  . json_encode((string)$ach['description']) . ', ' 
+  . json_encode((string)$ach['techUsed']) . ', ' 
+  . json_encode((string)$ach['certificateUrl']) . ', ' 
+  . json_encode((string)$ach['media_urls']) 
+  . ')" style="background:#006;color:white;border:none;padding:4px 8px;border-radius:4px">Edit</button>';
         echo '</div>';
       }
     } else {

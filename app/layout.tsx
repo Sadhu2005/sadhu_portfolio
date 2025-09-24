@@ -10,6 +10,21 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Sadhu J - AI & ML Engineer",
   description: "Dynamic and Motivated B.E Student Majoring in Artificial Intelligence and Machine Learning.",
+  icons: {
+    icon: [
+      // User-provided photo (with space in filename)
+      { url: "/Sadhu J.png" },
+      // Place your photo at public/profile-favicon.png (preferred)
+      { url: "/profile-favicon.png" },
+      // Fallbacks
+      { url: "/favicon.png" },
+      { url: "/favicon.ico" },
+    ],
+    apple: [
+      // Optional iOS home screen icon; place at public/apple-touch-icon.png
+      { url: "/apple-touch-icon.png" },
+    ],
+  },
 };
 
 export default function RootLayout({
