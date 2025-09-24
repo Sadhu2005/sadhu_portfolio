@@ -83,10 +83,11 @@ export default function CertificationsPage() {
           const data: Cert[] = await apiRes.json();
           if (Array.isArray(data) && data.length > 0) {
             setDynamicCertificates(data);
+            return; // Success, don't try JSON fallback
           }
         }
         
-        // Also try JSON fallback for dynamic data
+        // Fallback to JSON for dynamic data
         const res = await fetch(`${prefix}/data/certificates.json`, { signal: controller.signal, cache: 'no-store' });
         if (res.ok) {
           const data: Cert[] = await res.json();
@@ -96,6 +97,7 @@ export default function CertificationsPage() {
         }
       } catch (error) {
         console.log('Error loading dynamic certificates:', error);
+        // Keep dynamic certificates empty, static fallback will still work
       }
     };
     load();

@@ -17,6 +17,12 @@ try {
         case 'GET':
             $stmt = $pdo->query("SELECT * FROM certificates ORDER BY created_at DESC");
             $certificates = $stmt->fetchAll();
+            // Ensure caption field is included
+            foreach ($certificates as &$cert) {
+                if (!isset($cert['caption'])) {
+                    $cert['caption'] = '';
+                }
+            }
             echo json_encode($certificates);
             break;
             

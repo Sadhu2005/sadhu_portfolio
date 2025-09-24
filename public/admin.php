@@ -91,7 +91,7 @@ function append_json_row($file, $row) {
 if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $act = $_POST['action'];
   
-  // Upload file (image/video/json)
+  // Upload file (image/video/json) - for certificates, also store in SQL
   if ($act === 'upload' && isset($_FILES['file'])) {
     $subdir = trim((string)($_POST['subdir']));
     $targetDir = ensure_subdir($subdir);
@@ -109,8 +109,20 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!move_uploaded_file($_FILES['file']['tmp_name'], $target)) {
       $_SESSION['err'] = 'Upload failed - check directory permissions';
     } else {
+      $filePath = '/' . ltrim(str_replace(__DIR__, '', $target), '/');
       $_SESSION['ok'] = 'Uploaded to ' . str_replace(__DIR__, '', $target);
-      $_SESSION['last_src'] = '/' . ltrim(str_replace(__DIR__, '', $target), '/');
+      $_SESSION['last_src'] = $filePath;
+      
+      // If this is a certificate upload, also store in SQL
+      if ($subdir === 'certificates' && $pdo) {
+        try {
+          $stmt = $pdo->prepare("INSERT INTO certificates (src, alt, `desc`, caption) VALUES (?, ?, ?, ?)");
+          $stmt->execute(array($filePath, $name, '', ''));
+          $_SESSION['ok'] .= ' and added to database';
+        } catch (Exception $e) {
+          $_SESSION['err'] = 'File uploaded but database error: ' . $e->getMessage();
+        }
+      }
     }
     header('Location: ' . $_SERVER['REQUEST_URI']);
     exit;
