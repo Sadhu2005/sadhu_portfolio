@@ -174,33 +174,41 @@ export default function AchievementsPage() {
   ];
 
   const [achievementsData, setAchievementsData] = useState<Achievement[]>(fallback);
+  const [dynamicAchievements, setDynamicAchievements] = useState<Achievement[]>([]);
 
   useEffect(() => {
     const controller = new AbortController();
     const load = async () => {
       try {
         const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
-        // Try MySQL API first
+        
+        // Load dynamic achievements from MySQL API
         const apiRes = await fetch(`${prefix}/api/achievements.php`, { signal: controller.signal, cache: 'no-store' });
         if (apiRes.ok) {
           const data: Achievement[] = await apiRes.json();
           if (Array.isArray(data) && data.length > 0) {
-            setAchievementsData(data);
-            return;
+            setDynamicAchievements(data);
           }
         }
-        // Fallback to JSON
+        
+        // Also try JSON fallback for dynamic data
         const res = await fetch(`${prefix}/data/achievements.json`, { signal: controller.signal, cache: 'no-store' });
-        if (!res.ok) return;
-        const data: Achievement[] = await res.json();
-        if (Array.isArray(data) && data.length > 0) setAchievementsData(data);
-      } catch (_) {
-        // ignore and keep fallback
+        if (res.ok) {
+          const data: Achievement[] = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setDynamicAchievements(data);
+          }
+        }
+      } catch (error) {
+        console.log('Error loading dynamic achievements:', error);
       }
     };
     load();
     return () => controller.abort();
   }, []);
+
+  // Combine static fallback + dynamic achievements
+  const allAchievements = [...fallback, ...dynamicAchievements];
 
   return (
     <>
@@ -208,8 +216,33 @@ export default function AchievementsPage() {
         <section id="achievements" style={{ paddingTop: '100px' }}>
           <h2>Competitions & Hackathons</h2>
           <div className="achievements-container">
-            {achievementsData.map((event, index) => (
-              <div key={index} className="achievement-card">
+            {allAchievements.map((event, index) => {
+              const isDynamic = index >= fallback.length;
+              return (
+                <div 
+                  key={index} 
+                  className="achievement-card"
+                  style={{
+                    border: isDynamic ? '2px solid #4f46e5' : '1px solid var(--border)',
+                    position: 'relative'
+                  }}
+                >
+                  {isDynamic && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '12px',
+                      right: '12px',
+                      background: '#4f46e5',
+                      color: 'white',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      zIndex: 10
+                    }}>
+                      NEW
+                    </div>
+                  )}
                 <div className="achievement-header">
                   <h3>{event.eventName}</h3>
                   <p className="achievement-date">{event.date}</p>
@@ -243,8 +276,9 @@ export default function AchievementsPage() {
                     </div>
                   )}
                 </div>
-              </div>
-            ))}
+                </div>
+              );
+            })}
           </div>
         </section>
       </main>

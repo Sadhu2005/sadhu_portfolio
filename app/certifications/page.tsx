@@ -21,7 +21,7 @@ function Lightbox({ src, onClose }: { src: string | null; onClose: () => void })
 }
 
 
-type Cert = { src: string; alt: string; desc: string };
+type Cert = { src: string; alt: string; desc: string; caption?: string };
 
 export default function CertificationsPage() {
   // This state keeps track of which certificate is currently open in the lightbox
@@ -69,39 +69,41 @@ export default function CertificationsPage() {
   ];
 
   const [certificates, setCertificates] = useState<Cert[]>(fallback);
+  const [dynamicCertificates, setDynamicCertificates] = useState<Cert[]>([]);
 
   useEffect(() => {
     const controller = new AbortController();
     const load = async () => {
       try {
         const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
-        // Try MySQL API first
+        
+        // Load dynamic certificates from MySQL API
         const apiRes = await fetch(`${prefix}/api/certificates.php`, { signal: controller.signal, cache: 'no-store' });
         if (apiRes.ok) {
           const data: Cert[] = await apiRes.json();
           if (Array.isArray(data) && data.length > 0) {
-            setCertificates(data);
-            return;
+            setDynamicCertificates(data);
           }
         }
-        // Fallback to JSON
+        
+        // Also try JSON fallback for dynamic data
         const res = await fetch(`${prefix}/data/certificates.json`, { signal: controller.signal, cache: 'no-store' });
         if (res.ok) {
           const data: Cert[] = await res.json();
           if (Array.isArray(data) && data.length > 0) {
-            setCertificates(data);
-            return;
+            setDynamicCertificates(data);
           }
         }
-        // If both fail, keep fallback but log for debugging
-        console.log('Using fallback certificates - API and JSON both failed');
       } catch (error) {
-        console.log('Error loading certificates:', error);
+        console.log('Error loading dynamic certificates:', error);
       }
     };
     load();
     return () => controller.abort();
   }, []);
+
+  // Combine static fallback + dynamic certificates
+  const allCertificates = [...fallback, ...dynamicCertificates];
 
   return (
     <>
@@ -109,13 +111,35 @@ export default function CertificationsPage() {
         <section id="certifications-page" style={{ paddingTop: '100px' }}>
           <h2>My Certifications</h2>
           <div className="certifications-grid">
-            {certificates.map((cert, index) => (
-              <div 
-                key={index} 
-                className="gallery" 
-                onClick={() => setLightboxSrc(cert.src)} 
-                style={{ cursor: 'pointer' }}
-              >
+            {allCertificates.map((cert, index) => {
+              const isDynamic = index >= fallback.length;
+              return (
+                <div 
+                  key={index} 
+                  className="gallery" 
+                  onClick={() => setLightboxSrc(cert.src)} 
+                  style={{ 
+                    cursor: 'pointer',
+                    border: isDynamic ? '2px solid #4f46e5' : '1px solid #ccc',
+                    position: 'relative'
+                  }}
+                >
+                  {isDynamic && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '8px',
+                      right: '8px',
+                      background: '#4f46e5',
+                      color: 'white',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      zIndex: 10
+                    }}>
+                      NEW
+                    </div>
+                  )}
                 <Image 
                   src={asset(cert.src)} 
                   alt={cert.alt} 
@@ -123,9 +147,23 @@ export default function CertificationsPage() {
                   height={300} 
                   style={{ objectFit: 'cover', width: '100%', height: 'auto' }} 
                 />
-                <div className="desc">{cert.desc}</div>
-              </div>
-            ))}
+                <div className="desc">
+                  {cert.caption ? (
+                    <>
+                      <div style={{ fontWeight: 'bold', color: '#4f46e5', marginBottom: '4px' }}>
+                        {cert.caption}
+                      </div>
+                      <div style={{ fontSize: '0.9em', color: '#9ca3af' }}>
+                        {cert.desc}
+                      </div>
+                    </>
+                  ) : (
+                    cert.desc
+                  )}
+                </div>
+                </div>
+              );
+            })}
           </div>
         </section>
       </main>

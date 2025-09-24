@@ -25,9 +25,10 @@ try {
             ");
             $achievements = $stmt->fetchAll();
             
-            // Convert media_urls string to array
+            // Process media URLs
             foreach ($achievements as &$achievement) {
-                $achievement['media'] = $achievement['media_urls'] ? explode(',', $achievement['media_urls']) : [];
+                $achievement['media'] = $achievement['media_urls'] ? 
+                    array_values(array_filter(explode(',', $achievement['media_urls']))) : [];
                 unset($achievement['media_urls']);
             }
             
@@ -46,27 +47,25 @@ try {
             
             $stmt = $pdo->prepare("INSERT INTO achievements (eventName, `date`, outcome, description, techUsed, certificateUrl) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->execute([
-                $input['eventName'],
-                $input['date'] ?? '',
-                $input['outcome'] ?? '',
-                $input['description'] ?? '',
-                $input['techUsed'] ?? '',
+                $input['eventName'], 
+                $input['date'] ?? '', 
+                $input['outcome'] ?? '', 
+                $input['description'] ?? '', 
+                $input['techUsed'] ?? '', 
                 $input['certificateUrl'] ?? ''
             ]);
-            $achievement_id = $pdo->lastInsertId();
+            $id = $pdo->lastInsertId();
             
-            // Add media if provided
+            // Add media
             if (isset($input['media']) && is_array($input['media'])) {
                 $stmt = $pdo->prepare("INSERT INTO achievement_media (achievement_id, url) VALUES (?, ?)");
                 foreach ($input['media'] as $url) {
-                    if (trim($url)) {
-                        $stmt->execute([$achievement_id, trim($url)]);
-                    }
+                    $stmt->execute([$id, $url]);
                 }
             }
             
             $pdo->commit();
-            echo json_encode(['id' => $achievement_id, 'message' => 'Achievement added']);
+            echo json_encode(['id' => $id, 'message' => 'Achievement added']);
             break;
             
         case 'PUT':
@@ -81,23 +80,21 @@ try {
             
             $stmt = $pdo->prepare("UPDATE achievements SET eventName=?, `date`=?, outcome=?, description=?, techUsed=?, certificateUrl=? WHERE id=?");
             $stmt->execute([
-                $input['eventName'],
-                $input['date'] ?? '',
-                $input['outcome'] ?? '',
-                $input['description'] ?? '',
-                $input['techUsed'] ?? '',
-                $input['certificateUrl'] ?? '',
+                $input['eventName'], 
+                $input['date'] ?? '', 
+                $input['outcome'] ?? '', 
+                $input['description'] ?? '', 
+                $input['techUsed'] ?? '', 
+                $input['certificateUrl'] ?? '', 
                 $input['id']
             ]);
             
             // Update media
+            $pdo->prepare("DELETE FROM achievement_media WHERE achievement_id=?")->execute([$input['id']]);
             if (isset($input['media']) && is_array($input['media'])) {
-                $pdo->prepare("DELETE FROM achievement_media WHERE achievement_id=?")->execute([$input['id']]);
                 $stmt = $pdo->prepare("INSERT INTO achievement_media (achievement_id, url) VALUES (?, ?)");
                 foreach ($input['media'] as $url) {
-                    if (trim($url)) {
-                        $stmt->execute([$input['id'], trim($url)]);
-                    }
+                    $stmt->execute([$input['id'], $url]);
                 }
             }
             
@@ -113,8 +110,10 @@ try {
                 break;
             }
             
-            $stmt = $pdo->prepare("DELETE FROM achievements WHERE id=?");
-            $stmt->execute([$id]);
+            $pdo->beginTransaction();
+            $pdo->prepare("DELETE FROM achievement_media WHERE achievement_id=?")->execute([$id]);
+            $pdo->prepare("DELETE FROM achievements WHERE id=?")->execute([$id]);
+            $pdo->commit();
             
             echo json_encode(['message' => 'Achievement deleted']);
             break;
@@ -124,7 +123,9 @@ try {
             echo json_encode(['error' => 'Method not allowed']);
     }
 } catch (Exception $e) {
-    $pdo->rollBack();
+    if (isset($pdo)) {
+        $pdo->rollBack();
+    }
     error_log("API Error: " . $e->getMessage());
     http_response_code(500);
     echo json_encode(['error' => 'Internal server error']);
