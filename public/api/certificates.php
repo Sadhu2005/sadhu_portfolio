@@ -28,8 +28,8 @@ try {
                 break;
             }
             
-            $stmt = $pdo->prepare("INSERT INTO certificates (src, alt, `desc`) VALUES (?, ?, ?)");
-            $stmt->execute([$input['src'], $input['alt'] ?? '', $input['desc'] ?? '']);
+            $stmt = $pdo->prepare("INSERT INTO certificates (src, alt, `desc`, caption) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$input['src'], $input['alt'] ?? '', $input['desc'] ?? '', $input['caption'] ?? '']);
             $id = $pdo->lastInsertId();
             
             echo json_encode(['id' => $id, 'message' => 'Certificate added']);
@@ -43,8 +43,8 @@ try {
                 break;
             }
             
-            $stmt = $pdo->prepare("UPDATE certificates SET src=?, alt=?, `desc`=? WHERE id=?");
-            $stmt->execute([$input['src'], $input['alt'] ?? '', $input['desc'] ?? '', $input['id']]);
+            $stmt = $pdo->prepare("UPDATE certificates SET src=?, alt=?, `desc`=?, caption=? WHERE id=?");
+            $stmt->execute([$input['src'], $input['alt'] ?? '', $input['desc'] ?? '', $input['caption'] ?? '', $input['id']]);
             
             echo json_encode(['message' => 'Certificate updated']);
             break;

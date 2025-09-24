@@ -85,10 +85,16 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'] ?? $_FILES['file']['name'];
     $name = preg_replace('/[^A-Za-z0-9_\-.]/', '_', $name);
     $target = rtrim($targetDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $name;
-    if (!empty($_FILES['file']['size']) && $_FILES['file']['size'] > 200 * 1024 * 1024) {
-      $_SESSION['err'] = 'File too large';
+    
+    // Enhanced error checking
+    if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+      $_SESSION['err'] = 'Upload error: ' . $_FILES['file']['error'];
+    } elseif (!empty($_FILES['file']['size']) && $_FILES['file']['size'] > 200 * 1024 * 1024) {
+      $_SESSION['err'] = 'File too large (max 200MB)';
+    } elseif (!is_uploaded_file($_FILES['file']['tmp_name'])) {
+      $_SESSION['err'] = 'Invalid upload file';
     } elseif (!move_uploaded_file($_FILES['file']['tmp_name'], $target)) {
-      $_SESSION['err'] = 'Upload failed';
+      $_SESSION['err'] = 'Upload failed - check directory permissions';
     } else {
       $_SESSION['ok'] = 'Uploaded to ' . str_replace(__DIR__, '', $target);
       $_SESSION['last_src'] = '/' . ltrim(str_replace(__DIR__, '', $target), '/');
@@ -102,8 +108,8 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // Add certificate to MySQL
     if ($act === 'add_certificate') {
       try {
-        $stmt = $pdo->prepare("INSERT INTO certificates (src, alt, `desc`) VALUES (?, ?, ?)");
-        $stmt->execute([$_POST['c_src'], $_POST['c_alt'] ?? '', $_POST['c_desc'] ?? '']);
+        $stmt = $pdo->prepare("INSERT INTO certificates (src, alt, `desc`, caption) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$_POST['c_src'], $_POST['c_alt'] ?? '', $_POST['c_desc'] ?? '', $_POST['c_caption'] ?? '']);
         $_SESSION['ok'] = 'Certificate added to database';
       } catch (Exception $e) {
         $_SESSION['err'] = 'Database error: ' . $e->getMessage();
@@ -142,8 +148,8 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // Update certificate
     if ($act === 'update_certificate') {
       try {
-        $stmt = $pdo->prepare("UPDATE certificates SET src=?, alt=?, `desc`=? WHERE id=?");
-        $stmt->execute([$_POST['c_src'], $_POST['c_alt'] ?? '', $_POST['c_desc'] ?? '', $_POST['c_id']]);
+        $stmt = $pdo->prepare("UPDATE certificates SET src=?, alt=?, `desc`=?, caption=? WHERE id=?");
+        $stmt->execute([$_POST['c_src'], $_POST['c_alt'] ?? '', $_POST['c_desc'] ?? '', $_POST['c_caption'] ?? '', $_POST['c_id']]);
         $_SESSION['ok'] = 'Certificate updated';
       } catch (Exception $e) {
         $_SESSION['err'] = 'Database error: ' . $e->getMessage();
@@ -231,6 +237,7 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
         'src' => (string)($_POST['c_src'] ?? ''),
         'alt' => (string)($_POST['c_alt'] ?? ''),
         'desc' => (string)($_POST['c_desc'] ?? ''),
+        'caption' => (string)($_POST['c_caption'] ?? ''),
       ];
       $file = __DIR__ . '/data/certificates.json';
       ensure_subdir('data');
@@ -306,6 +313,14 @@ if ($type === 'cert') {
        . '<label>Image</label><input name="file" type="file" accept="image/*" required />'
        . '<button type="submit">Upload</button>'
        . '</form>';
+    echo '<div style="margin-top:12px;padding:8px;background:#f5f5f5;border-radius:4px">';
+    echo '<small><strong>Debug Info:</strong><br>';
+    echo 'Upload Max Filesize: ' . ini_get('upload_max_filesize') . '<br>';
+    echo 'Post Max Size: ' . ini_get('post_max_size') . '<br>';
+    echo 'Max Execution Time: ' . ini_get('max_execution_time') . 's<br>';
+    echo 'Target Directory: ' . __DIR__ . '/certificates<br>';
+    echo 'Directory Writable: ' . (is_writable(__DIR__ . '/certificates') ? 'Yes' : 'No') . '</small>';
+    echo '</div>';
     if ($lastSrc) {
       echo '<p><small>Last upload: <code>' . htmlspecialchars($lastSrc) . '</code></small></p>';
       echo '<a class="button" href="?type=cert&stage=2" style="display:inline-block;padding:8px 12px;border:1px solid #ddd;border-radius:6px">Go to Stage 2</a>';
@@ -317,6 +332,7 @@ if ($type === 'cert') {
        . '<label>Image path (src)</label><input name="c_src" type="text" value="' . htmlspecialchars($lastSrc) . '" required />'
        . '<label>Title (alt)</label><input name="c_alt" type="text" placeholder="Certificate title" />'
        . '<label>Short description (desc)</label><textarea name="c_desc" rows="3" placeholder="Brief description of the certificate"></textarea>'
+       . '<label>Caption (for display)</label><input name="c_caption" type="text" placeholder="Short caption for the certificate" />'
        . '<button type="submit">Save certificate</button>'
        . '</form>';
     echo '<div style="margin-top:12px"><a href="?type=cert&stage=1" style="display:inline-block;padding:8px 12px;border:1px solid #ddd;border-radius:6px">Add one more</a></div>';
@@ -371,12 +387,13 @@ if ($pdo) {
         echo '<strong>' . htmlspecialchars($cert['alt']) . '</strong><br>';
         echo '<small>src: ' . htmlspecialchars($cert['src']) . '</small><br>';
         echo '<small>desc: ' . htmlspecialchars($cert['desc']) . '</small><br>';
+        echo '<small>caption: ' . htmlspecialchars($cert['caption'] ?? '') . '</small><br>';
         echo '<form method="post" style="display:inline;margin-right:8px">';
         echo '<input type="hidden" name="action" value="delete_certificate">';
         echo '<input type="hidden" name="c_id" value="' . $cert['id'] . '">';
         echo '<button type="submit" onclick="return confirm(\'Delete this certificate?\')" style="background:#b00;color:white;border:none;padding:4px 8px;border-radius:4px">Delete</button>';
         echo '</form>';
-        echo '<button onclick="editCert(' . $cert['id'] . ', \'' . htmlspecialchars($cert['src']) . '\', \'' . htmlspecialchars($cert['alt']) . '\', \'' . htmlspecialchars($cert['desc']) . '\')" style="background:#006;color:white;border:none;padding:4px 8px;border-radius:4px">Edit</button>';
+        echo '<button onclick="editCert(' . $cert['id'] . ', \'' . htmlspecialchars($cert['src']) . '\', \'' . htmlspecialchars($cert['alt']) . '\', \'' . htmlspecialchars($cert['desc']) . '\', \'' . htmlspecialchars($cert['caption'] ?? '') . '\')" style="background:#006;color:white;border:none;padding:4px 8px;border-radius:4px">Edit</button>';
         echo '</div>';
       }
     } else {
@@ -453,6 +470,7 @@ if (file_exists($certFile)) {
       echo '<strong>' . htmlspecialchars($cert['alt'] ?? 'No title') . '</strong><br>';
       echo '<small>src: ' . htmlspecialchars($cert['src'] ?? '') . '</small><br>';
       echo '<small>desc: ' . htmlspecialchars($cert['desc'] ?? '') . '</small><br>';
+      echo '<small>caption: ' . htmlspecialchars($cert['caption'] ?? '') . '</small><br>';
       echo '<small>Index: ' . $index . '</small>';
       echo '</div>';
     }
@@ -488,12 +506,13 @@ echo '<p><small>Note: The website reads from MySQL API first, then falls back to
 
 // JavaScript for edit forms
 echo '<script>
-function editCert(id, src, alt, desc) {
+function editCert(id, src, alt, desc, caption) {
   document.getElementById("edit-cert-form").style.display = "block";
   document.getElementById("edit-cert-id").value = id;
   document.getElementById("edit-cert-src").value = src;
   document.getElementById("edit-cert-alt").value = alt;
   document.getElementById("edit-cert-desc").value = desc;
+  document.getElementById("edit-cert-caption").value = caption || '';
 }
 
 function editAchievement(id, event, date, outcome, desc, tech, cert, media) {
@@ -525,6 +544,7 @@ if ($pdo) {
   echo '<label>src</label><input name="c_src" id="edit-cert-src" required>';
   echo '<label>alt</label><input name="c_alt" id="edit-cert-alt">';
   echo '<label>desc</label><input name="c_desc" id="edit-cert-desc">';
+  echo '<label>caption</label><input name="c_caption" id="edit-cert-caption">';
   echo '<button type="submit">Update Certificate</button>';
   echo '<button type="button" onclick="document.getElementById(\'edit-cert-form\').style.display=\'none\'">Cancel</button>';
   echo '</form></div>';
