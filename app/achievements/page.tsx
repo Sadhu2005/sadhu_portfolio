@@ -185,10 +185,23 @@ export default function AchievementsPage() {
         // Load dynamic achievements from MySQL API
         const apiRes = await fetch(`${prefix}/api/achievements.php`, { signal: controller.signal, cache: 'no-store' });
         if (apiRes.ok) {
-          const data: Achievement[] = await apiRes.json();
-          if (Array.isArray(data) && data.length > 0) {
-            setDynamicAchievements(data);
+          const response = await apiRes.json();
+          console.log('API Response:', response);
+          
+          // Handle both direct array and wrapped response formats
+          let data: Achievement[] = [];
+          if (Array.isArray(response)) {
+            data = response;
+          } else if (response.achievements && Array.isArray(response.achievements)) {
+            data = response.achievements;
           }
+          
+          if (data.length > 0) {
+            setDynamicAchievements(data);
+            console.log('Loaded dynamic achievements:', data);
+          }
+        } else {
+          console.log('API response not ok:', apiRes.status, apiRes.statusText);
         }
         
         // Also try JSON fallback for dynamic data

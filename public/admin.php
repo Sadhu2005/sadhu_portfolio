@@ -185,6 +185,11 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
           $folderName = isset($_POST['folder_name']) ? trim($_POST['folder_name']) : 'general';
           $targetDir = ensure_subdir('event-media/' . $folderName);
           
+          // Debug: Log file upload info
+          error_log('Media files count: ' . count($_FILES['media_files']['name']));
+          error_log('Folder name: ' . $folderName);
+          error_log('Target dir: ' . $targetDir);
+          
           for ($i = 0; $i < count($_FILES['media_files']['name']); $i++) {
             if ($_FILES['media_files']['error'][$i] === UPLOAD_ERR_OK) {
               $name = $_FILES['media_files']['name'][$i];
@@ -193,7 +198,12 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
               
               if (move_uploaded_file($_FILES['media_files']['tmp_name'][$i], $target)) {
                 $mediaUrls[] = '/' . ltrim(str_replace(__DIR__, '', $target), '/');
+                error_log('Uploaded media file: ' . $mediaUrls[count($mediaUrls)-1]);
+              } else {
+                error_log('Failed to upload: ' . $name);
               }
+            } else {
+              error_log('Upload error for file ' . $i . ': ' . $_FILES['media_files']['error'][$i]);
             }
           }
         }
@@ -453,6 +463,7 @@ if ($type === 'ach') {
        . '<input type="hidden" name="a_cert" value="' . htmlspecialchars($lastSrc) . '" />'
        . '<label>Event Folder Name (for media organization)</label><input name="folder_name" type="text" placeholder="hackthehive-2025" />'
        . '<label>Gallery Media Files (multiple files allowed)</label><input name="media_files[]" type="file" accept="image/*,video/*" multiple />'
+       . '<small>Hold Ctrl/Cmd to select multiple files</small>'
        . '<button type="submit">Save Achievement</button>'
        . '</form>';
     echo '<div style="margin-top:12px"><a href="?type=ach&stage=1" style="display:inline-block;padding:8px 12px;border:1px solid #ddd;border-radius:6px">Add more media or another achievement</a></div>';
