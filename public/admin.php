@@ -1,14 +1,20 @@
 <?php
+// PHP 5.6+ compatible admin panel with full MySQL support
 session_start();
 
 // Load token from env or adjacent secret file
 $envToken = getenv('UPLOAD_TOKEN');
+$configuredToken = $envToken;
 if (file_exists(__DIR__ . '/upload.secret.php')) {
-  include __DIR__ . '/upload.secret.php'; // should define $UPLOAD_TOKEN
+  include __DIR__ . '/upload.secret.php';
+  if (isset($UPLOAD_TOKEN) && is_string($UPLOAD_TOKEN)) {
+    $configuredToken = $UPLOAD_TOKEN;
+  }
 }
-$configuredToken = isset($UPLOAD_TOKEN) && is_string($UPLOAD_TOKEN) ? $UPLOAD_TOKEN : $envToken;
 // Normalize tokens to avoid issues with stray whitespace/BOM
-if (is_string($configuredToken)) { $configuredToken = trim($configuredToken); }
+if (is_string($configuredToken)) { 
+  $configuredToken = trim($configuredToken); 
+}
 
 // Load database config if available
 $pdo = null;
@@ -19,6 +25,7 @@ if (file_exists(__DIR__ . '/db.config.php')) {
     error_log("DB config failed: " . $e->getMessage());
   }
 }
+
 function html_header($title = 'Admin') {
   echo '<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">'
      . '<meta charset="utf-8"><title>' . htmlspecialchars($title) . '</title>'
@@ -26,7 +33,9 @@ function html_header($title = 'Admin') {
      . '</head><body>';
 }
 
-function html_footer() { echo '</body></html>'; }
+function html_footer() { 
+  echo '</body></html>'; 
+}
 
 function is_authed() {
   return isset($_SESSION['admin_ok']) && $_SESSION['admin_ok'] === true;
@@ -34,7 +43,7 @@ function is_authed() {
 
 // Handle logout
 if (isset($_GET['logout'])) {
-  $_SESSION = [];
+  $_SESSION = array();
   session_destroy();
   header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
   exit;
@@ -54,21 +63,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // Helpers
-function ensure_subdir(string $subdir): string {
+function ensure_subdir($subdir) {
   $base = __DIR__;
   if ($subdir && preg_match('/^[A-Za-z0-9_\-\/]+$/', $subdir)) {
     $base = rtrim($base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $subdir;
   }
-  if (!is_dir($base)) { mkdir($base, 0755, true); }
+  if (!is_dir($base)) { 
+    mkdir($base, 0755, true); 
+  }
   return $base;
 }
 
-function append_json_row(string $file, $row): bool {
-  $data = [];
+function append_json_row($file, $row) {
+  $data = array();
   if (file_exists($file)) {
     $raw = file_get_contents($file);
     $data = json_decode($raw, true);
-    if (!is_array($data)) { $data = []; }
+    if (!is_array($data)) { 
+      $data = array(); 
+    }
   }
   $data[] = $row;
   return (bool)file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
@@ -76,13 +89,13 @@ function append_json_row(string $file, $row): bool {
 
 // Handle actions (only if authed)
 if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
-  $act = $_POST['action'] ?? '';
+  $act = $_POST['action'];
   
   // Upload file (image/video/json)
   if ($act === 'upload' && isset($_FILES['file'])) {
-    $subdir = trim((string)($_POST['subdir'] ?? ''));
+    $subdir = trim((string)($_POST['subdir']));
     $targetDir = ensure_subdir($subdir);
-    $name = $_POST['name'] ?? $_FILES['file']['name'];
+    $name = $_POST['name'] ? $_POST['name'] : $_FILES['file']['name'];
     $name = preg_replace('/[^A-Za-z0-9_\-.]/', '_', $name);
     $target = rtrim($targetDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $name;
     
@@ -109,7 +122,7 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($act === 'add_certificate') {
       try {
         $stmt = $pdo->prepare("INSERT INTO certificates (src, alt, `desc`, caption) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$_POST['c_src'], $_POST['c_alt'] ?? '', $_POST['c_desc'] ?? '', $_POST['c_caption'] ?? '']);
+        $stmt->execute(array($_POST['c_src'], $_POST['c_alt'], $_POST['c_desc'], $_POST['c_caption']));
         $_SESSION['ok'] = 'Certificate added to database';
       } catch (Exception $e) {
         $_SESSION['err'] = 'Database error: ' . $e->getMessage();
@@ -123,16 +136,16 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
       try {
         $pdo->beginTransaction();
         $stmt = $pdo->prepare("INSERT INTO achievements (eventName, `date`, outcome, description, techUsed, certificateUrl) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$_POST['a_event'], $_POST['a_date'] ?? '', $_POST['a_outcome'] ?? '', $_POST['a_desc'] ?? '', $_POST['a_tech'] ?? '', $_POST['a_cert'] ?? '']);
+        $stmt->execute(array($_POST['a_event'], $_POST['a_date'], $_POST['a_outcome'], $_POST['a_desc'], $_POST['a_tech'], $_POST['a_cert']));
         $achievement_id = $pdo->lastInsertId();
         
         // Add media
-        $mediaRaw = (string)($_POST['a_media'] ?? '');
+        $mediaRaw = (string)($_POST['a_media']);
         $media = array_values(array_filter(array_map('trim', explode(',', $mediaRaw)), function($v) { return $v !== ''; }));
         if (!empty($media)) {
           $stmt = $pdo->prepare("INSERT INTO achievement_media (achievement_id, url) VALUES (?, ?)");
           foreach ($media as $url) {
-            $stmt->execute([$achievement_id, $url]);
+            $stmt->execute(array($achievement_id, $url));
           }
         }
         $pdo->commit();
@@ -149,7 +162,7 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($act === 'update_certificate') {
       try {
         $stmt = $pdo->prepare("UPDATE certificates SET src=?, alt=?, `desc`=?, caption=? WHERE id=?");
-        $stmt->execute([$_POST['c_src'], $_POST['c_alt'] ?? '', $_POST['c_desc'] ?? '', $_POST['c_caption'] ?? '', $_POST['c_id']]);
+        $stmt->execute(array($_POST['c_src'], $_POST['c_alt'], $_POST['c_desc'], $_POST['c_caption'], $_POST['c_id']));
         $_SESSION['ok'] = 'Certificate updated';
       } catch (Exception $e) {
         $_SESSION['err'] = 'Database error: ' . $e->getMessage();
@@ -163,16 +176,16 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
       try {
         $pdo->beginTransaction();
         $stmt = $pdo->prepare("UPDATE achievements SET eventName=?, `date`=?, outcome=?, description=?, techUsed=?, certificateUrl=? WHERE id=?");
-        $stmt->execute([$_POST['a_event'], $_POST['a_date'] ?? '', $_POST['a_outcome'] ?? '', $_POST['a_desc'] ?? '', $_POST['a_tech'] ?? '', $_POST['a_cert'] ?? '', $_POST['a_id']]);
+        $stmt->execute(array($_POST['a_event'], $_POST['a_date'], $_POST['a_outcome'], $_POST['a_desc'], $_POST['a_tech'], $_POST['a_cert'], $_POST['a_id']));
         
         // Update media
-        $pdo->prepare("DELETE FROM achievement_media WHERE achievement_id=?")->execute([$_POST['a_id']]);
-        $mediaRaw = (string)($_POST['a_media'] ?? '');
+        $pdo->prepare("DELETE FROM achievement_media WHERE achievement_id=?")->execute(array($_POST['a_id']));
+        $mediaRaw = (string)($_POST['a_media']);
         $media = array_values(array_filter(array_map('trim', explode(',', $mediaRaw)), function($v) { return $v !== ''; }));
         if (!empty($media)) {
           $stmt = $pdo->prepare("INSERT INTO achievement_media (achievement_id, url) VALUES (?, ?)");
           foreach ($media as $url) {
-            $stmt->execute([$_POST['a_id'], $url]);
+            $stmt->execute(array($_POST['a_id'], $url));
           }
         }
         $pdo->commit();
@@ -189,7 +202,7 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($act === 'delete_certificate') {
       try {
         $stmt = $pdo->prepare("DELETE FROM certificates WHERE id=?");
-        $stmt->execute([$_POST['c_id']]);
+        $stmt->execute(array($_POST['c_id']));
         $_SESSION['ok'] = 'Certificate deleted';
       } catch (Exception $e) {
         $_SESSION['err'] = 'Database error: ' . $e->getMessage();
@@ -202,7 +215,7 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($act === 'delete_achievement') {
       try {
         $stmt = $pdo->prepare("DELETE FROM achievements WHERE id=?");
-        $stmt->execute([$_POST['a_id']]);
+        $stmt->execute(array($_POST['a_id']));
         $_SESSION['ok'] = 'Achievement deleted';
       } catch (Exception $e) {
         $_SESSION['err'] = 'Database error: ' . $e->getMessage();
@@ -218,10 +231,10 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $existing = $stmt->fetch();
         if ($existing) {
           $stmt = $pdo->prepare("UPDATE intro_video SET src=?, poster=? WHERE id=?");
-          $stmt->execute([$_POST['video_src'], $_POST['video_poster'] ?? '', $existing['id']]);
+          $stmt->execute(array($_POST['video_src'], $_POST['video_poster'], $existing['id']));
         } else {
           $stmt = $pdo->prepare("INSERT INTO intro_video (src, poster) VALUES (?, ?)");
-          $stmt->execute([$_POST['video_src'], $_POST['video_poster'] ?? '']);
+          $stmt->execute(array($_POST['video_src'], $_POST['video_poster']));
         }
         $_SESSION['ok'] = 'Intro video updated';
       } catch (Exception $e) {
@@ -233,39 +246,42 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
   } else {
     // Fallback to JSON operations
     if ($act === 'add_certificate') {
-      $row = [
-        'src' => (string)($_POST['c_src'] ?? ''),
-        'alt' => (string)($_POST['c_alt'] ?? ''),
-        'desc' => (string)($_POST['c_desc'] ?? ''),
-        'caption' => (string)($_POST['c_caption'] ?? ''),
-      ];
+      $row = array(
+        'src' => (string)($_POST['c_src']),
+        'alt' => (string)($_POST['c_alt']),
+        'desc' => (string)($_POST['c_desc']),
+        'caption' => (string)($_POST['c_caption']),
+      );
       $file = __DIR__ . '/data/certificates.json';
       ensure_subdir('data');
       if ($row['src'] && append_json_row($file, $row)) { 
         $_SESSION['ok'] = 'Certificate added to JSON (MySQL not configured)'; 
       } else { 
-        $_SESSION['err'] = 'Could not update certificates.json: ' . error_get_last()['message']; 
+        $_SESSION['err'] = 'Could not update certificates.json'; 
       }
       header('Location: ' . $_SERVER['REQUEST_URI']);
       exit;
     }
 
     if ($act === 'add_achievement') {
-      $mediaRaw = (string)($_POST['a_media'] ?? '');
-      $media = array_values(array_filter(array_map('trim', explode(',', $mediaRaw)), fn($v) => $v !== ''));
-      $row = [
-        'eventName' => (string)($_POST['a_event'] ?? ''),
-        'date' => (string)($_POST['a_date'] ?? ''),
-        'outcome' => (string)($_POST['a_outcome'] ?? ''),
-        'description' => (string)($_POST['a_desc'] ?? ''),
-        'techUsed' => (string)($_POST['a_tech'] ?? ''),
-        'certificateUrl' => (string)($_POST['a_cert'] ?? ''),
+      $mediaRaw = (string)($_POST['a_media']);
+      $media = array_values(array_filter(array_map('trim', explode(',', $mediaRaw)), function($v) { return $v !== ''; }));
+      $row = array(
+        'eventName' => (string)($_POST['a_event']),
+        'date' => (string)($_POST['a_date']),
+        'outcome' => (string)($_POST['a_outcome']),
+        'description' => (string)($_POST['a_desc']),
+        'techUsed' => (string)($_POST['a_tech']),
+        'certificateUrl' => (string)($_POST['a_cert']),
         'media' => $media,
-      ];
+      );
       $file = __DIR__ . '/data/achievements.json';
       ensure_subdir('data');
-      if ($row['eventName'] && append_json_row($file, $row)) { $_SESSION['ok'] = 'Achievement added to JSON'; }
-      else { $_SESSION['err'] = 'Could not update achievements.json'; }
+      if ($row['eventName'] && append_json_row($file, $row)) { 
+        $_SESSION['ok'] = 'Achievement added to JSON'; 
+      } else { 
+        $_SESSION['err'] = 'Could not update achievements.json'; 
+      }
       header('Location: ' . $_SERVER['REQUEST_URI']);
       exit;
     }
@@ -276,19 +292,28 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
 if (!is_authed()) {
   html_header('Admin Login');
   echo '<h2>Admin Login</h2>';
-  if (!empty($_SESSION['err'])) { echo '<p style="color:#b00">' . htmlspecialchars($_SESSION['err']) . '</p>'; unset($_SESSION['err']); }
+  if (!empty($_SESSION['err'])) { 
+    echo '<p style="color:#b00">' . htmlspecialchars($_SESSION['err']) . '</p>'; 
+    unset($_SESSION['err']); 
+  }
   echo '<form method="post"><input type="hidden" name="action" value="login" />'
      . '<label>Password</label><input type="password" name="password" required />'
      . '<button type="submit">Login</button></form>';
-  echo '<p><small>Tip: same secret as <code>upload.php</code> token. Ensure the file <code>upload.secret.php</code> is next to this file and contains <code><?php $UPLOAD_TOKEN=\'your-secret\'; ?></code></small></p>';
+  echo '<p><small>Tip: same secret as upload.php token. Ensure the file upload.secret.php is next to this file and contains $UPLOAD_TOKEN=\'your-secret\';</small></p>';
   html_footer();
   exit;
 }
 
 html_header('Admin');
 echo '<nav><a href="?logout=1">Logout</a></nav>';
-if (!empty($_SESSION['ok'])) { echo '<p style="color:#060">' . htmlspecialchars($_SESSION['ok']) . '</p>'; unset($_SESSION['ok']); }
-if (!empty($_SESSION['err'])) { echo '<p style="color:#b00">' . htmlspecialchars($_SESSION['err']) . '</p>'; unset($_SESSION['err']); }
+if (!empty($_SESSION['ok'])) { 
+  echo '<p style="color:#060">' . htmlspecialchars($_SESSION['ok']) . '</p>'; 
+  unset($_SESSION['ok']); 
+}
+if (!empty($_SESSION['err'])) { 
+  echo '<p style="color:#b00">' . htmlspecialchars($_SESSION['err']) . '</p>'; 
+  unset($_SESSION['err']); 
+}
 
 // Simple step selector
 $type = isset($_GET['type']) ? (string)$_GET['type'] : '';
@@ -317,7 +342,6 @@ if ($type === 'cert') {
     echo '<small><strong>Debug Info:</strong><br>';
     echo 'Upload Max Filesize: ' . ini_get('upload_max_filesize') . '<br>';
     echo 'Post Max Size: ' . ini_get('post_max_size') . '<br>';
-    echo 'Max Execution Time: ' . ini_get('max_execution_time') . 's<br>';
     echo 'Target Directory: ' . __DIR__ . '/certificates<br>';
     echo 'Directory Writable: ' . (is_writable(__DIR__ . '/certificates') ? 'Yes' : 'No') . '</small>';
     echo '</div>';
@@ -361,7 +385,7 @@ if ($type === 'ach') {
        . '<input type="hidden" name="action" value="add_achievement" />'
        . '<label>eventName</label><input name="a_event" type="text" required />'
        . '<label>date</label><input name="a_date" type="text" placeholder="May 2025" />'
-        . '<label>outcome</label><input name="a_outcome" type="text" />'
+       . '<label>outcome</label><input name="a_outcome" type="text" />'
        . '<label>description</label><textarea name="a_desc" rows="3"></textarea>'
        . '<label>key skills (techUsed)</label><input name="a_tech" type="text" />'
        . '<label>certificateUrl</label><input name="a_cert" type="text" value="' . htmlspecialchars($lastSrc) . '" />'
@@ -387,13 +411,13 @@ if ($pdo) {
         echo '<strong>' . htmlspecialchars($cert['alt']) . '</strong><br>';
         echo '<small>src: ' . htmlspecialchars($cert['src']) . '</small><br>';
         echo '<small>desc: ' . htmlspecialchars($cert['desc']) . '</small><br>';
-        echo '<small>caption: ' . htmlspecialchars($cert['caption'] ?? '') . '</small><br>';
+        echo '<small>caption: ' . htmlspecialchars($cert['caption']) . '</small><br>';
         echo '<form method="post" style="display:inline;margin-right:8px">';
         echo '<input type="hidden" name="action" value="delete_certificate">';
         echo '<input type="hidden" name="c_id" value="' . $cert['id'] . '">';
         echo '<button type="submit" onclick="return confirm(\'Delete this certificate?\')" style="background:#b00;color:white;border:none;padding:4px 8px;border-radius:4px">Delete</button>';
         echo '</form>';
-        echo '<button onclick="editCert(' . $cert['id'] . ', \'' . htmlspecialchars($cert['src']) . '\', \'' . htmlspecialchars($cert['alt']) . '\', \'' . htmlspecialchars($cert['desc']) . '\', \'' . htmlspecialchars($cert['caption'] ?? '') . '\')" style="background:#006;color:white;border:none;padding:4px 8px;border-radius:4px">Edit</button>';
+        echo '<button onclick="editCert(' . $cert['id'] . ', \'' . htmlspecialchars($cert['src']) . '\', \'' . htmlspecialchars($cert['alt']) . '\', \'' . htmlspecialchars($cert['desc']) . '\', \'' . htmlspecialchars($cert['caption']) . '\')" style="background:#006;color:white;border:none;padding:4px 8px;border-radius:4px">Edit</button>';
         echo '</div>';
       }
     } else {
@@ -467,10 +491,10 @@ if (file_exists($certFile)) {
   if ($certData && is_array($certData)) {
     foreach ($certData as $index => $cert) {
       echo '<div style="border:1px solid #ddd;padding:8px;margin:8px 0;border-radius:4px">';
-      echo '<strong>' . htmlspecialchars($cert['alt'] ?? 'No title') . '</strong><br>';
-      echo '<small>src: ' . htmlspecialchars($cert['src'] ?? '') . '</small><br>';
-      echo '<small>desc: ' . htmlspecialchars($cert['desc'] ?? '') . '</small><br>';
-      echo '<small>caption: ' . htmlspecialchars($cert['caption'] ?? '') . '</small><br>';
+      echo '<strong>' . htmlspecialchars($cert['alt']) . '</strong><br>';
+      echo '<small>src: ' . htmlspecialchars($cert['src']) . '</small><br>';
+      echo '<small>desc: ' . htmlspecialchars($cert['desc']) . '</small><br>';
+      echo '<small>caption: ' . htmlspecialchars($cert['caption']) . '</small><br>';
       echo '<small>Index: ' . $index . '</small>';
       echo '</div>';
     }
@@ -489,9 +513,9 @@ if (file_exists($achFile)) {
   if ($achData && is_array($achData)) {
     foreach ($achData as $index => $ach) {
       echo '<div style="border:1px solid #ddd;padding:8px;margin:8px 0;border-radius:4px">';
-      echo '<strong>' . htmlspecialchars($ach['eventName'] ?? 'No event') . '</strong><br>';
-      echo '<small>Date: ' . htmlspecialchars($ach['date'] ?? '') . ' | Outcome: ' . htmlspecialchars($ach['outcome'] ?? '') . '</small><br>';
-      echo '<small>Tech: ' . htmlspecialchars($ach['techUsed'] ?? '') . '</small><br>';
+      echo '<strong>' . htmlspecialchars($ach['eventName']) . '</strong><br>';
+      echo '<small>Date: ' . htmlspecialchars($ach['date']) . ' | Outcome: ' . htmlspecialchars($ach['outcome']) . '</small><br>';
+      echo '<small>Tech: ' . htmlspecialchars($ach['techUsed']) . '</small><br>';
       echo '<small>Index: ' . $index . '</small>';
       echo '</div>';
     }
@@ -512,7 +536,7 @@ function editCert(id, src, alt, desc, caption) {
   document.getElementById("edit-cert-src").value = src;
   document.getElementById("edit-cert-alt").value = alt;
   document.getElementById("edit-cert-desc").value = desc;
-  document.getElementById("edit-cert-caption").value = caption || '';
+  document.getElementById("edit-cert-caption").value = caption || "";
 }
 
 function editAchievement(id, event, date, outcome, desc, tech, cert, media) {
@@ -578,5 +602,3 @@ if ($pdo) {
 
 html_footer();
 ?>
-
-
