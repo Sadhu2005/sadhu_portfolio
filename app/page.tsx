@@ -20,7 +20,7 @@ function IntroVideo() {
           const data = await res.json();
           if (data.src) setVideoData(data);
         }
-      } catch (_) {
+      } catch {
         // keep default
       }
     };

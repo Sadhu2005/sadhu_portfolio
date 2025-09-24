@@ -21,7 +21,7 @@ export default function MouseTrail() {
       dot.style.top = y + 'px';
       dot.style.background = colors[Math.floor(Math.random() * colors.length)];
       dot.style.opacity = '0.95';
-      body.appendChild(dot);
+      body?.appendChild(dot);
 
       // Animate out after a short delay so initial render is visible
       const lifeMs = 1600 + Math.random() * 900; // 1.6s - 2.5s

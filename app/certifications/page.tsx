@@ -31,14 +31,6 @@ function Lightbox({ items, index, onClose, onChange }: { items: string[]; index:
 type Cert = { src: string; alt: string; desc: string; caption?: string };
 
 export default function CertificationsPage() {
-  // Lightbox carousel state
-  const [lightboxItems, setLightboxItems] = useState<string[]>([]);
-  const [lightboxIndex, setLightboxIndex] = useState<number>(0);
-  const openAt = useCallback((idx: number) => {
-    setLightboxItems(allCertificates.map(c => c.src));
-    setLightboxIndex(idx);
-  }, [allCertificates]);
-
   // Fallback array (used if JSON manifest missing)
   const fallback: Cert[] = [
     { src: "/certificates/cr35.jpg", alt: "LLM, Agentic Ai & More: Career Guidance", desc: "LLM, Agentic Ai & More: Career Guidance" },
@@ -137,6 +129,14 @@ export default function CertificationsPage() {
       });
     return [...addUnique(dynamicCertificates), ...addUnique(fallback)];
   })();
+
+  // Lightbox carousel state
+  const [lightboxItems, setLightboxItems] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState<number>(0);
+  const openAt = useCallback((idx: number) => {
+    setLightboxItems(allCertificates.map(c => c.src));
+    setLightboxIndex(idx);
+  }, [allCertificates]);
   
   // Debug logging
   console.log('Static certificates (fallback):', fallback.length);
@@ -152,8 +152,6 @@ export default function CertificationsPage() {
           {isLoading && <p>Loading certificates...</p>}
           <div className="certifications-grid">
             {allCertificates.map((cert, index) => {
-              // Dynamic vs static visuals are identical now
-              const isDynamic = false;
               return (
                 <div 
                   key={index} 
