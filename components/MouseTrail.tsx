@@ -59,7 +59,7 @@ export default function MouseTrail() {
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove as any);
+      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 

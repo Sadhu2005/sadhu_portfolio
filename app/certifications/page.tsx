@@ -37,7 +37,7 @@ export default function CertificationsPage() {
   const openAt = useCallback((idx: number) => {
     setLightboxItems(allCertificates.map(c => c.src));
     setLightboxIndex(idx);
-  }, []);
+  }, [allCertificates]);
 
   // Fallback array (used if JSON manifest missing)
   const fallback: Cert[] = [
@@ -80,7 +80,7 @@ export default function CertificationsPage() {
     { src: "/certificates/cr1.jpg", alt: "Kodacy", desc: "30 Day Virtual Internship Kodacy (AI &ML)" },
   ];
 
-  const [certificates, setCertificates] = useState<Cert[]>(fallback);
+  // const [certificates, setCertificates] = useState<Cert[]>(fallback);
   const [dynamicCertificates, setDynamicCertificates] = useState<Cert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

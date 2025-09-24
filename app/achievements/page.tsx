@@ -191,7 +191,7 @@ export default function AchievementsPage() {
     },
   ];
 
-  const [achievementsData, setAchievementsData] = useState<Achievement[]>(fallback);
+  // const [achievementsData, setAchievementsData] = useState<Achievement[]>(fallback);
   const [dynamicAchievements, setDynamicAchievements] = useState<Achievement[]>([]);
 
   useEffect(() => {
@@ -271,7 +271,7 @@ export default function AchievementsPage() {
           <div className="achievements-container">
             {allAchievements.map((event, index) => {
               // Visual parity; remove NEW badge and special border
-              const isDynamic = false;
+              // const isDynamic = false;
               return (
                 <div 
                   key={index} 
