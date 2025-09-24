@@ -116,8 +116,9 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
       // If this is a certificate upload, also store in SQL
       if ($subdir === 'certificates' && $pdo) {
         try {
+          $caption = isset($_POST['caption']) ? trim($_POST['caption']) : '';
           $stmt = $pdo->prepare("INSERT INTO certificates (src, alt, `desc`, caption) VALUES (?, ?, ?, ?)");
-          $stmt->execute(array($filePath, $name, '', ''));
+          $stmt->execute(array($filePath, $name, '', $caption));
           $_SESSION['ok'] .= ' and added to database';
         } catch (Exception $e) {
           $_SESSION['err'] = 'File uploaded but database error: ' . $e->getMessage();
@@ -348,6 +349,7 @@ if ($type === 'cert') {
        . '<input type="hidden" name="name" value="" />'
        . '<label>Subdir</label><input name="subdir" type="text" value="certificates" readonly />'
        . '<label>Image</label><input name="file" type="file" accept="image/*" required />'
+       . '<label>Caption (optional)</label><input name="caption" type="text" placeholder="Short caption for the certificate" />'
        . '<button type="submit">Upload</button>'
        . '</form>';
     echo '<div style="margin-top:12px;padding:8px;background:#f5f5f5;border-radius:4px">';

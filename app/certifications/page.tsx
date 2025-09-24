@@ -83,8 +83,11 @@ export default function CertificationsPage() {
           const data: Cert[] = await apiRes.json();
           if (Array.isArray(data) && data.length > 0) {
             setDynamicCertificates(data);
+            console.log('Loaded dynamic certificates:', data);
             return; // Success, don't try JSON fallback
           }
+        } else {
+          console.log('API response not ok:', apiRes.status, apiRes.statusText);
         }
         
         // Fallback to JSON for dynamic data
@@ -106,6 +109,11 @@ export default function CertificationsPage() {
 
   // Combine static fallback + dynamic certificates
   const allCertificates = [...fallback, ...dynamicCertificates];
+  
+  // Debug logging
+  console.log('Static certificates (fallback):', fallback.length);
+  console.log('Dynamic certificates:', dynamicCertificates.length);
+  console.log('Total certificates:', allCertificates.length);
 
   return (
     <>
