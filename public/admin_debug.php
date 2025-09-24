@@ -7,6 +7,8 @@ echo "<h1>Admin Debug</h1>";
 
 // Test 1: Basic PHP
 echo "<h2>✅ PHP is working</h2>";
+echo "PHP Version: " . phpversion() . "<br>";
+echo "PHP Version ID: " . PHP_VERSION_ID . "<br>";
 
 // Test 2: Session
 try {

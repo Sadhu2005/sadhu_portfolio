@@ -28,7 +28,7 @@ function html_header($title = 'Admin') {
 
 function html_footer() { echo '</body></html>'; }
 
-function is_authed(): bool {
+function is_authed() {
   return isset($_SESSION['admin_ok']) && $_SESSION['admin_ok'] === true;
 }
 
@@ -128,7 +128,7 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Add media
         $mediaRaw = (string)($_POST['a_media'] ?? '');
-        $media = array_values(array_filter(array_map('trim', explode(',', $mediaRaw)), fn($v) => $v !== ''));
+        $media = array_values(array_filter(array_map('trim', explode(',', $mediaRaw)), function($v) { return $v !== ''; }));
         if (!empty($media)) {
           $stmt = $pdo->prepare("INSERT INTO achievement_media (achievement_id, url) VALUES (?, ?)");
           foreach ($media as $url) {
@@ -168,7 +168,7 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
         // Update media
         $pdo->prepare("DELETE FROM achievement_media WHERE achievement_id=?")->execute([$_POST['a_id']]);
         $mediaRaw = (string)($_POST['a_media'] ?? '');
-        $media = array_values(array_filter(array_map('trim', explode(',', $mediaRaw)), fn($v) => $v !== ''));
+        $media = array_values(array_filter(array_map('trim', explode(',', $mediaRaw)), function($v) { return $v !== ''; }));
         if (!empty($media)) {
           $stmt = $pdo->prepare("INSERT INTO achievement_media (achievement_id, url) VALUES (?, ?)");
           foreach ($media as $url) {
