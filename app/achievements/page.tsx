@@ -220,18 +220,29 @@ export default function AchievementsPage() {
     return () => controller.abort();
   }, []);
 
-  // Combine dynamic achievements first, then static fallback (dedupe by eventName+date)
+  // Combine dynamic achievements first, then static fallback (dedupe by unique ID)
   const allAchievements = (() => {
     const seen = new Set<string>();
-    const keyOf = (a: Achievement) => `${(a.eventName||'').toLowerCase()}__${(a.date||'').toLowerCase()}`;
+    const keyOf = (a: Achievement) => {
+      // Use ID if available, otherwise use eventName+date+outcome for uniqueness
+      if ('id' in a && a.id) return `id_${a.id}`;
+      return `${(a.eventName||'').toLowerCase()}__${(a.date||'').toLowerCase()}__${(a.outcome||'').toLowerCase()}`;
+    };
     const addUnique = (list: Achievement[]) =>
       list.filter((a) => {
         const key = keyOf(a);
-        if (seen.has(key)) return false;
+        if (seen.has(key)) {
+          console.log('Deduplicating achievement:', a.eventName, 'with key:', key);
+          return false;
+        }
         seen.add(key);
         return true;
       });
-    return [...addUnique(dynamicAchievements), ...addUnique(fallback)];
+    const result = [...addUnique(dynamicAchievements), ...addUnique(fallback)];
+    console.log('Final achievements count:', result.length);
+    console.log('Dynamic achievements count:', dynamicAchievements.length);
+    console.log('Fallback achievements count:', fallback.length);
+    return result;
   })();
 
   return (

@@ -462,8 +462,10 @@ if ($type === 'ach') {
        . '<label>Certificate Image (optional)</label><input name="certificate_file" type="file" accept="image/*" />'
        . '<input type="hidden" name="a_cert" value="' . htmlspecialchars($lastSrc) . '" />'
        . '<label>Event Folder Name (for media organization)</label><input name="folder_name" type="text" placeholder="hackthehive-2025" />'
-       . '<label>Gallery Media Files (multiple files allowed)</label><input name="media_files[]" type="file" accept="image/*,video/*" multiple />'
-       . '<small>Hold Ctrl/Cmd to select multiple files</small>'
+       . '<div id="media-uploads">'
+       . '<label>Gallery Media File 1</label><input name="media_files[]" type="file" accept="image/*,video/*" />'
+       . '</div>'
+       . '<button type="button" onclick="addMediaUpload()" style="background:#006;color:white;border:none;padding:4px 8px;border-radius:4px;margin:8px 0">Add Another Media File</button>'
        . '<button type="submit">Save Achievement</button>'
        . '</form>';
     echo '<div style="margin-top:12px"><a href="?type=ach&stage=1" style="display:inline-block;padding:8px 12px;border:1px solid #ddd;border-radius:6px">Add more media or another achievement</a></div>';
@@ -629,6 +631,14 @@ function editVideo(src, poster) {
   document.getElementById("edit-video-form").style.display = "block";
   document.getElementById("edit-video-src").value = src;
   document.getElementById("edit-video-poster").value = poster;
+}
+
+function addMediaUpload() {
+  const container = document.getElementById("media-uploads");
+  const count = container.children.length + 1;
+  const newUpload = document.createElement("div");
+  newUpload.innerHTML = `<label>Gallery Media File ${count}</label><input name="media_files[]" type="file" accept="image/*,video/*" />`;
+  container.appendChild(newUpload);
 }
 </script>';
 
