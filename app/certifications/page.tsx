@@ -113,8 +113,18 @@ export default function CertificationsPage() {
     return () => controller.abort();
   }, []);
 
-  // Combine dynamic certificates first, then static fallback
-  const allCertificates = [...dynamicCertificates, ...fallback];
+  // Combine dynamic certificates first, then static fallback (dedupe by src)
+  const allCertificates = (() => {
+    const seen = new Set<string>();
+    const addUnique = (list: Cert[]) =>
+      list.filter((c) => {
+        const key = (c.src || '').toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    return [...addUnique(dynamicCertificates), ...addUnique(fallback)];
+  })();
   
   // Debug logging
   console.log('Static certificates (fallback):', fallback.length);
@@ -130,7 +140,8 @@ export default function CertificationsPage() {
           {isLoading && <p>Loading certificates...</p>}
           <div className="certifications-grid">
             {allCertificates.map((cert, index) => {
-              const isDynamic = index < dynamicCertificates.length;
+              // Dynamic vs static visuals are identical now
+              const isDynamic = false;
               return (
                 <div 
                   key={index} 
@@ -138,27 +149,11 @@ export default function CertificationsPage() {
                   onClick={() => setLightboxSrc(cert.src)} 
                   style={{ 
                     cursor: 'pointer',
-                    border: isDynamic ? '2px solid #4f46e5' : '1px solid #ccc',
+                    border: '1px solid #ccc',
                     position: 'relative'
                   }}
                 >
-                  {isDynamic && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '8px',
-                      right: '8px',
-                      background: 'var(--primary)',
-                      color: 'white',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      fontSize: '0.75rem',
-                      fontWeight: 'bold',
-                      zIndex: 10,
-                      fontFamily: 'inherit'
-                    }}>
-                      NEW
-                    </div>
-                  )}
+                  {/* NEW badge removed per request */}
                 <Image 
                   src={asset(cert.src)} 
                   alt={cert.alt} 

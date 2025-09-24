@@ -155,8 +155,28 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($act === 'add_achievement') {
       try {
         $pdo->beginTransaction();
+        
+        // Handle certificate file upload if provided
+        $certificateUrl = $_POST['a_cert'];
+        if (isset($_FILES['certificate_file']) && $_FILES['certificate_file']['error'] === UPLOAD_ERR_OK) {
+          $targetDir = ensure_subdir('certificates');
+          $name = $_FILES['certificate_file']['name'];
+          $name = preg_replace('/[^A-Za-z0-9_\-.]/', '_', $name);
+          $target = rtrim($targetDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $name;
+          
+          if (move_uploaded_file($_FILES['certificate_file']['tmp_name'], $target)) {
+            $certificateUrl = '/' . ltrim(str_replace(__DIR__, '', $target), '/');
+            $_SESSION['ok'] = 'Certificate uploaded to ' . $certificateUrl;
+          } else {
+            $_SESSION['err'] = 'Certificate upload failed';
+            $pdo->rollBack();
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+          }
+        }
+        
         $stmt = $pdo->prepare("INSERT INTO achievements (eventName, `date`, outcome, description, techUsed, certificateUrl) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute(array($_POST['a_event'], $_POST['a_date'], $_POST['a_outcome'], $_POST['a_desc'], $_POST['a_tech'], $_POST['a_cert']));
+        $stmt->execute(array($_POST['a_event'], $_POST['a_date'], $_POST['a_outcome'], $_POST['a_desc'], $_POST['a_tech'], $certificateUrl));
         $achievement_id = $pdo->lastInsertId();
         
         // Add media
@@ -404,14 +424,15 @@ if ($type === 'ach') {
     }
   } elseif ($stage === 2) {
     echo '<h3>Stage 2: Add details and save</h3>';
-    echo '<form method="post">'
+    echo '<form method="post" enctype="multipart/form-data">'
        . '<input type="hidden" name="action" value="add_achievement" />'
        . '<label>Event Name *</label><input name="a_event" type="text" placeholder="HackTheHive Hackathon" required />'
        . '<label>Date</label><input name="a_date" type="text" placeholder="May 2025" />'
        . '<label>Outcome *</label><input name="a_outcome" type="text" placeholder="1st Runner-Up & Internship Opportunity" required />'
        . '<label>Description *</label><textarea name="a_desc" rows="4" placeholder="Our team, "EvoBot Crew", secured 1st Runner-Up. We also earned an internship opportunity..." required></textarea>'
        . '<label>Key Skills (Tech Used) *</label><input name="a_tech" type="text" placeholder="AI, Machine Learning, Product Launch Strategy" required />'
-       . '<label>Certificate URL</label><input name="a_cert" type="text" value="' . htmlspecialchars($lastSrc) . '" placeholder="/certificates/certificate.jpg" />'
+       . '<label>Certificate Image (optional)</label><input name="certificate_file" type="file" accept="image/*" />'
+       . '<label>Certificate URL (auto-filled from upload or enter manually)</label><input name="a_cert" type="text" value="' . htmlspecialchars($lastSrc) . '" placeholder="/certificates/certificate.jpg" />'
        . '<label>Media URLs (comma separated)</label><textarea name="a_media" rows="3" placeholder="/event-media/hackthehive-2025/image1.jpg, /event-media/hackthehive-2025/video1.mp4"></textarea>'
        . '<button type="submit">Save Achievement</button>'
        . '</form>';

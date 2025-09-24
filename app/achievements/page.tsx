@@ -207,8 +207,19 @@ export default function AchievementsPage() {
     return () => controller.abort();
   }, []);
 
-  // Combine dynamic achievements first, then static fallback
-  const allAchievements = [...dynamicAchievements, ...fallback];
+  // Combine dynamic achievements first, then static fallback (dedupe by eventName+date)
+  const allAchievements = (() => {
+    const seen = new Set<string>();
+    const keyOf = (a: Achievement) => `${(a.eventName||'').toLowerCase()}__${(a.date||'').toLowerCase()}`;
+    const addUnique = (list: Achievement[]) =>
+      list.filter((a) => {
+        const key = keyOf(a);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    return [...addUnique(dynamicAchievements), ...addUnique(fallback)];
+  })();
 
   return (
     <>
@@ -217,33 +228,18 @@ export default function AchievementsPage() {
           <h2>Competitions & Hackathons</h2>
           <div className="achievements-container">
             {allAchievements.map((event, index) => {
-              const isDynamic = index < dynamicAchievements.length;
+              // Visual parity; remove NEW badge and special border
+              const isDynamic = false;
               return (
                 <div 
                   key={index} 
                   className="achievement-card"
                   style={{
-                    border: isDynamic ? '2px solid #4f46e5' : '1px solid var(--border)',
+                    border: '1px solid var(--border)',
                     position: 'relative'
                   }}
                 >
-                  {isDynamic && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '12px',
-                      right: '12px',
-                      background: 'var(--primary)',
-                      color: 'white',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      fontSize: '0.75rem',
-                      fontWeight: 'bold',
-                      zIndex: 10,
-                      fontFamily: 'inherit'
-                    }}>
-                      NEW
-                    </div>
-                  )}
+                  {/* NEW badge removed per request */}
                 <div className="achievement-header">
                   <h3>{event.eventName}</h3>
                   <p className="achievement-date">{event.date}</p>
