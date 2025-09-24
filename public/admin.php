@@ -179,17 +179,35 @@ if (is_authed() && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute(array($_POST['a_event'], $_POST['a_date'], $_POST['a_outcome'], $_POST['a_desc'], $_POST['a_tech'], $certificateUrl));
         $achievement_id = $pdo->lastInsertId();
         
-        // Add media
-        $mediaRaw = (string)($_POST['a_media']);
-        $media = array_values(array_filter(array_map('trim', explode(',', $mediaRaw)), function($v) { return $v !== ''; }));
-        if (!empty($media)) {
+        // Handle media file uploads
+        $mediaUrls = array();
+        if (isset($_FILES['media_files']) && is_array($_FILES['media_files']['name'])) {
+          $folderName = isset($_POST['folder_name']) ? trim($_POST['folder_name']) : 'general';
+          $targetDir = ensure_subdir('event-media/' . $folderName);
+          
+          for ($i = 0; $i < count($_FILES['media_files']['name']); $i++) {
+            if ($_FILES['media_files']['error'][$i] === UPLOAD_ERR_OK) {
+              $name = $_FILES['media_files']['name'][$i];
+              $name = preg_replace('/[^A-Za-z0-9_\-.]/', '_', $name);
+              $target = rtrim($targetDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $name;
+              
+              if (move_uploaded_file($_FILES['media_files']['tmp_name'][$i], $target)) {
+                $mediaUrls[] = '/' . ltrim(str_replace(__DIR__, '', $target), '/');
+              }
+            }
+          }
+        }
+        
+        // Add media URLs to database
+        if (!empty($mediaUrls)) {
           $stmt = $pdo->prepare("INSERT INTO achievement_media (achievement_id, url) VALUES (?, ?)");
-          foreach ($media as $url) {
+          foreach ($mediaUrls as $url) {
             $stmt->execute(array($achievement_id, $url));
           }
         }
+        
         $pdo->commit();
-        $_SESSION['ok'] = 'Achievement added to database';
+        $_SESSION['ok'] = 'Achievement added to database with ' . count($mediaUrls) . ' media files';
       } catch (Exception $e) {
         $pdo->rollBack();
         $_SESSION['err'] = 'Database error: ' . $e->getMessage();
@@ -432,8 +450,9 @@ if ($type === 'ach') {
        . '<label>Description *</label><textarea name="a_desc" rows="4" placeholder="Our team, "EvoBot Crew", secured 1st Runner-Up. We also earned an internship opportunity..." required></textarea>'
        . '<label>Key Skills (Tech Used) *</label><input name="a_tech" type="text" placeholder="AI, Machine Learning, Product Launch Strategy" required />'
        . '<label>Certificate Image (optional)</label><input name="certificate_file" type="file" accept="image/*" />'
-       . '<label>Certificate URL (auto-filled from upload or enter manually)</label><input name="a_cert" type="text" value="' . htmlspecialchars($lastSrc) . '" placeholder="/certificates/certificate.jpg" />'
-       . '<label>Media URLs (comma separated)</label><textarea name="a_media" rows="3" placeholder="/event-media/hackthehive-2025/image1.jpg, /event-media/hackthehive-2025/video1.mp4"></textarea>'
+       . '<input type="hidden" name="a_cert" value="' . htmlspecialchars($lastSrc) . '" />'
+       . '<label>Event Folder Name (for media organization)</label><input name="folder_name" type="text" placeholder="hackthehive-2025" />'
+       . '<label>Gallery Media Files (multiple files allowed)</label><input name="media_files[]" type="file" accept="image/*,video/*" multiple />'
        . '<button type="submit">Save Achievement</button>'
        . '</form>';
     echo '<div style="margin-top:12px"><a href="?type=ach&stage=1" style="display:inline-block;padding:8px 12px;border:1px solid #ddd;border-radius:6px">Add more media or another achievement</a></div>';
