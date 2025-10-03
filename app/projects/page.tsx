@@ -379,7 +379,7 @@ export default function ProjectsPage() {
               Interested in Collaborating?
             </h3>
             <p style={{ marginBottom: '2rem', opacity: '0.9', fontSize: '1.1rem' }}>
-              I'm always excited to work on innovative projects and solve complex problems. Let's create something amazing together!
+              I&apos;m always excited to work on innovative projects and solve complex problems. Let&apos;s create something amazing together!
             </p>
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <a href="mailto:sadhuj2005@gmail.com" style={{
@@ -400,7 +400,7 @@ export default function ProjectsPage() {
                 e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
                 e.currentTarget.style.transform = 'translateY(0)';
               }}>
-                💬 Let's Connect
+                💬 Let&apos;s Connect
               </a>
               <a href="https://www.linkedin.com/in/sadhu-j-3387b228a" target="_blank" rel="noopener noreferrer" style={{
                 background: 'rgba(255,255,255,0.1)',

@@ -1,7 +1,6 @@
 // app/tools/page.tsx
 'use client';
 
-import Image from 'next/image';
 
 export default function ToolsPage() {
   const toolsData = [
@@ -93,7 +92,7 @@ export default function ToolsPage() {
             Development Tools & Utilities
           </h2>
           <p style={{ fontSize: '1.1rem', color: '#e5e7eb', maxWidth: '600px', margin: '0 auto' }}>
-            Collection of practical tools and utilities I've built to streamline development workflows and solve common problems.
+            Collection of practical tools and utilities I&apos;ve built to streamline development workflows and solve common problems.
           </p>
         </div>
 
@@ -288,7 +287,7 @@ export default function ToolsPage() {
             Need a Custom Tool?
           </h3>
           <p style={{ marginBottom: '1.5rem', opacity: '0.9' }}>
-            I'm always building new utilities to solve development challenges. Let me know what tool you need!
+            I&apos;m always building new utilities to solve development challenges. Let me know what tool you need!
           </p>
           <a href="mailto:sadhuj2005@gmail.com" style={{
             background: 'rgba(255,255,255,0.2)',
