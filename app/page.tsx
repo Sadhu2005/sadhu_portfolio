@@ -92,7 +92,7 @@ export default function Home() {
         <h2>Education Background</h2>
         <div className="timeline">
           <div className="timeline-item">
-            <h3>B.E. in Artificial Intelligence and Machine Learning (Present 6<sup>th</sup>Sem)</h3>
+            <h3>B.E. in Artificial Intelligence and Machine Learning (Present 7<sup>th</sup>Sem)</h3>
             <p>Coorg Institute of Technology, Ponnampete Kodagu</p>
             <p>Visvesvaraya Technological University, Belagavi (2022-2026)</p>
           </div>
@@ -139,13 +139,15 @@ export default function Home() {
       
       <section id="skills">
         <h2>Skills</h2>
-        <p><strong>Programming Languages:</strong> Python, C, Java, HTML, CSS, JavaScript.</p>
-        <p><strong> Databases:</strong> MongoDB, SQL</p>
-        <p><strong> Data Visualization:</strong> Power BI, Tableau</p>
-        <p><strong>Software:</strong> MS Excel, Fusion 360, Linux, PyCharm, VSCode, GoogleColab, Jupyter Notebook.</p>
-        <p><strong>Frameworks:</strong> Pandas, NumPy, Matplotlib, OpenCV, TensorFlow, Scikit-learn, TTS, NLP, PyTorch.</p>
-        <p><strong>Hardware & Embedded Systems</strong> Raspberry Pi 5 | Arduino Uno | ESP32 | ESP32-CAM</p>
-        <p><strong>Languages:</strong> English (Fluent), Kannada (Fluent), Hindi (Fluent), Adivasi (Fluent), Tamil (Basic Understanding).</p>
+        <p><strong>Languages:</strong> Python, C, C++, Java, HTML, CSS, JavaScript</p>
+        <p><strong>Frameworks:</strong> TensorFlow, PyTorch, Scikit-Learn, OpenCV</p>
+        <p><strong>DevOps & Cloud:</strong> Docker, Jenkins, Azure DevOps, Microsoft Azure</p>
+        <p><strong>Web/API:</strong> Flask, FastAPI, Postman</p>
+        <p><strong>Data Visualization:</strong> Tableau, Power BI</p>
+        <p><strong>Databases:</strong> MySQL, MongoDB, SQL Server</p>
+        <p><strong>Tools:</strong> Git, VS Code, PyCharm, Jupyter, Colab, n8n, DockerHub, Hostinger Management, Flutter</p>
+        <p><strong>Hardware & Embedded Systems:</strong> Raspberry Pi 5 | Arduino Uno | ESP32 | ESP32-CAM</p>
+        <p><strong>Languages:</strong> English (Fluent), Kannada (Fluent), Hindi (Fluent), Adivasi (Fluent), Tamil (Basic Understanding)</p>
       </section>
 
       <section id="tools">
