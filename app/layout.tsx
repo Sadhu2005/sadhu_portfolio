@@ -34,6 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" style={{scrollPaddingTop: '80px'}}>
+      <head>
+        <link rel="search" type="application/opensearchdescription+xml" title="SadhujDev Search" href="/opensearch.xml" />
+      </head>
       <body className={inter.className}>
         <MouseTrail /> {/* <-- ADD IT HERE */}
         <Navbar />
