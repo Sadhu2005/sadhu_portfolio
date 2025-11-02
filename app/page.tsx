@@ -104,7 +104,7 @@ export default function Home() {
                 <li> <strong>Completed Software Internship at Sitero:</strong> Successfully designed and implemented CI/CD pipelines, deployed Docker containers, and integrated workflows with Azure DevOps for production healthcare AI solutions.</li>
                 <li> <strong>ML Intern at AiRobosoft:</strong> Built OCR models that <strong>improved recognition accuracy by 15%</strong>, leveraging Python, OpenCV, and TensorFlow.</li>
                 <li> <strong>Strong Algorithm Skills:</strong> Solved 50+ problems on LeetCode and GeeksforGeeks, demonstrating proficiency in data structures and algorithms.</li>
-                <li> Built <strong>"FlowMind AI"</strong> autonomous marketing assistant with predictive analytics, NLP insights using Gemini API, and multi-platform integrations (YouTube, Instagram, Facebook, Twitter, GSC).</li>
+                <li> Built <strong>&quot;FlowMind AI&quot;</strong> autonomous marketing assistant with predictive analytics, NLP insights using Gemini API, and multi-platform integrations (YouTube, Instagram, Facebook, Twitter, GSC).</li>
                 <li> Developed <strong>AI-powered fraud detection system</strong> with real-time ML models for risk assessment and anomaly detection.</li>
                 <li> Built <strong>HealthCheckr</strong> website monitoring tool with real-time status dashboard, email alerts, background worker for checking websites, PostgreSQL database, and automated CI/CD pipeline using Jenkins, Docker, and Flask.</li>
             </ul>
