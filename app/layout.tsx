@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Sadhu J - AI & ML Engineer",
-  description: "Dynamic and Motivated B.E Student Majoring in Artificial Intelligence and Machine Learning.",
+  description: "AI & ML Engineer | Computer Vision & NLP Specialist | CI/CD & Docker Expert | 50+ DSA Problems Solved | Actively Seeking Opportunities in Top International Companies",
   icons: {
     icon: [
       // User-provided photo (with space in filename)

@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaLinkedin, FaEnvelope, FaWhatsapp, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { FaLinkedin, FaEnvelope, FaWhatsapp, FaPhoneAlt, FaMapMarkerAlt, FaFileDownload } from "react-icons/fa";
 import { useState, useEffect } from 'react';
 
 const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
@@ -41,9 +41,27 @@ function IntroVideo() {
   );
 }
 
+function ScrollProgressBar() {
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const updateScrollProgress = () => {
+      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (window.scrollY / windowHeight) * 100;
+      setScrollProgress(scrolled);
+    };
+
+    window.addEventListener('scroll', updateScrollProgress);
+    return () => window.removeEventListener('scroll', updateScrollProgress);
+  }, []);
+
+  return <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />;
+}
+
 export default function Home() {
   return (
     <main>
+      <ScrollProgressBar />
       <header style={{ position: 'relative', paddingTop: '32px', paddingBottom: '32px' }}>
         <Image
           src={asset('/certificates/sadu.jpg')}
@@ -55,7 +73,17 @@ export default function Home() {
         />
         <IntroVideo />
         <h1>Sadhu{'\u00A0'}J</h1>
-        <p>Dynamic and Motivated B.E Student Majoring in Artificial Intelligence and Machine Learning.</p>
+        <p>AI & ML Engineer | Building Scalable Solutions with Computer Vision, NLP & CI/CD | 50+ DSA Problems Solved | Seeking Opportunities in Top International Companies</p>
+        <div style={{ marginTop: '20px' }}>
+          <a href="/SadhuJ_Resume.pdf" download="SadhuJ_Resume.pdf" className="button-primary" style={{ 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            gap: '10px',
+            textDecoration: 'none'
+          }}>
+            <FaFileDownload /> Download My Resume
+          </a>
+        </div>
       </header>
 
       <section id="about">
@@ -64,26 +92,24 @@ export default function Home() {
             background: 'linear-gradient(135deg, #1e3c72, #2a5298, #6a3093, #a044ff)',
             color: '#fff',
             padding: '40px',
-            borderRadius: '12px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
             maxWidth: '800px',
             margin: '0 auto'
         }}>
             <h2 style={{ textAlign: 'center', color: '#fff', fontSize: '32px', marginBottom: '20px' }}>About Me</h2>
             <p style={{ fontSize: '18px', lineHeight: 1.8, textAlign: 'justify' }}>
-                <strong>Aspiring AI & ML Engineer | Data Scientist | AI Tool Builder</strong><br /><br />
-                I am a passionate B.E. student specializing in <strong>Artificial Intelligence and Machine Learning</strong>, with a strong focus on
-                <strong> developing intelligent systems and fine-tuning AI models</strong> for real-world applications. Skilled in frameworks like
-                <strong> TensorFlow, OpenCV, Scikit-learn, and Flask</strong>, I’ve successfully built AI models that integrate computer vision,
-                speech recognition, and natural language processing.
+                I am a <strong>passionate AI & ML Engineering student (B.E. 2022-2026)</strong> with a strong foundation in machine learning, computer vision, and natural language processing. 
+                I am committed to building and deploying <strong>impactful AI systems in real-world scenarios</strong>, with proven experience from industry internships and hands-on projects.
             </p>
             <ul style={{ fontSize: '18px', lineHeight: 1.8, marginTop: '20px', paddingLeft: '20px' }}>
-                <li> Developed <strong>“Anu AI”</strong> with vision and voice capabilities for PC and Android.</li>
-                <li> Built <strong>“Choti Anu AI”</strong> for ESP32-CAM with offline face recognition and intelligent conversations.</li>
-                <li> Experienced in supervised, unsupervised, and reinforcement learning models.</li>
+                <li> <strong>Completed Software Internship at Sitero:</strong> Successfully designed and implemented CI/CD pipelines, deployed Docker containers, and integrated workflows with Azure DevOps for production healthcare AI solutions.</li>
+                <li> <strong>ML Intern at AiRobosoft:</strong> Built OCR models that <strong>improved recognition accuracy by 15%</strong>, leveraging Python, OpenCV, and TensorFlow.</li>
+                <li> <strong>Strong Algorithm Skills:</strong> Solved 50+ problems on LeetCode and GeeksforGeeks, demonstrating proficiency in data structures and algorithms.</li>
+                <li> Built <strong>"FlowMind AI"</strong> autonomous marketing assistant with predictive analytics, NLP insights using Gemini API, and multi-platform integrations (YouTube, Instagram, Facebook, Twitter, GSC).</li>
+                <li> Developed <strong>AI-powered fraud detection system</strong> with real-time ML models for risk assessment and anomaly detection.</li>
+                <li> Built <strong>HealthCheckr</strong> website monitoring tool with real-time status dashboard, email alerts, background worker for checking websites, PostgreSQL database, and automated CI/CD pipeline using Jenkins, Docker, and Flask.</li>
             </ul>
             <p style={{ fontSize: '18px', lineHeight: 1.8, marginTop: '20px' }}>
-                <strong>Goal:</strong> To enhance my expertise in <strong>neural networks, reinforcement learning, and AI-driven solutions</strong> while contributing to the evolution of AI technologies.
+                A <strong>quick learner and strong team player</strong>, I am actively seeking opportunities with top international companies to contribute my skills in building and deploying scalable, production-ready AI solutions.
             </p>
         </div>
       </section>
@@ -92,7 +118,7 @@ export default function Home() {
         <h2>Education Background</h2>
         <div className="timeline">
           <div className="timeline-item">
-            <h3>B.E. in Artificial Intelligence and Machine Learning (Present 6<sup>th</sup>Sem)</h3>
+            <h3>B.E. in Artificial Intelligence and Machine Learning (Present 7<sup>th</sup> Semester)</h3>
             <p>Coorg Institute of Technology, Ponnampete Kodagu</p>
             <p>Visvesvaraya Technological University, Belagavi (2022-2026)</p>
           </div>
@@ -112,11 +138,12 @@ export default function Home() {
         <div className="timeline">
           <div className="timeline-item">
             <h3>Software Intern, Sitero. <span style={{ color: 'orange' }}> <b> On-site</b></span></h3>
-            <p>August 2025 - Present</p>
+            <p>August 4, 2024 - November 4, 2024 (3 Months, Stipend-based)</p>
             <ul>
-              <li>Engaged in a comprehensive onboarding process within a dynamic and supportive team environment.</li>
-              <li>Focusing on CI/CD pipelines, utilizing technologies such as Docker, Jenkins, and Azure DevOps.</li>
-              <li>Exploring and implementing AI-driven automation for real-world healthcare solutions.</li>
+              <li>Designed and implemented CI/CD pipelines, utilizing technologies such as Docker, Jenkins, and Azure DevOps for healthcare AI solutions.</li>
+              <li>Deployed Docker containers and integrated workflows with Azure DevOps, contributing directly to production environments.</li>
+              <li>Implemented AI-driven automation and optimization for real-world healthcare applications.</li>
+              <li>Collaborated with cross-functional teams on scalable AI solution deployments.</li>
             </ul>
           </div>
           <div className="timeline-item">
@@ -139,13 +166,17 @@ export default function Home() {
       
       <section id="skills">
         <h2>Skills</h2>
-        <p><strong>Programming Languages:</strong> Python, C, Java, HTML, CSS, JavaScript.</p>
-        <p><strong> Databases:</strong> MongoDB, SQL</p>
-        <p><strong> Data Visualization:</strong> Power BI, Tableau</p>
-        <p><strong>Software:</strong> MS Excel, Fusion 360, Linux, PyCharm, VSCode, GoogleColab, Jupyter Notebook.</p>
-        <p><strong>Frameworks:</strong> Pandas, NumPy, Matplotlib, OpenCV, TensorFlow, Scikit-learn, TTS, NLP, PyTorch.</p>
-        <p><strong>Hardware & Embedded Systems</strong> Raspberry Pi 5 | Arduino Uno | ESP32 | ESP32-CAM</p>
-        <p><strong>Languages:</strong> English (Fluent), Kannada (Fluent), Hindi (Fluent), Adivasi (Fluent), Tamil (Basic Understanding).</p>
+        <p><strong>Programming Languages:</strong> Python, JavaScript, TypeScript, C, Java, HTML, CSS, Dart, Shell Scripting</p>
+        <p><strong>AI/ML Frameworks & Libraries:</strong> TensorFlow, PyTorch, Scikit-learn, OpenCV, Pandas, NumPy, Matplotlib, Seaborn, Prophet, Langchain, Gemini API, TTS, NLP</p>
+        <p><strong>DevOps & Cloud:</strong> Docker, Kubernetes, CI/CD Pipelines, Jenkins, Azure DevOps, GitHub Actions, Git</p>
+        <p><strong>Databases:</strong> MongoDB, SQL, PostgreSQL, Firebase</p>
+        <p><strong>Web Technologies:</strong> Flask, React, Next.js, Node.js, RESTful APIs, GraphQL</p>
+        <p><strong>Mobile & Cross-Platform:</strong> Flutter, React Native</p>
+        <p><strong>Automation & Testing:</strong> Puppeteer, Selenium, n8n, Twilio API, WhatsApp Business API</p>
+        <p><strong>Data Visualization:</strong> Power BI, Tableau, Plotly, Dashboard Design</p>
+        <p><strong>Development Tools:</strong> Linux, PyCharm, VSCode, Google Colab, Jupyter Notebook, MS Excel, Fusion 360</p>
+        <p><strong>Hardware & Embedded Systems:</strong> Raspberry Pi 5, Arduino Uno, ESP32, ESP32-CAM</p>
+        <p><strong>Languages:</strong> English (Fluent), Kannada (Fluent), Hindi (Fluent), Adivasi (Fluent), Tamil (Basic Understanding)</p>
       </section>
 
       <section id="tools">
@@ -218,6 +249,22 @@ export default function Home() {
           <div className="contact-item">
             <FaMapMarkerAlt className="contact-icon" />
             <span>Kadumane Estate, Hassan, Karnataka</span>
+          </div>
+          <div className="contact-item" style={{ 
+            marginTop: '20px', 
+            padding: '15px', 
+            backgroundColor: 'rgba(189, 24, 204, 0.1)', 
+            borderRadius: '8px',
+            border: '2px solid var(--primary)' 
+          }}>
+            <FaFileDownload className="contact-icon" />
+            <a href="/SadhuJ_Resume.pdf" download="SadhuJ_Resume.pdf" style={{ 
+              fontSize: '1.1rem', 
+              fontWeight: 'bold',
+              color: '#bd18cc'
+            }}>
+              📄 Download My Resume
+            </a>
           </div>
         </div>
       </section>
