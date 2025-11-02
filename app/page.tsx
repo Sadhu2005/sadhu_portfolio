@@ -138,7 +138,7 @@ export default function Home() {
         <div className="timeline">
           <div className="timeline-item">
             <h3>Software Intern, Sitero. <span style={{ color: 'orange' }}> <b> On-site</b></span></h3>
-            <p>August 4, 2024 - November 4, 2024 (3 Months, Stipend-based)</p>
+            <p>August 4, 2025 - November 4, 2025 (3 Months, Stipend-based)</p>
             <ul>
               <li>Designed and implemented CI/CD pipelines, utilizing technologies such as Docker, Jenkins, and Azure DevOps for healthcare AI solutions.</li>
               <li>Deployed Docker containers and integrated workflows with Azure DevOps, contributing directly to production environments.</li>
