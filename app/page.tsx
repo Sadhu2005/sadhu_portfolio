@@ -4,42 +4,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaLinkedin, FaEnvelope, FaWhatsapp, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
-import { useState, useEffect } from 'react';
 
 const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
-
-function IntroVideo() {
-  const [videoData, setVideoData] = useState({ src: '/video/VID_20250326_191540.mp4', poster: '/video/VID_20250326_191540.mp4' });
-
-  useEffect(() => {
-    const loadVideo = async () => {
-      try {
-        const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
-        const res = await fetch(`${prefix}/api/intro-video.php`, { cache: 'no-store' });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.src) setVideoData(data);
-        }
-      } catch {
-        // keep default
-      }
-    };
-    loadVideo();
-  }, []);
-
-  return (
-    <video
-      className="profile-video"
-      controls
-      width="320"
-      poster={asset(videoData.poster)}
-      style={{ position: 'absolute', top: '150px', right: '16px', borderRadius: '12px' }}
-    >
-      <source src={asset(videoData.src)} type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
-  );
-}
 
 export default function Home() {
   return (
@@ -53,9 +19,8 @@ export default function Home() {
           height={180}
           style={{ objectFit: 'cover', borderRadius: '50%' }}
         />
-        <IntroVideo />
         <h1>Sadhu{'\u00A0'}J</h1>
-        <p>Dynamic and Motivated B.E Student Majoring in Artificial Intelligence and Machine Learning.</p>
+        <p>AI & ML engineering student and Android developer building cloud-powered mobile experiences.</p>
       </header>
 
       <section id="about">
@@ -71,19 +36,19 @@ export default function Home() {
         }}>
             <h2 style={{ textAlign: 'center', color: '#fff', fontSize: '32px', marginBottom: '20px' }}>About Me</h2>
             <p style={{ fontSize: '18px', lineHeight: 1.8, textAlign: 'justify' }}>
-                <strong>Aspiring AI & ML Engineer | Data Scientist | AI Tool Builder</strong><br /><br />
-                I am a passionate B.E. student specializing in <strong>Artificial Intelligence and Machine Learning</strong>, with a strong focus on
-                <strong> developing intelligent systems and fine-tuning AI models</strong> for real-world applications. Skilled in frameworks like
-                <strong> TensorFlow, OpenCV, Scikit-learn, and Flask</strong>, I’ve successfully built AI models that integrate computer vision,
-                speech recognition, and natural language processing.
+                <strong>Aspiring AI & ML Engineer | Android Developer | Cloud Enthusiast</strong><br /><br />
+                I am an 8<sup>th</sup> semester B.E. student in <strong>Artificial Intelligence and Machine Learning</strong>, currently working as an
+                <strong> Android Developer Intern at ODEE</strong>, a fast-paced edtech startup. I enjoy building end-to-end products that combine
+                <strong> machine learning, cloud services, and modern mobile development</strong> to solve real-world problems.
             </p>
             <ul style={{ fontSize: '18px', lineHeight: 1.8, marginTop: '20px', paddingLeft: '20px' }}>
-                <li> Developed <strong>“Anu AI”</strong> with vision and voice capabilities for PC and Android.</li>
-                <li> Built <strong>“Choti Anu AI”</strong> for ESP32-CAM with offline face recognition and intelligent conversations.</li>
-                <li> Experienced in supervised, unsupervised, and reinforcement learning models.</li>
+                <li>Hands-on experience with <strong>Kotlin, Jetpack Compose, Flutter, Firebase, Supabase</strong> and app testing through <strong>Google Play Console</strong>.</li>
+                <li>Comfortable working with <strong>TensorFlow, PyTorch, OpenCV</strong> and deploying ML-powered features backed by <strong>Azure</strong> and <strong>GCP</strong>.</li>
+                <li>Thrives in startup-style environments with daily planning, fast iterations, and close collaboration with cross-functional teams.</li>
             </ul>
             <p style={{ fontSize: '18px', lineHeight: 1.8, marginTop: '20px' }}>
-                <strong>Goal:</strong> To enhance my expertise in <strong>neural networks, reinforcement learning, and AI-driven solutions</strong> while contributing to the evolution of AI technologies.
+                <strong>Goal:</strong> To grow as an <strong>AI-driven Android engineer</strong>, building reliable, scalable products that blend
+                <strong> machine learning, cloud, and mobile experiences</strong> for users at scale.
             </p>
         </div>
       </section>
@@ -92,7 +57,7 @@ export default function Home() {
         <h2>Education Background</h2>
         <div className="timeline">
           <div className="timeline-item">
-            <h3>B.E. in Artificial Intelligence and Machine Learning (Present 7<sup>th</sup>Sem)</h3>
+            <h3>B.E. in Artificial Intelligence and Machine Learning (Present 8<sup>th</sup> Sem)</h3>
             <p>Coorg Institute of Technology, Ponnampete Kodagu</p>
             <p>Visvesvaraya Technological University, Belagavi (2022-2026)</p>
           </div>
@@ -110,6 +75,16 @@ export default function Home() {
       <section id="experience">
         <h2>Professional Experience</h2>
         <div className="timeline">
+          <div className="timeline-item">
+            <h3>Android Developer Intern, ODEE <span style={{ color: 'orange' }}> <b> Hybrid</b></span></h3>
+            <p>Jan 2026 - Present · Bengaluru, Karnataka, India</p>
+            <ul>
+              <li>Interning at ODEE, a fast-paced edtech startup building an AI-driven student platform.</li>
+              <li>Working in a startup culture with daily planning, rapid iterations, and close collaboration with US-based leadership.</li>
+              <li>Developing Android applications using Kotlin and Jetpack Compose.</li>
+              <li>Integrating backend services and authentication using Supabase.</li>
+            </ul>
+          </div>
           <div className="timeline-item">
             <h3>Software Intern, Sitero. <span style={{ color: 'orange' }}> <b> On-site</b></span></h3>
             <p>August 2025 - Present</p>
@@ -139,13 +114,14 @@ export default function Home() {
       
       <section id="skills">
         <h2>Skills</h2>
-        <p><strong>Languages:</strong> Python, C, C++, Java, HTML, CSS, JavaScript</p>
-        <p><strong>Frameworks:</strong> TensorFlow, PyTorch, Scikit-Learn, OpenCV</p>
-        <p><strong>DevOps & Cloud:</strong> Docker, Jenkins, Azure DevOps, Microsoft Azure</p>
-        <p><strong>Web/API:</strong> Flask, FastAPI, Postman</p>
+        <p><strong>Programming Languages:</strong> Python, C, C++, Java, Kotlin, HTML, CSS, JavaScript</p>
+        <p><strong>AI & ML Frameworks:</strong> TensorFlow, PyTorch, Scikit-Learn, OpenCV</p>
+        <p><strong>Mobile Development:</strong> Kotlin, Jetpack Compose, Android SDK, Android Studio, Flutter</p>
+        <p><strong>DevOps & Cloud:</strong> Docker, Jenkins, Azure DevOps, Microsoft Azure, Google Cloud Platform (GCP)</p>
+        <p><strong>Web/API & Backend:</strong> Flask, FastAPI, Supabase, REST APIs, Postman, Firebase</p>
         <p><strong>Data Visualization:</strong> Tableau, Power BI</p>
         <p><strong>Databases:</strong> MySQL, MongoDB, SQL Server</p>
-        <p><strong>Tools:</strong> Git, VS Code, PyCharm, Jupyter, Colab, n8n, DockerHub, Hostinger Management, Flutter</p>
+        <p><strong>Tools & App Testing:</strong> Git, VS Code, PyCharm, Jupyter, Colab, n8n, DockerHub, Hostinger Management, Android Studio, Firebase, Google Play Console (release & testing)</p>
         <p><strong>Hardware & Embedded Systems:</strong> Raspberry Pi 5 | Arduino Uno | ESP32 | ESP32-CAM</p>
         <p><strong>Languages:</strong> English (Fluent), Kannada (Fluent), Hindi (Fluent), Adivasi (Fluent), Tamil (Basic Understanding)</p>
       </section>
