@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaLinkedin, FaEnvelope, FaWhatsapp, FaPhoneAlt, FaMapMarkerAlt, FaFileDownload } from "react-icons/fa";
 import { useState, useEffect } from 'react';
+import RevealSection from '@/components/RevealSection';
 
 const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
 
@@ -25,6 +26,13 @@ function ScrollProgressBar() {
   return <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />;
 }
 export default function Home() {
+  const [scrollY, setScrollY] = useState(0);
+  useEffect(() => {
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <main>
       <ScrollProgressBar />
@@ -39,7 +47,7 @@ export default function Home() {
         />
         <h1>Sadhu{'\u00A0'}J</h1>
         <p>AI & ML Engineering Student & Android Developer Intern | Building Cloud-Powered Apps with Computer Vision, NLP & CI/CD | Open to Global Opportunities</p>
-        <div style={{ marginTop: '20px' }}>
+        <div className="hero-cta" style={{ marginTop: '20px' }}>
           <a href="/SadhuJ_Resume.pdf" download="SadhuJ_Resume.pdf" className="button-primary" style={{ 
             display: 'inline-flex', 
             alignItems: 'center', 
@@ -49,9 +57,18 @@ export default function Home() {
             <FaFileDownload /> Download My Resume
           </a>
         </div>
+        <div
+          className="hero-scroll-cue"
+          style={{ opacity: scrollY > 80 ? 0 : 1, pointerEvents: scrollY > 80 ? 'none' : 'auto' }}
+          aria-hidden
+        >
+          <span>Scroll</span>
+          <span className="hero-scroll-cue-chevron">&#9660;</span>
+        </div>
       </header>
 
       <section id="about">
+        <RevealSection>
         <div className="about-me-card" style={{
             fontFamily: 'Arial, sans-serif',
             background: 'linear-gradient(135deg, #1e3c72, #2a5298, #6a3093, #a044ff)',
@@ -77,9 +94,11 @@ export default function Home() {
                 <strong> machine learning, cloud, and mobile experiences</strong> for users at scale.
             </p>
         </div>
+        </RevealSection>
       </section>
 
       <section id="education">
+        <RevealSection>
         <h2>Education Background</h2>
         <div className="timeline">
           <div className="timeline-item">
@@ -96,9 +115,11 @@ export default function Home() {
             <p>Government high School Kantharajapura {'\u00A0'} (2014-2020)<br /> Channarayapatna Hassan Karnataka</p>
           </div>
         </div>
+        </RevealSection>
       </section>
 
       <section id="experience">
+        <RevealSection>
         <h2>Professional Experience</h2>
         <div className="timeline">
           <div className="timeline-item">
@@ -137,9 +158,11 @@ export default function Home() {
             </ul>
           </div>
         </div>
+        </RevealSection>
       </section>
       
       <section id="skills">
+        <RevealSection>
         <h2>Skills</h2>
         <p><strong>Programming Languages:</strong> Python, C, C++, Java, Kotlin, HTML, CSS, JavaScript</p>
         <p><strong>AI & ML Frameworks:</strong> TensorFlow, PyTorch, Scikit-Learn, OpenCV</p>
@@ -151,9 +174,11 @@ export default function Home() {
         <p><strong>Tools & App Testing:</strong> Git, VS Code, PyCharm, Jupyter, Colab, n8n, DockerHub, Hostinger Management, Android Studio, Firebase, Google Play Console (release & testing)</p>
         <p><strong>Hardware & Embedded Systems:</strong> Raspberry Pi 5 | Arduino Uno | ESP32 | ESP32-CAM</p>
         <p><strong>Languages:</strong> English (Fluent), Kannada (Fluent), Hindi (Fluent), Adivasi (Fluent), Tamil (Basic Understanding)</p>
+        </RevealSection>
       </section>
 
       <section id="tools">
+        <RevealSection>
         <h2>My Tools</h2>
         <p style={{textAlign: 'center', maxWidth: '600px', margin: '0 auto 2rem auto'}}>
           I enjoy building small utilities and tools to solve problems and improve workflows. Check out the full list of tools I have developed.
@@ -163,9 +188,11 @@ export default function Home() {
             View All Tools
           </Link>
         </div>
+        </RevealSection>
       </section>
 
       <section id="projects">
+        <RevealSection>
         <h2>Projects</h2>
         <p style={{textAlign: 'center', maxWidth: '600px', margin: '0 auto 2rem auto'}}>
           From AI assistants to IoT devices, I love bringing ideas to life. My projects section contains detailed case studies of my work.
@@ -175,9 +202,11 @@ export default function Home() {
             View All Projects
           </Link>
         </div>
+        </RevealSection>
       </section>
 
       <section id="achievements-preview">
+        <RevealSection>
         <h2>Achievements</h2>
         <p style={{textAlign: 'center', maxWidth: '600px', margin: '0 auto 2rem auto'}}>
           I actively participate in hackathons and coding competitions to challenge myself and build innovative solutions. Click the button below to see a full list of my technical event participation and outcomes.
@@ -187,9 +216,11 @@ export default function Home() {
             View All Competitions & Hackathons
           </Link>
         </div>
+        </RevealSection>
       </section>
 
       <section id="certifications">
+        <RevealSection>
         <h2>Certifications</h2>
         <p style={{textAlign: 'center', maxWidth: '600px', margin: '0 auto 2rem auto'}}>
           I am committed to continuous learning and have earned numerous certifications across AI, Machine Learning, and software development to validate my skills.
@@ -199,9 +230,11 @@ export default function Home() {
             View All Certifications
           </Link>
         </div>
+        </RevealSection>
       </section>
 
       <section id="contact">
+        <RevealSection>
         <h2>Contact Information</h2>
         <div className="contact-container">
           <div className="contact-item">
@@ -241,6 +274,7 @@ export default function Home() {
             </a>
           </div>
         </div>
+        </RevealSection>
       </section>
     </main>
   );

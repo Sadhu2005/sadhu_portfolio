@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import RevealSection from '@/components/RevealSection';
 
 function Lightbox({ src, onClose }: { src: string | null; onClose: () => void }) {
   if (!src) return null;
@@ -175,6 +176,7 @@ export default function ProjectsPage() {
     <>
       <main>
         <section id="projects-page" style={{ paddingTop: '100px' }}>
+          <RevealSection>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', background: 'linear-gradient(135deg, #2563eb 0%, #8b5cf6 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               Featured Projects
@@ -191,13 +193,14 @@ export default function ProjectsPage() {
             padding: '0 1rem'
           }}>
             {projectsData.map((project, index) => (
-              <div key={index} style={{
+              <div key={index} className="reveal-card" style={{
                 background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
                 borderRadius: '20px',
                 padding: '2rem',
                 boxShadow: '0 15px 35px rgba(0,0,0,0.3)',
                 border: '1px solid #374151',
-                transition: 'all 0.3s ease',
+                transition: 'opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease',
+                transitionDelay: `${index * 0.08}s`,
                 position: 'relative',
                 overflow: 'hidden'
               }}
@@ -476,6 +479,7 @@ export default function ProjectsPage() {
               </a>
             </div>
           </div>
+          </RevealSection>
         </section>
       </main>
       <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
