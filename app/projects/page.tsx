@@ -92,6 +92,58 @@ export default function ProjectsPage() {
       impact: "Smart Home Integration",
       team: "Solo Project",
       icon: "🏠"
+    },
+    {
+      title: "FlowMind AI - Autonomous Marketing Assistant",
+      description: "AI-driven autonomous marketing platform built for HackAbhigna 2025. Features predictive analytics (Prophet), NLP insights with Gemini API, CI/CD pipelines, Docker deployment, and integrations with YouTube, Twitter, Instagram, Facebook, and Google Search Console. Built with Python, Flask, React, and Langchain.",
+      projectLink: "https://github.com/Sadhu2005/Team_FlowMind_AI_project",
+      technologies: ["Python", "Flask", "React", "Langchain", "Prophet", "Gemini API"],
+      status: "Completed",
+      stage: "Hackathon Finalist",
+      progress: 100,
+      category: "AI Analytics",
+      impact: "Marketing Automation",
+      team: "Hackathon Team",
+      icon: "🤖"
+    },
+    {
+      title: "WhatsApp Auto - Automation Tool",
+      description: "Intelligent automation system for WhatsApp that processes resumes and streamlines communication workflows. Built with Node.js, Puppeteer, and automation frameworks.",
+      projectLink: "https://github.com/Sadhu2005/whatsapp_auto",
+      technologies: ["Node.js", "Puppeteer", "Automation", "Twilio API"],
+      status: "In Progress",
+      stage: "Automation Features",
+      progress: 80,
+      category: "Automation Tool",
+      impact: "Recruitment Efficiency",
+      team: "Solo Project",
+      icon: "💬"
+    },
+    {
+      title: "HealthCheckr - Website Monitoring Tool",
+      description: "Full-stack containerized application for monitoring website uptime and performance. Features real-time status dashboard, dynamic website management, email alerts on status changes, background Python worker, PostgreSQL database, and complete CI/CD pipeline with Jenkins.",
+      projectLink: "https://github.com/Sadhu2005/HealthCheckr",
+      technologies: ["Python", "Flask", "PostgreSQL", "Docker", "Jenkins"],
+      status: "Completed",
+      stage: "Stable Release",
+      progress: 100,
+      category: "DevOps & Monitoring",
+      impact: "Site Reliability",
+      team: "Solo Project",
+      icon: "❤️"
+    },
+    {
+      title: "GenZFlow - CI/CD Platform",
+      description: "Modern CI/CD platform designed for Gen Z developers, featuring seamless workflow management, automated deployment pipelines, and GitHub Actions integration.",
+      projectLink: "https://github.com/Sadhu2005/GenZFlow",
+      technologies: ["React", "Node.js", "MongoDB", "GitHub Actions"],
+      status: "In Progress",
+      stage: "CI/CD Enhancements",
+      progress: 70,
+      category: "DevOps Platform",
+      impact: "Developer Productivity",
+      team: "2 Members",
+      icon: "🛠️"
     }
   ];
 

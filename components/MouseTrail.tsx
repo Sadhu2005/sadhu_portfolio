@@ -24,7 +24,7 @@ export default function MouseTrail() {
       body?.appendChild(dot);
 
       // Animate out after a short delay so initial render is visible
-      const lifeMs = 1600 + Math.random() * 900; // 1.6s - 2.5s
+      const lifeMs = 800 + Math.random() * 400; // 0.8s - 1.2s (reduced by 50%)
       setTimeout(() => {
         dot.style.opacity = '0';
         dot.style.transform = 'translate(-50%, -50%) scale(4.5)';
@@ -46,7 +46,7 @@ export default function MouseTrail() {
       const dx = x - lastX;
       const dy = y - lastY;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      const steps = Math.min(8, Math.max(2, Math.floor(dist / 12))); // 2-8 dots depending on speed
+      const steps = Math.min(4, Math.max(1, Math.floor(dist / 24))); // 1-4 dots depending on speed (reduced by 50%)
       for (let i = 1; i <= steps; i++) {
         const t = i / steps;
         spawnDot(lastX + dx * t, lastY + dy * t);

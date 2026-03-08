@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Sadhu J - AI & ML Engineer",
-  description: "Dynamic and Motivated B.E Student Majoring in Artificial Intelligence and Machine Learning.",
+  description: "AI & ML Engineering student and Android developer intern building cloud-powered applications with computer vision, NLP, and CI/CD, open to global opportunities.",
   icons: {
     icon: [
       // User-provided photo (with space in filename)
@@ -34,6 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" style={{scrollPaddingTop: '80px'}}>
+      <head>
+        <link rel="search" type="application/opensearchdescription+xml" title="SadhujDev Search" href="/opensearch.xml" />
+      </head>
       <body className={inter.className}>
         <MouseTrail /> {/* <-- ADD IT HERE */}
         <Navbar />

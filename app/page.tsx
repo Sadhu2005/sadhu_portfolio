@@ -3,13 +3,31 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaLinkedin, FaEnvelope, FaWhatsapp, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { FaLinkedin, FaEnvelope, FaWhatsapp, FaPhoneAlt, FaMapMarkerAlt, FaFileDownload } from "react-icons/fa";
+import { useState, useEffect } from 'react';
 
 const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
 
+function ScrollProgressBar() {
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const updateScrollProgress = () => {
+      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (window.scrollY / windowHeight) * 100;
+      setScrollProgress(scrolled);
+    };
+
+    window.addEventListener('scroll', updateScrollProgress);
+    return () => window.removeEventListener('scroll', updateScrollProgress);
+  }, []);
+
+  return <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />;
+}
 export default function Home() {
   return (
     <main>
+      <ScrollProgressBar />
       <header style={{ position: 'relative', paddingTop: '32px', paddingBottom: '32px' }}>
         <Image
           src={asset('/certificates/sadu.jpg')}
@@ -20,7 +38,17 @@ export default function Home() {
           style={{ objectFit: 'cover', borderRadius: '50%' }}
         />
         <h1>Sadhu{'\u00A0'}J</h1>
-        <p>AI & ML engineering student and Android developer building cloud-powered mobile experiences.</p>
+        <p>AI & ML Engineering Student & Android Developer Intern | Building Cloud-Powered Apps with Computer Vision, NLP & CI/CD | Open to Global Opportunities</p>
+        <div style={{ marginTop: '20px' }}>
+          <a href="/SadhuJ_Resume.pdf" download="SadhuJ_Resume.pdf" className="button-primary" style={{ 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            gap: '10px',
+            textDecoration: 'none'
+          }}>
+            <FaFileDownload /> Download My Resume
+          </a>
+        </div>
       </header>
 
       <section id="about">
@@ -29,8 +57,6 @@ export default function Home() {
             background: 'linear-gradient(135deg, #1e3c72, #2a5298, #6a3093, #a044ff)',
             color: '#fff',
             padding: '40px',
-            borderRadius: '12px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
             maxWidth: '800px',
             margin: '0 auto'
         }}>
@@ -87,11 +113,12 @@ export default function Home() {
           </div>
           <div className="timeline-item">
             <h3>Software Intern, Sitero. <span style={{ color: 'orange' }}> <b> On-site</b></span></h3>
-            <p>August 2025 - Present</p>
+            <p>August 4, 2025 - November 4, 2025 (3 Months, Stipend-based)</p>
             <ul>
-              <li>Engaged in a comprehensive onboarding process within a dynamic and supportive team environment.</li>
-              <li>Focusing on CI/CD pipelines, utilizing technologies such as Docker, Jenkins, and Azure DevOps.</li>
-              <li>Exploring and implementing AI-driven automation for real-world healthcare solutions.</li>
+              <li>Designed and implemented CI/CD pipelines, utilizing technologies such as Docker, Jenkins, and Azure DevOps for healthcare AI solutions.</li>
+              <li>Deployed Docker containers and integrated workflows with Azure DevOps, contributing directly to production environments.</li>
+              <li>Implemented AI-driven automation and optimization for real-world healthcare applications.</li>
+              <li>Collaborated with cross-functional teams on scalable AI solution deployments.</li>
             </ul>
           </div>
           <div className="timeline-item">
@@ -196,6 +223,22 @@ export default function Home() {
           <div className="contact-item">
             <FaMapMarkerAlt className="contact-icon" />
             <span>Kadumane Estate, Hassan, Karnataka</span>
+          </div>
+          <div className="contact-item" style={{ 
+            marginTop: '20px', 
+            padding: '15px', 
+            backgroundColor: 'rgba(189, 24, 204, 0.1)', 
+            borderRadius: '8px',
+            border: '2px solid var(--primary)' 
+          }}>
+            <FaFileDownload className="contact-icon" />
+            <a href="/SadhuJ_Resume.pdf" download="SadhuJ_Resume.pdf" style={{ 
+              fontSize: '1.1rem', 
+              fontWeight: 'bold',
+              color: '#bd18cc'
+            }}>
+              📄 Download My Resume
+            </a>
           </div>
         </div>
       </section>

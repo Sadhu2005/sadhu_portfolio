@@ -1,7 +1,6 @@
 // app/tools/page.tsx
 'use client';
 
-
 export default function ToolsPage() {
   const toolsData = [
     {
@@ -63,6 +62,46 @@ export default function ToolsPage() {
       icon: "🔐",
       demoLink: "#",
       githubLink: "#"
+    },
+    {
+      title: "WhatsApp Resume Processor",
+      description: "Automated WhatsApp bot for processing resumes and streamlining recruitment workflows. Built with Node.js, Puppeteer, and Twilio API.",
+      features: ["Resume Processing", "WhatsApp Integration", "Automation", "Twilio API"],
+      status: "Completed",
+      category: "Automation Tool",
+      icon: "💬",
+      demoLink: "https://github.com/Sadhu2005/whatsapp_auto",
+      githubLink: "https://github.com/Sadhu2005/whatsapp_auto"
+    },
+    {
+      title: "FlowMind Analytics Dashboard",
+      description: "Real-time marketing analytics dashboard with AI-powered insights, predictive analytics, and multi-platform integration (YouTube, Instagram, Facebook, Twitter, GSC).",
+      features: ["Real-time Analytics", "Predictive Insights", "Multi-platform Integration", "AI-powered Dashboards"],
+      status: "Completed",
+      category: "AI Analytics Tool",
+      icon: "📊",
+      demoLink: "https://github.com/Sadhu2005/Team_FlowMind_AI_project",
+      githubLink: "https://github.com/Sadhu2005/Team_FlowMind_AI_project"
+    },
+    {
+      title: "Fraud Detection API",
+      description: "RESTful API for real-time fraud detection using machine learning models. Provides instant risk assessment and anomaly detection.",
+      features: ["Real-time Detection", "Risk Scoring", "RESTful API", "Anomaly Detection"],
+      status: "Completed",
+      category: "ML API",
+      icon: "🛡️",
+      demoLink: "https://github.com/Sadhu2005/AI-Powered-Fraud-Detection-System",
+      githubLink: "https://github.com/Sadhu2005/AI-Powered-Fraud-Detection-System"
+    },
+    {
+      title: "HealthCheckr - Website Monitoring Tool",
+      description: "Website uptime and performance monitoring application with real-time status dashboard, email alerts, dynamic website management, and automated CI/CD pipeline using Jenkins. Built with Python, Flask, PostgreSQL, Docker, and Docker Compose.",
+      features: ["Uptime Monitoring", "Email Alerts", "CI/CD Pipeline", "Dockerized Deployment"],
+      status: "Completed",
+      category: "DevOps Tool",
+      icon: "❤️",
+      demoLink: "https://github.com/Sadhu2005/HealthCheckr",
+      githubLink: "https://github.com/Sadhu2005/HealthCheckr"
     }
   ];
 
