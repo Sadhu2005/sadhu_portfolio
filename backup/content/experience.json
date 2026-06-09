@@ -1,0 +1,46 @@
+[
+  {
+    "title": "Android Developer Intern, ODEE",
+    "location": "Bengaluru, Karnataka, India",
+    "period": "Jan 2026 - Present",
+    "mode": "Hybrid",
+    "bullets": [
+      "Interning at ODEE, a fast-paced edtech startup building an AI-driven student platform.",
+      "Working in a startup culture with daily planning, rapid iterations, and close collaboration with US-based leadership.",
+      "Developing Android applications using Kotlin and Jetpack Compose.",
+      "Integrating backend services and authentication using Supabase."
+    ]
+  },
+  {
+    "title": "Software Intern, Sitero.",
+    "location": "",
+    "period": "August 4, 2025 - November 4, 2025 (3 Months, Stipend-based)",
+    "mode": "On-site",
+    "bullets": [
+      "Designed and implemented CI/CD pipelines, utilizing technologies such as Docker, Jenkins, and Azure DevOps for healthcare AI solutions.",
+      "Deployed Docker containers and integrated workflows with Azure DevOps, contributing directly to production environments.",
+      "Implemented AI-driven automation and optimization for real-world healthcare applications.",
+      "Collaborated with cross-functional teams on scalable AI solution deployments."
+    ]
+  },
+  {
+    "title": "Machine Learning Intern, AiRobosoft.",
+    "location": "",
+    "period": "April 2024 - May 2024",
+    "mode": "On-site",
+    "bullets": [
+      "Developed machine learning models using Python and OpenCV for OCR projects and conducted Python training sessions for new trainees.",
+      "Collaborated on task-based projects and participated in career development sessions, enhancing both technical and soft skills."
+    ]
+  },
+  {
+    "title": "Internships",
+    "location": "",
+    "period": "",
+    "mode": "",
+    "bullets": [
+      "Artificial Intelligence And Machine Learning, Kodacy (Oct 2023 - Nov 2023). Online",
+      "Data Science And Machine Learning, YBI Foundation (Feb 2024). Online"
+    ]
+  }
+]

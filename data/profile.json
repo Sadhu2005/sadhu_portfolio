@@ -1,0 +1,21 @@
+{
+  "name": "Sadhu J",
+  "tagline": "AI & ML Engineering Student & Android Developer Intern | Building Cloud-Powered Apps with Computer Vision, NLP & CI/CD | Open to Global Opportunities",
+  "photo": "/certificates/sadu.jpg",
+  "about": {
+    "headline": "Aspiring AI & ML Engineer | Android Developer | Cloud Enthusiast",
+    "paragraphs": [
+      "I am an 8th semester B.E. student in Artificial Intelligence and Machine Learning, currently working as an Android Developer Intern at ODEE, a fast-paced edtech startup. I enjoy building end-to-end products that combine machine learning, cloud services, and modern mobile development to solve real-world problems."
+    ],
+    "highlights": [
+      "Hands-on experience with Kotlin, Jetpack Compose, Flutter, Firebase, Supabase and app testing through Google Play Console.",
+      "Comfortable working with TensorFlow, PyTorch, OpenCV and deploying ML-powered features backed by Azure and GCP.",
+      "Thrives in startup-style environments with daily planning, fast iterations, and close collaboration with cross-functional teams."
+    ],
+    "goal": "To grow as an AI-driven Android engineer, building reliable, scalable products that blend machine learning, cloud, and mobile experiences for users at scale."
+  },
+  "introVideo": {
+    "src": "/video/VID_20250326_191540.mp4",
+    "poster": "/certificates/sadu.jpg"
+  }
+}

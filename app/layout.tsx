@@ -1,29 +1,22 @@
-// app/layout.tsx
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
-import MouseTrail from "@/components/MouseTrail"; // <-- IMPORT IT
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import Navbar from '@/components/Navbar';
+import AuraBackground from '@/components/AuraBackground';
+import MouseTrail from '@/components/MouseTrail';
+import { site, contact } from '@/lib/data';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Sadhu J - AI & ML Engineer",
-  description: "AI & ML Engineering student and Android developer intern building cloud-powered applications with computer vision, NLP, and CI/CD, open to global opportunities.",
+  title: site.title,
+  description: site.description,
   icons: {
     icon: [
-      // User-provided photo (with space in filename)
-      { url: "/Sadhu J.png" },
-      // Place your photo at public/profile-favicon.png (preferred)
-      { url: "/profile-favicon.png" },
-      // Fallbacks
-      { url: "/favicon.png" },
-      { url: "/favicon.ico" },
+      { url: '/favicon.png' },
+      { url: '/favicon.ico' },
     ],
-    apple: [
-      // Optional iOS home screen icon; place at public/apple-touch-icon.png
-      { url: "/apple-touch-icon.png" },
-    ],
+    apple: [{ url: '/apple-touch-icon.png' }],
   },
 };
 
@@ -33,17 +26,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" style={{scrollPaddingTop: '80px'}}>
-      <head>
-        <link rel="search" type="application/opensearchdescription+xml" title="SadhujDev Search" href="/opensearch.xml" />
-      </head>
+    <html lang="en" style={{ scrollPaddingTop: '80px' }}>
       <body className={inter.className}>
-        <MouseTrail /> {/* <-- ADD IT HERE */}
+        <AuraBackground />
+        <MouseTrail />
         <Navbar />
         {children}
-        <footer>
-          <p>GitHub: <a href="https://github.com/Sadhu2005" target="_blank" rel="noopener noreferrer">Sadhu2005</a></p>
-          <p>© 2025 Sadhu J. All rights reserved.</p>
+        <footer className="site-footer">
+          <p>
+            GitHub:{' '}
+            <a href={contact.github} target="_blank" rel="noopener noreferrer">
+              {contact.githubLabel}
+            </a>
+          </p>
+          <p>{site.copyright}</p>
         </footer>
       </body>
     </html>

@@ -1,6 +1,16 @@
+@import './aura.css';
+@import './animations.css';
+
  /* Modern Color Scheme */
  :root {
-    --primary: #2563eb;
+    --aura-bg: #0a0a0f;
+    --aura-primary: #8b5cf6;
+    --aura-secondary: #06b6d4;
+    --aura-glow: rgba(139, 92, 246, 0.35);
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --snap-section-height: 100dvh;
+    --text-muted: #9ca3af;
+    --primary: #8b5cf6;
     --primary-dark: #1d4ed8;
     --secondary: #4f46e5;
     --accent: #8b5cf6;
@@ -25,10 +35,31 @@
 }
 
 body {
-    background: var(--dark);
+    background: var(--aura-bg);
     color: var(--text-light);
     line-height: 1.6;
     overflow-x: hidden;
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+.lightbox-nav--prev { left: 16px; }
+.lightbox-nav--next { right: 16px; }
+
+.navbar--transparent {
+  background: transparent !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Custom Scrollbar */

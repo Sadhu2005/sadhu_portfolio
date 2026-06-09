@@ -1,0 +1,42 @@
+[
+  {
+    "title": "WhatsApp Resume Processor",
+    "description": "Automated WhatsApp bot for processing resumes and streamlining recruitment workflows. Built with Node.js, Puppeteer, and Twilio API.",
+    "features": ["Resume Processing", "WhatsApp Integration", "Automation", "Twilio API"],
+    "status": "Completed",
+    "category": "Automation Tool",
+    "icon": "💬",
+    "demoLink": "https://github.com/Sadhu2005/whatsapp_auto",
+    "githubLink": "https://github.com/Sadhu2005/whatsapp_auto"
+  },
+  {
+    "title": "FlowMind Analytics Dashboard",
+    "description": "Real-time marketing analytics dashboard with AI-powered insights, predictive analytics, and multi-platform integration.",
+    "features": ["Real-time Analytics", "Predictive Insights", "Multi-platform Integration", "AI-powered Dashboards"],
+    "status": "Completed",
+    "category": "AI Analytics Tool",
+    "icon": "📊",
+    "demoLink": "https://github.com/Sadhu2005/Team_FlowMind_AI_project",
+    "githubLink": "https://github.com/Sadhu2005/Team_FlowMind_AI_project"
+  },
+  {
+    "title": "Fraud Detection API",
+    "description": "RESTful API for real-time fraud detection using machine learning models. Provides instant risk assessment and anomaly detection.",
+    "features": ["Real-time Detection", "Risk Scoring", "RESTful API", "Anomaly Detection"],
+    "status": "Completed",
+    "category": "ML API",
+    "icon": "🛡️",
+    "demoLink": "https://github.com/Sadhu2005/AI-Powered-Fraud-Detection-System",
+    "githubLink": "https://github.com/Sadhu2005/AI-Powered-Fraud-Detection-System"
+  },
+  {
+    "title": "HealthCheckr - Website Monitoring Tool",
+    "description": "Website uptime and performance monitoring with real-time dashboard, email alerts, and automated CI/CD pipeline using Jenkins.",
+    "features": ["Uptime Monitoring", "Email Alerts", "CI/CD Pipeline", "Dockerized Deployment"],
+    "status": "Completed",
+    "category": "DevOps Tool",
+    "icon": "❤️",
+    "demoLink": "https://github.com/Sadhu2005/HealthCheckr",
+    "githubLink": "https://github.com/Sadhu2005/HealthCheckr"
+  }
+]

@@ -1,0 +1,12 @@
+[
+  { "category": "Programming Languages", "items": "Python, C, C++, Java, Kotlin, HTML, CSS, JavaScript" },
+  { "category": "AI & ML Frameworks", "items": "TensorFlow, PyTorch, Scikit-Learn, OpenCV" },
+  { "category": "Mobile Development", "items": "Kotlin, Jetpack Compose, Android SDK, Android Studio, Flutter" },
+  { "category": "DevOps & Cloud", "items": "Docker, Jenkins, Azure DevOps, Microsoft Azure, Google Cloud Platform (GCP)" },
+  { "category": "Web/API & Backend", "items": "Flask, FastAPI, Supabase, REST APIs, Postman, Firebase" },
+  { "category": "Data Visualization", "items": "Tableau, Power BI" },
+  { "category": "Databases", "items": "MySQL, MongoDB, SQL Server" },
+  { "category": "Tools & App Testing", "items": "Git, VS Code, PyCharm, Jupyter, Colab, n8n, DockerHub, Hostinger Management, Android Studio, Firebase, Google Play Console (release & testing)" },
+  { "category": "Hardware & Embedded Systems", "items": "Raspberry Pi 5 | Arduino Uno | ESP32 | ESP32-CAM" },
+  { "category": "Languages", "items": "English (Fluent), Kannada (Fluent), Hindi (Fluent), Adivasi (Fluent), Tamil (Basic Understanding)" }
+]

@@ -1,0 +1,29 @@
+{
+  "backupDate": "2026-06-09",
+  "gitBranch": "backup/pre-migration-2026-06-09",
+  "sources": [
+    "app/page.tsx",
+    "app/projects/page.tsx",
+    "app/tools/page.tsx",
+    "app/achievements/page.tsx",
+    "app/certifications/page.tsx",
+    "app/layout.tsx",
+    "public/data/*.json",
+    "public/api/*.php",
+    "public/admin.php"
+  ],
+  "counts": {
+    "achievements": 8,
+    "certificates": 37,
+    "projects": 9,
+    "tools": 10,
+    "education": 3,
+    "experience": 4,
+    "skills": 10
+  },
+  "notes": {
+    "apiSnapshots": "Live API fetch failed (SSL/TLS). Fallback arrays used as source of truth.",
+    "mysqlDump": "Manual export from Hostinger phpMyAdmin recommended — not available locally.",
+    "media": "Media files on Hostinger server — download via SFTP to backup/media/ before migration."
+  }
+}

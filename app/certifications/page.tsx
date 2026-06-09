@@ -1,199 +1,67 @@
-// app/certifications/page.tsx
-'use client'; // This makes the page interactive
+'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import Image from 'next/image';
-
-// This is the Lightbox pop-up component
-const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
-
-function Lightbox({ items, index, onClose, onChange }: { items: string[]; index: number; onClose: () => void; onChange: (nextIndex: number) => void }) {
-  if (!items.length) return null;
-  const src = items[index];
-
-  return (
-    <div className="lightbox-overlay" onClick={onClose}>
-      <span className="lightbox-close" onClick={onClose}>&times;</span>
-      <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-        <Image src={asset(src)} alt="Certificate Preview" width={1200} height={800} style={{ objectFit: 'contain', maxWidth: '90vw', maxHeight: '80vh', width: 'auto', height: 'auto', borderRadius: '8px' }} />
-        {items.length > 1 && (
-          <>
-            <button aria-label="Previous" onClick={() => onChange((index - 1 + items.length) % items.length)} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '4px', padding: '8px 12px', cursor: 'pointer' }}>{'‹'}</button>
-            <button aria-label="Next" onClick={() => onChange((index + 1) % items.length)} style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '4px', padding: '8px 12px', cursor: 'pointer' }}>{'›'}</button>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-
-
-type Cert = { src: string; alt: string; desc: string; caption?: string };
+import { motion } from 'framer-motion';
+import PageTransition from '@/components/PageTransition';
+import Lightbox from '@/components/Lightbox';
+import { certificates } from '@/lib/data';
+import { asset } from '@/lib/utils';
 
 export default function CertificationsPage() {
-  // Fallback array (used if JSON manifest missing)
-  const fallback: Cert[] = [
-    { src: "/certificates/cr35.jpg", alt: "LLM, Agentic Ai & More: Career Guidance", desc: "LLM, Agentic Ai & More: Career Guidance" },
-    { src: "/certificates/cr34.jpg", alt: "CoachEd AI Bootcamp", desc: "CoachEd AI Bootcamp" },
-    { src: "/event-media/hackthehive-2025/hackthehive10.jpg", alt: "HackTheHive Hackathon", desc: "HackTheHive Hackathon 1st Runner up" },
-    { src: "/event-media/hackthehive-2025/hackthehive11.jpg", alt: "HackTheHive Hackathon", desc: "HackTheHive Hackathon" },
-    { src: "/certificates/cr33.jpg", alt: "SYMBIOT-2025 2nd Runner up", desc: "SYMBIOT-2025 2nd Runner up" },
-    { src: "/certificates/cr32.jpg", alt: "SYMBIOT-2025 Participation", desc: "SYMBIOT-2025 Participation" },
-    { src: "/certificates/cr31.jpg", alt: "Project OMEGA 2025 Hackathon", desc: "Project OMEGA 2025 - 24h National-Level Hackathon" },
-    { src: "/certificates/cr30.jpg", alt: "CODE IGNITER 2025", desc: "CODE IGNITER 2025 8th National Level Coding Competition" },
-    { src: "/certificates/cr29.jpg", alt: "TCS TechBytes", desc: "TCS TechBytes (An inter-College Quiz On IT)" },
-    { src: "/certificates/cr28.jpg", alt: "Weekly Coding Challenge 20", desc: "Weekly Coding Challenge 20 (Unstop)" },
-    { src: "/certificates/cr27.jpg", alt: "Unstop Talent Park 2025", desc: "Unstop Talent Park 2025 (Round 1)" },
-    { src: "/certificates/cr26.jpg", alt: "Infosys Springboard", desc: "Advanced solutions in Go- Testing and Distributed Systems" },
-    { src: "/certificates/cr25.jpg", alt: "E- Minds Hackathon", desc: "E- Minds Hackathon (28h) GSSS" },
-    { src: "/certificates/cr24.jpg", alt: "Mini Project Expo", desc: "Mini Project Expo (3rd Place) GSSS" },
-    { src: "/certificates/cr23.jpg", alt: "Kaggle", desc: "Python Coder (Kaggle)" },
-    { src: "/certificates/cr22.jpg", alt: "HP Power Lab", desc: "HP Power Lab by HP (Round 1)" },
-    { src: "/certificates/cr21.png", alt: "Software Engineering Fundamentals", desc: "Software Engineering Fundamentals" },
-    { src: "/certificates/cr20.jpg", alt: "Flipkart GRiD 6.0", desc: "E-Commerce & Tech Quiz (Flipkart GRiD 6.0)" },
-    { src: "/certificates/cr19.jpg", alt: "Code IGNITER 2023", desc: "Code IGNITER 2023 (GSSS)" },
-    { src: "/certificates/cr18.jpg", alt: "Great Learning", desc: "Speech Recognition in AI (Great Learning)" },
-    { src: "/certificates/cr17.jpg", alt: "MongoDB", desc: "Introduction To MongoDB" },
-    { src: "/certificates/cr16.jpg", alt: "Python Debugging", desc: "Programming Debugging Competition (Python)" },
-    { src: "/certificates/cr15.jpg", alt: "CoachEd", desc: "Programming, Soft Skill & Power Skill (CoachEd)" },
-    { src: "/certificates/cr14.jpg", alt: "AWS Summit India 2024", desc: "AWS Summit India 2024" },
-    { src: "/certificates/cr13.jpg", alt: "AiROBOSOFT", desc: "AI&ML Internship @AiROBOSOFT (Onsite)" },
-    { src: "/certificates/cr12.jpg", alt: "Great Learning", desc: "Introduction to Neural Networks and Deep Learning" },
-    { src: "/certificates/cr11.jpg", alt: "YBI Foundation", desc: "Fundamentals in Big data and Cloud Computing" },
-    { src: "/certificates/cr10.jpg", alt: "YBI Foundation", desc: "Fashion Clothing Classification Modelling" },
-    { src: "/certificates/cr9.jpg", alt: "YBI Foundation", desc: "Data Science and Machine Learning Internship (2 Weeks)" },
-    { src: "/certificates/cr8.jpg", alt: "Great Learning", desc: "Arduino vs Raspberry Pi (Great Learning)" },
-    { src: "/certificates/cr7.jpg", alt: "Great Learning", desc: "Machine Learning Algorithms (Great Learning)" },
-    { src: "/certificates/cr6.jpg", alt: "Great Learning", desc: "Generative AI for Beginners (Great Learning)" },
-    { src: "/certificates/cr5.jpg", alt: "Crion Versity", desc: "Data skills 3 Days Challenge (Crion Versity)" },
-    { src: "/certificates/cr4.jpg", alt: "Codedamn", desc: "Linear Algebra for Machine Learning (Codedamn)" },
-    { src: "/certificates/cr3.jpg", alt: "be10X", desc: "be10X 1 Day AI Tools Workshop" },
-    { src: "/certificates/cr2.jpg", alt: "Udemy", desc: "Applied Ethical Hacking and Rules of Engagement (Udemy)" },
-    { src: "/certificates/cr1.jpg", alt: "Kodacy", desc: "30 Day Virtual Internship Kodacy (AI &ML)" },
-  ];
+  const [lightboxItems, setLightboxItems] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
-  // const [certificates, setCertificates] = useState<Cert[]>(fallback);
-  const [dynamicCertificates, setDynamicCertificates] = useState<Cert[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const load = async () => {
-      try {
-        const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
-        
-        // Load dynamic certificates from MySQL API
-        const apiUrl = `${prefix}/api/certificates.php`;
-        console.log('Trying to fetch from:', apiUrl);
-        const apiRes = await fetch(apiUrl, { signal: controller.signal, cache: 'no-store' });
-        if (apiRes.ok) {
-          const data: Cert[] = await apiRes.json();
-          if (Array.isArray(data) && data.length > 0) {
-            setDynamicCertificates(data);
-            console.log('Loaded dynamic certificates:', data);
-            return; // Success, don't try JSON fallback
-          }
-        } else {
-          console.log('API response not ok:', apiRes.status, apiRes.statusText);
-          console.log('API URL was:', apiUrl);
-        }
-        
-        // Fallback to JSON for dynamic data
-        const res = await fetch(`${prefix}/data/certificates.json`, { signal: controller.signal, cache: 'no-store' });
-        if (res.ok) {
-          const data: Cert[] = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            setDynamicCertificates(data);
-          }
-        }
-      } catch (error) {
-        console.log('Error loading dynamic certificates:', error);
-        // Keep dynamic certificates empty, static fallback will still work
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    load();
-    return () => controller.abort();
+  const openAt = useCallback((idx: number) => {
+    setLightboxItems(certificates.map((c) => c.src));
+    setLightboxIndex(idx);
   }, []);
 
-  // Combine dynamic certificates first, then static fallback (dedupe by src)
-  const allCertificates = (() => {
-    const seen = new Set<string>();
-    const addUnique = (list: Cert[]) =>
-      list.filter((c) => {
-        const key = (c.src || '').toLowerCase();
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
-    return [...addUnique(dynamicCertificates), ...addUnique(fallback)];
-  })();
-
-  // Lightbox carousel state
-  const [lightboxItems, setLightboxItems] = useState<string[]>([]);
-  const [lightboxIndex, setLightboxIndex] = useState<number>(0);
-  const openAt = useCallback((idx: number) => {
-    setLightboxItems(allCertificates.map(c => c.src));
-    setLightboxIndex(idx);
-  }, [allCertificates]);
-  
-  // Debug logging
-  console.log('Static certificates (fallback):', fallback.length);
-  console.log('Dynamic certificates:', dynamicCertificates.length);
-  console.log('Total certificates:', allCertificates.length);
-  console.log('All certificates data:', allCertificates);
-
   return (
-    <>
+    <PageTransition>
       <main>
-        <section id="certifications-page" style={{ paddingTop: '100px' }}>
-          <h2>My Certifications</h2>
-          {isLoading && <p>Loading certificates...</p>}
-          <div className="certifications-grid">
-            {allCertificates.map((cert, index) => {
-              return (
-                <div 
-                  key={index} 
-                  className="gallery" 
-                  onClick={() => openAt(index)} 
-                  style={{ 
-                    cursor: 'pointer',
-                    border: '1px solid #ccc',
-                    position: 'relative'
-                  }}
-                >
-                  {/* NEW badge removed per request */}
-                <Image 
-                  src={asset(cert.src)} 
-                  alt={cert.alt} 
-                  width={400} 
-                  height={300} 
-                  style={{ objectFit: 'cover', width: '100%', height: 'auto' }} 
-                />
-                <div className="desc">
-                  {cert.caption ? (
-                    <>
-                      <div style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '4px', fontFamily: 'inherit' }}>
-                        {cert.caption}
-                      </div>
-                      <div style={{ fontSize: '0.9em', color: 'var(--text-light)', fontFamily: 'inherit' }}>
-                        {cert.desc}
-                      </div>
-                    </>
-                  ) : (
-                    <div style={{ fontFamily: 'inherit' }}>{cert.desc}</div>
-                  )}
-                </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+        <div className="page-hero">
+          <motion.h1 className="text-gradient" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>Certifications</motion.h1>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+            {certificates.length} credentials across AI, ML, and software development.
+          </motion.p>
+        </div>
+
+        <div className="certifications-grid" style={{ padding: '0 5% 4rem' }}>
+          {certificates.map((cert, index) => (
+            <motion.div
+              key={cert.src}
+              className="gallery glass-card"
+              onClick={() => openAt(index)}
+              style={{ cursor: 'pointer', overflow: 'hidden' }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ delay: (index % 6) * 0.05 }}
+              whileHover={{ scale: 1.02 }}
+            >
+              <Image
+                src={asset(cert.src)}
+                alt={cert.alt}
+                width={400}
+                height={300}
+                style={{ objectFit: 'cover', width: '100%', height: 'auto' }}
+              />
+              <div className="desc" style={{ padding: '1rem' }}>
+                {cert.caption ? (
+                  <>
+                    <div style={{ fontWeight: 'bold', color: 'var(--aura-primary)', marginBottom: '4px' }}>{cert.caption}</div>
+                    <div style={{ fontSize: '0.9em', color: 'var(--text-muted)' }}>{cert.desc}</div>
+                  </>
+                ) : (
+                  <div>{cert.desc}</div>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </main>
-      
-      {/* This renders the lightbox when a certificate is clicked */}
       <Lightbox items={lightboxItems} index={lightboxIndex} onClose={() => setLightboxItems([])} onChange={setLightboxIndex} />
-    </>
+    </PageTransition>
   );
 }

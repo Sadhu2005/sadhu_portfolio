@@ -1,0 +1,102 @@
+[
+  {
+    "title": "Code Optimizer Pro",
+    "description": "A lightweight utility that analyzes and optimizes Python code performance.",
+    "features": ["Code Analysis", "Performance Metrics", "Optimization Suggestions", "Lightweight"],
+    "status": "Completed",
+    "category": "Development Utility",
+    "icon": "⚡",
+    "demoLink": "#",
+    "githubLink": "#"
+  },
+  {
+    "title": "API Response Validator",
+    "description": "Quick testing tool for validating API responses.",
+    "features": ["JSON Validation", "Status Code Check", "Response Time", "Batch Testing"],
+    "status": "Completed",
+    "category": "Testing Tool",
+    "icon": "🔍",
+    "demoLink": "#",
+    "githubLink": "#"
+  },
+  {
+    "title": "Database Query Builder",
+    "description": "Visual query builder for complex database operations.",
+    "features": ["Visual Builder", "Multi-DB Support", "Query Optimization", "Syntax Highlighting"],
+    "status": "In Progress",
+    "category": "Database Tool",
+    "icon": "🗄️",
+    "demoLink": "#",
+    "githubLink": "#"
+  },
+  {
+    "title": "Text Summarizer AI",
+    "description": "AI-powered text summarization tool that extracts key points from long documents.",
+    "features": ["AI Summarization", "Multiple Languages", "Custom Length", "Export Options"],
+    "status": "Adding Features",
+    "category": "AI Utility",
+    "icon": "📝",
+    "demoLink": "#",
+    "githubLink": "#"
+  },
+  {
+    "title": "Image Format Converter",
+    "description": "Batch image converter supporting 20+ formats.",
+    "features": ["20+ Formats", "Batch Processing", "Compression", "Watermarking"],
+    "status": "Completed",
+    "category": "Media Tool",
+    "icon": "🖼️",
+    "demoLink": "#",
+    "githubLink": "#"
+  },
+  {
+    "title": "Password Generator Pro",
+    "description": "Secure password generator with customizable complexity rules.",
+    "features": ["Custom Rules", "Strength Checker", "Memorable Options", "Secure Storage"],
+    "status": "Completed",
+    "category": "Security Tool",
+    "icon": "🔐",
+    "demoLink": "#",
+    "githubLink": "#"
+  },
+  {
+    "title": "WhatsApp Resume Processor",
+    "description": "Automated WhatsApp bot for processing resumes and streamlining recruitment workflows.",
+    "features": ["Resume Processing", "WhatsApp Integration", "Automation", "Twilio API"],
+    "status": "Completed",
+    "category": "Automation Tool",
+    "icon": "💬",
+    "demoLink": "https://github.com/Sadhu2005/whatsapp_auto",
+    "githubLink": "https://github.com/Sadhu2005/whatsapp_auto"
+  },
+  {
+    "title": "FlowMind Analytics Dashboard",
+    "description": "Real-time marketing analytics dashboard with AI-powered insights.",
+    "features": ["Real-time Analytics", "Predictive Insights", "Multi-platform Integration", "AI-powered Dashboards"],
+    "status": "Completed",
+    "category": "AI Analytics Tool",
+    "icon": "📊",
+    "demoLink": "https://github.com/Sadhu2005/Team_FlowMind_AI_project",
+    "githubLink": "https://github.com/Sadhu2005/Team_FlowMind_AI_project"
+  },
+  {
+    "title": "Fraud Detection API",
+    "description": "RESTful API for real-time fraud detection using machine learning models.",
+    "features": ["Real-time Detection", "Risk Scoring", "RESTful API", "Anomaly Detection"],
+    "status": "Completed",
+    "category": "ML API",
+    "icon": "🛡️",
+    "demoLink": "https://github.com/Sadhu2005/AI-Powered-Fraud-Detection-System",
+    "githubLink": "https://github.com/Sadhu2005/AI-Powered-Fraud-Detection-System"
+  },
+  {
+    "title": "HealthCheckr - Website Monitoring Tool",
+    "description": "Website uptime and performance monitoring application with real-time status dashboard.",
+    "features": ["Uptime Monitoring", "Email Alerts", "CI/CD Pipeline", "Dockerized Deployment"],
+    "status": "Completed",
+    "category": "DevOps Tool",
+    "icon": "❤️",
+    "demoLink": "https://github.com/Sadhu2005/HealthCheckr",
+    "githubLink": "https://github.com/Sadhu2005/HealthCheckr"
+  }
+]

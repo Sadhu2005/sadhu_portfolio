@@ -1,327 +1,80 @@
-// app/achievements/page.tsx
-'use client'; 
-import { useState, useRef, useEffect } from 'react';
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
-
-const asset = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${p}`;
-
-function Lightbox({ items, index, onClose, onChange }: { items: string[]; index: number; onClose: () => void; onChange: (nextIndex: number) => void }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const src = items[index];
-
-  useEffect(() => {
-    const videoElement = videoRef.current;
-    return () => {
-      if (videoElement) {
-        videoElement.pause();
-      }
-    };
-  }, [index]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowRight') onChange((index + 1) % items.length);
-      if (e.key === 'ArrowLeft') onChange((index - 1 + items.length) % items.length);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [index, items.length, onClose, onChange]);
-
-  if (!items.length) return null;
-
-  return (
-    <div className="lightbox-overlay" onClick={onClose}>
-      <span className="lightbox-close" onClick={onClose}>&times;</span>
-      <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-        {src.endsWith('.mp4') ? (
-          <video ref={videoRef} src={asset(src)} controls autoPlay muted loop style={{ maxWidth: '90vw', maxHeight: '80vh', borderRadius: '8px' }} />
-        ) : (
-          <Image src={asset(src)} alt="Lightbox content" width={1200} height={800} style={{ objectFit: 'contain', maxWidth: '90vw', maxHeight: '80vh', width: 'auto', height: 'auto', borderRadius: '8px' }} />
-        )}
-        {items.length > 1 && (
-          <>
-            <button aria-label="Previous" onClick={() => onChange((index - 1 + items.length) % items.length)} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '4px', padding: '8px 12px', cursor: 'pointer' }}>{'‹'}</button>
-            <button aria-label="Next" onClick={() => onChange((index + 1) % items.length)} style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '4px', padding: '8px 12px', cursor: 'pointer' }}>{'›'}</button>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-
-type Achievement = {
-  eventName: string;
-  date: string;
-  outcome: string;
-  description: string;
-  techUsed: string;
-  certificateUrl: string;
-  media: string[];
-};
+import { motion } from 'framer-motion';
+import PageTransition from '@/components/PageTransition';
+import Lightbox from '@/components/Lightbox';
+import ReelCard from '@/components/ReelCard';
+import { achievements } from '@/lib/data';
+import { asset } from '@/lib/utils';
+import { staggerContainer } from '@/lib/motion';
 
 export default function AchievementsPage() {
   const [lightboxItems, setLightboxItems] = useState<string[]>([]);
-  const [lightboxIndex, setLightboxIndex] = useState<number>(0);
-
-  const fallback: Achievement[] = [
-    {
-      eventName: "HackTheHive Hackathon",
-      date: "May 2025",
-      outcome: "1st Runner-Up & Internship Opportunity",
-      description: "Our team, “EvoBot Crew”, secured 1st Runner-Up. We also earned an internship opportunity and a chance to launch our project with expert mentorship and potential investment.",
-      techUsed: "AI, Machine Learning, Product Launch Strategy",
-      certificateUrl: "/event-media/hackthehive-2025/hackthehive10.jpg",
-      media: [
-        "/event-media/hackthehive-2025/hackthehive1.jpg",
-        "/event-media/hackthehive-2025/hackthehive2.jpg",
-        "/event-media/hackthehive-2025/hackthehive3.jpg",
-        "/event-media/hackthehive-2025/hackthehive4.jpg",
-        "/event-media/hackthehive-2025/hackthehive5.jpg",
-        "/event-media/hackthehive-2025/hackthehive6.jpg",
-        "/event-media/hackthehive-2025/hackthehive7.jpg",
-        "/event-media/hackthehive-2025/hackthehive8.jpg",
-        "/event-media/hackthehive-2025/hackthehive9.jpg",
-      ]
-    },
-    {
-      eventName: "SYMBIOT 2025 - National Level Hackathon",
-      date: "May 2025",
-      outcome: "2nd Runner-Up",
-      description: "Thrilled to announce that our team secured 2nd Runner-Up. As the Team Leader of the D.A.A 5.2 Humanoid Robot project, this was the second time we showcased our robot outside—and both times, I got placed!",
-      techUsed: "Raspberry Pi 5, Robotics, Hardware, Team Leadership",
-      certificateUrl: "/certificates/cr33.jpg",
-      media: [
-        "/event-media/symbiot-2025/symbiot1.jpg",
-        "/event-media/symbiot-2025/symbiot2.jpg",
-        "/event-media/symbiot-2025/symbiot3.jpg",
-        "/event-media/symbiot-2025/symbiot4.jpg",
-        "/event-media/symbiot-2025/symbiot5.jpg",
-        "/event-media/symbiot-2025/symbiot6.jpg",
-        "/event-media/symbiot-2025/symbiot7.jpg",
-        "/event-media/symbiot-2025/symbiot1.mp4",
-      ]
-    },
-    {
-      eventName: "Project Omega 2025 - Code for Enlightenment",
-      date: "April 2025",
-      outcome: "Shortlisted Participant",
-      description: "Proud to have led Team “CITians”. Within the time limit, we built VisionGuard: AI-based Density & Movement Detection — “Prevent the Panic, Protect the People.”",
-      techUsed: "AI, Density Detection, Movement Detection",
-      certificateUrl: "/certificates/cr31.jpg",
-      media: [
-        "/event-media/project-omega/project-omega1.jpg",
-        "/event-media/project-omega/project-omega2.jpg",
-        "/event-media/project-omega/project-omega3.jpg",
-        "/event-media/project-omega/project-omega1.mp4",
-        "/event-media/project-omega/project-omega2.mp4",
-        "/event-media/project-omega/project-omega3.mp4",
-      ]
-    },
-    {
-      eventName: "CODE IGNITER 2025",
-      date: "April 2025",
-      outcome: "Participant",
-      description: "Participated in the 8th National Level Coding Competition. The “CODE HUNT” event was fun, exciting, and a great learning experience.",
-      techUsed: "Competitive Programming, Problem Solving",
-      certificateUrl: "/certificates/cr30.jpg",
-      media: [
-        "/event-media/Code-Igniter-2025/code-igniter1.jpg",
-        "/event-media/Code-Igniter-2025/code-igniter2.jpg",
-        "/event-media/Code-Igniter-2025/code-igniter3.jpg",
-        "/event-media/Code-Igniter-2025/code-igniter4.jpg",
-
-      ]
-    },
-    {
-      eventName: "TCS TechBytes 2025",
-      date: "March 2025",
-      outcome: "Participant",
-      description: "Participated in an inter-college IT quiz. Though out of my comfort zone, it was a great learning experience.",
-      techUsed: "IT General Knowledge",
-      certificateUrl: "/certificates/cr29.jpg",
-      media: [
-        "/event-media/tcs-techbytes-2025/tcs1.jpg",
-      ]
-    },
-    {
-      eventName: "E-MINDS Hackathon",
-      date: "December 2024",
-      outcome: "Participant",
-      description: "Had an incredible experience participating in this 28-hour National Level Hackathon. We learned so much from this challenge, from teamwork to innovation.",
-      techUsed: "Teamwork, Innovation, Project Development",
-      certificateUrl: "/certificates/cr25.jpg",
-      media: [
-        "/event-media/e-minds-2024/e-minds1.jpg",
-        "/event-media/e-minds-2024/e-minds2.jpg",
-        "/event-media/e-minds-2024/e-minds3.jpg",
-        "/event-media/e-minds-2024/e-minds4.jpg",
-        "/event-media/e-minds-2024/e-minds5.jpg",
-      ]
-    },
-    {
-      eventName: "Micro-Vision - Big Ideas in Small Projects",
-      date: "December 2024",
-      outcome: "Third Place",
-      description: "Thrilled to share that we secured Third place in the state-level event. This was a proud moment as we showcased our D.A.A 5.2 Robot for the first time.",
-      techUsed: "Robotics, Project Presentation, CSE/IEEE",
-      certificateUrl: "/certificates/cr24.jpg",
-      media: [
-        "/event-media/micro-vision-2024/micro-vision1.jpg",
-        "/event-media/micro-vision-2024/micro-vision2.jpg",
-        "/event-media/micro-vision-2024/micro-vision3.jpg",
-        "/event-media/micro-vision-2024/micro-vision4.jpg",
-        "/event-media/micro-vision-2024/micro-vision5.jpg",
-      ]
-    },
-    {
-      eventName: "UTKARSH 2.0: Mini-project Exhibition",
-      date: "July 2024",
-      outcome: "First Place",
-      description: "Awarded First Place for our outstanding project on Robot 5.2 at the mini-project exhibition organized by the Department of Artificial Intelligence and Machine Learning at Coorg Institute of Technology.",
-      techUsed: "Robotics, Hardware Integration",
-      certificateUrl: "/certificates/placeholder.png",
-      media: [
-        "/event-media/utkarsh-2024/utkarsh1.jpg",
-        "/event-media/utkarsh-2024/utkarsh2.jpg",
-        "/event-media/utkarsh-2024/utkarsh3.jpg",
-        "/event-media/utkarsh-2024/utkarsh4.jpg",
-      ]
-    },
-  ];
-
-  // const [achievementsData, setAchievementsData] = useState<Achievement[]>(fallback);
-  const [dynamicAchievements, setDynamicAchievements] = useState<Achievement[]>([]);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const load = async () => {
-      try {
-        const prefix = process.env.NEXT_PUBLIC_BASE_PATH || '';
-        
-        // Load dynamic achievements from MySQL API
-        const apiRes = await fetch(`${prefix}/api/achievements.php`, { signal: controller.signal, cache: 'no-store' });
-        if (apiRes.ok) {
-          const response = await apiRes.json();
-          console.log('API Response:', response);
-          
-          // Handle both direct array and wrapped response formats
-          let data: Achievement[] = [];
-          if (Array.isArray(response)) {
-            data = response;
-          } else if (response.achievements && Array.isArray(response.achievements)) {
-            data = response.achievements;
-          }
-          
-          if (data.length > 0) {
-            setDynamicAchievements(data);
-            console.log('Loaded dynamic achievements:', data);
-          }
-        } else {
-          console.log('API response not ok:', apiRes.status, apiRes.statusText);
-        }
-        
-        // Also try JSON fallback for dynamic data
-        const res = await fetch(`${prefix}/data/achievements.json`, { signal: controller.signal, cache: 'no-store' });
-        if (res.ok) {
-          const data: Achievement[] = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            setDynamicAchievements(data);
-          }
-        }
-      } catch (error) {
-        console.log('Error loading dynamic achievements:', error);
-      }
-    };
-    load();
-    return () => controller.abort();
-  }, []);
-
-  // Combine dynamic achievements first, then static fallback (dedupe by unique ID)
-  const allAchievements = (() => {
-    const seen = new Set<string>();
-    const keyOf = (a: Achievement) => {
-      // Use ID if available, otherwise use eventName+date+outcome for uniqueness
-      if ('id' in a && a.id) return `id_${a.id}`;
-      return `${(a.eventName||'').toLowerCase()}__${(a.date||'').toLowerCase()}__${(a.outcome||'').toLowerCase()}`;
-    };
-    const addUnique = (list: Achievement[]) =>
-      list.filter((a) => {
-        const key = keyOf(a);
-        if (seen.has(key)) {
-          console.log('Deduplicating achievement:', a.eventName, 'with key:', key);
-          return false;
-        }
-        seen.add(key);
-        return true;
-      });
-    const result = [...addUnique(dynamicAchievements), ...addUnique(fallback)];
-    console.log('Final achievements count:', result.length);
-    console.log('Dynamic achievements count:', dynamicAchievements.length);
-    console.log('Fallback achievements count:', fallback.length);
-    return result;
-  })();
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   return (
-    <>
+    <PageTransition>
       <main>
-        <section id="achievements" style={{ paddingTop: '100px' }}>
-          <h2>Competitions & Hackathons</h2>
-          <div className="achievements-container">
-            {allAchievements.map((event, index) => {
-              // Visual parity; remove NEW badge and special border
-              // const isDynamic = false;
-              return (
-                <div 
-                  key={index} 
-                  className="achievement-card"
-                  style={{
-                    border: '1px solid var(--border)',
-                    position: 'relative'
-                  }}
+        <div className="page-hero">
+          <motion.h1 className="text-gradient" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>Competitions & Hackathons</motion.h1>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+            Technical events, hackathons, and competition outcomes.
+          </motion.p>
+        </div>
+
+        <motion.div className="achievements-container" variants={staggerContainer} initial="hidden" animate="visible" style={{ padding: '0 5% 4rem' }}>
+          {achievements.map((event, index) => (
+            <ReelCard key={event.eventName} delay={index * 0.08} className="achievement-card" style={{ padding: '1.5rem' }}>
+              <div className="achievement-header">
+                <h3 style={{ color: 'var(--aura-primary)' }}>{event.eventName}</h3>
+                <p className="achievement-date">{event.date}</p>
+              </div>
+              <div className="achievement-body">
+                <p className="achievement-outcome"><strong>Outcome:</strong> {event.outcome}</p>
+                <p className="achievement-description" style={{ color: 'var(--text-muted)' }}>{event.description}</p>
+                <p className="achievement-tech"><strong>Key Skills:</strong> {event.techUsed}</p>
+                <button
+                  type="button"
+                  className="button-aura"
+                  style={{ marginTop: '1rem', fontSize: '0.9rem' }}
+                  onClick={() => { setLightboxItems([event.certificateUrl, ...event.media]); setLightboxIndex(0); }}
                 >
-                  {/* NEW badge removed per request */}
-                <div className="achievement-header">
-                  <h3>{event.eventName}</h3>
-                  <p className="achievement-date">{event.date}</p>
-                </div>
-                <div className="achievement-body">
-                  <p className="achievement-outcome"><strong>Outcome:</strong> {event.outcome}</p>
-                  <p className="achievement-description">{event.description}</p>
-                  <p className="achievement-tech"><strong>Key Skills:</strong> {event.techUsed}</p>
-                  
-                  <span onClick={() => { setLightboxItems([event.certificateUrl, ...event.media]); setLightboxIndex(0); }} className="achievement-link" style={{ cursor: 'pointer' }}>
-                    View Certificate
-                  </span>
-                  
-                  {event.media.length > 0 && (
-                    <div className="achievement-media">
-                      <h4>Event Gallery</h4>
-                      <div className="media-scroller">
-                        {event.media.map((mediaUrl, mediaIndex) => (
-                          <div key={mediaIndex} className="media-item" onClick={() => { setLightboxItems(event.media); setLightboxIndex(mediaIndex); }} style={{ cursor: 'pointer' }}>
-                            {mediaUrl.endsWith('.mp4') ? (
-                              <div className="video-thumbnail-wrapper">
-                                <video src={mediaUrl} muted loop playsInline title={`Video from ${event.eventName}`} />
-                                <div className="play-icon">▶</div>
-                              </div>
-                            ) : (
-                              <Image src={mediaUrl} alt={`${event.eventName} media ${mediaIndex + 1}`} width={200} height={150} style={{ objectFit: 'cover' }} />
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                  View Certificate
+                </button>
+                {event.media.length > 0 && (
+                  <div className="achievement-media">
+                    <h4>Event Gallery</h4>
+                    <div className="media-scroller">
+                      {event.media.map((mediaUrl, mediaIndex) => (
+                        <div
+                          key={mediaUrl}
+                          className="media-item"
+                          onClick={() => { setLightboxItems(event.media); setLightboxIndex(mediaIndex); }}
+                          style={{ cursor: 'pointer' }}
+                          role="button"
+                          tabIndex={0}
+                        >
+                          {mediaUrl.endsWith('.mp4') ? (
+                            <div className="video-thumbnail-wrapper">
+                              <video src={asset(mediaUrl)} muted loop playsInline />
+                              <div className="play-icon">▶</div>
+                            </div>
+                          ) : (
+                            <Image src={asset(mediaUrl)} alt={`${event.eventName} media ${mediaIndex + 1}`} width={200} height={150} style={{ objectFit: 'cover' }} />
+                          )}
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+                  </div>
+                )}
+              </div>
+            </ReelCard>
+          ))}
+        </motion.div>
       </main>
-      <Lightbox items={lightboxItems} index={lightboxIndex} onClose={() => { setLightboxItems([]); }} onChange={(i) => setLightboxIndex(i)} />
-    </>
+      <Lightbox items={lightboxItems} index={lightboxIndex} onClose={() => setLightboxItems([])} onChange={setLightboxIndex} />
+    </PageTransition>
   );
 }

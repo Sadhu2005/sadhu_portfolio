@@ -5,6 +5,9 @@ import { useEffect } from 'react';
 
 export default function MouseTrail() {
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if ('ontouchstart' in window) return;
+
     const body = document.querySelector('body');
     if (!body) return;
 
