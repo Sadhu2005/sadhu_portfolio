@@ -1,21 +1,31 @@
-'use client';
+"use client";
 
-import { useInView } from '@/hooks/useInView';
+import type { CSSProperties, ElementType, ReactNode } from "react";
+import { useInView } from "@/hooks/useInView";
+
+export function stagger(index: number, cap = 6): CSSProperties {
+  return { "--i": Math.min(index, cap) } as CSSProperties;
+}
 
 export default function RevealSection({
+  as: Tag = "div",
+  className = "",
+  index,
+  id,
   children,
-  className = '',
 }: {
-  children: React.ReactNode;
+  as?: ElementType;
   className?: string;
+  index?: number;
+  id?: string;
+  children: ReactNode;
 }) {
-  const { ref, isInView } = useInView({ threshold: 0.1 });
+  const { ref, isInView } = useInView<HTMLElement>();
+  const style = index === undefined ? undefined : ({ "--ri": index } as CSSProperties);
+
   return (
-    <div
-      ref={ref as React.RefObject<HTMLDivElement>}
-      className={`reveal-section ${isInView ? 'in-view' : ''} ${className}`.trim()}
-    >
+    <Tag ref={ref} id={id} className={`reveal ${isInView ? "in-view" : ""} ${className}`.trim()} style={style}>
       {children}
-    </div>
+    </Tag>
   );
 }

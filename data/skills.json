@@ -1,12 +1,129 @@
 [
-  { "category": "Programming Languages", "items": "Python, C, C++, Java, Kotlin, HTML, CSS, JavaScript" },
-  { "category": "AI & ML Frameworks", "items": "TensorFlow, PyTorch, Scikit-Learn, OpenCV" },
-  { "category": "Mobile Development", "items": "Kotlin, Jetpack Compose, Android SDK, Android Studio, Flutter" },
-  { "category": "DevOps & Cloud", "items": "Docker, Jenkins, Azure DevOps, Microsoft Azure, Google Cloud Platform (GCP)" },
-  { "category": "Web/API & Backend", "items": "Flask, FastAPI, Supabase, REST APIs, Postman, Firebase" },
-  { "category": "Data Visualization", "items": "Tableau, Power BI" },
-  { "category": "Databases", "items": "MySQL, MongoDB, SQL Server" },
-  { "category": "Tools & App Testing", "items": "Git, VS Code, PyCharm, Jupyter, Colab, n8n, DockerHub, Hostinger Management, Android Studio, Firebase, Google Play Console (release & testing)" },
-  { "category": "Hardware & Embedded Systems", "items": "Raspberry Pi 5 | Arduino Uno | ESP32 | ESP32-CAM" },
-  { "category": "Languages", "items": "English (Fluent), Kannada (Fluent), Hindi (Fluent), Adivasi (Fluent), Tamil (Basic Understanding)" }
+  {
+    "category": "Programming & Software",
+    "skills": [
+      { "name": "Python", "level": "Intermediate" },
+      { "name": "JavaScript", "level": "Intermediate" },
+      { "name": "TypeScript", "level": "Intermediate" },
+      { "name": "C", "level": "Developing" },
+      { "name": "C++", "level": "Developing" },
+      { "name": "Java" },
+      { "name": "OOP", "level": "Developing" },
+      { "name": "DSA", "level": "Developing" },
+      { "name": "Git", "level": "Intermediate" },
+      { "name": "REST APIs", "level": "Intermediate" },
+      { "name": "HTML" },
+      { "name": "CSS" }
+    ]
+  },
+  {
+    "category": "AI / ML",
+    "skills": [
+      { "name": "Machine Learning", "level": "Intermediate" },
+      { "name": "Deep Learning", "level": "Developing" },
+      { "name": "Computer Vision", "level": "Intermediate" },
+      { "name": "OpenCV", "level": "Practical" },
+      { "name": "MediaPipe", "level": "Practical" },
+      { "name": "Face Recognition", "level": "Practical" },
+      { "name": "PyTorch", "level": "Developing" },
+      { "name": "TensorFlow" },
+      { "name": "Scikit-Learn" },
+      { "name": "LLMs", "level": "Intermediate" },
+      { "name": "Local LLMs", "level": "Strong" },
+      { "name": "RAG", "level": "Developing" },
+      { "name": "AI Agents", "level": "Developing" },
+      { "name": "Agent orchestration", "level": "Developing" },
+      { "name": "STT/TTS", "level": "Developing" },
+      { "name": "VLM / Multimodal AI", "level": "Early" }
+    ]
+  },
+  {
+    "category": "Mobile Development",
+    "skills": [
+      { "name": "Kotlin" },
+      { "name": "Jetpack Compose" },
+      { "name": "Android SDK" },
+      { "name": "Android Studio" },
+      { "name": "Flutter" },
+      { "name": "React Native" }
+    ]
+  },
+  {
+    "category": "Web/API & Backend",
+    "skills": [
+      { "name": "Node.js" },
+      { "name": "Express" },
+      { "name": "Next.js" },
+      { "name": "Flask" },
+      { "name": "FastAPI" },
+      { "name": "Supabase" },
+      { "name": "Prisma" },
+      { "name": "Redis" },
+      { "name": "Postman" },
+      { "name": "Firebase" }
+    ]
+  },
+  {
+    "category": "DevOps & Cloud",
+    "skills": [
+      { "name": "Docker" },
+      { "name": "Linux" },
+      { "name": "Jenkins" },
+      { "name": "GitHub Actions" },
+      { "name": "Azure DevOps" },
+      { "name": "Microsoft Azure" },
+      { "name": "Google Cloud Platform (GCP)" },
+      { "name": "DigitalOcean" },
+      { "name": "Vercel" },
+      { "name": "PM2" }
+    ]
+  },
+  {
+    "category": "Databases",
+    "skills": [
+      { "name": "PostgreSQL" },
+      { "name": "MySQL" },
+      { "name": "MongoDB" },
+      { "name": "SQL Server" }
+    ]
+  },
+  {
+    "category": "Data Visualization",
+    "skills": [
+      { "name": "Tableau" },
+      { "name": "Power BI" }
+    ]
+  },
+  {
+    "category": "Tools & App Testing",
+    "skills": [
+      { "name": "VS Code" },
+      { "name": "PyCharm" },
+      { "name": "Jupyter" },
+      { "name": "Colab" },
+      { "name": "n8n" },
+      { "name": "DockerHub" },
+      { "name": "Hostinger Management" },
+      { "name": "Google Play Console (release & testing)" }
+    ]
+  },
+  {
+    "category": "Hardware & Embedded Systems",
+    "skills": [
+      { "name": "Raspberry Pi 5" },
+      { "name": "Arduino Uno" },
+      { "name": "ESP32" },
+      { "name": "ESP32-CAM" }
+    ]
+  },
+  {
+    "category": "Languages",
+    "skills": [
+      { "name": "English (Fluent)" },
+      { "name": "Kannada (Fluent)" },
+      { "name": "Hindi (Fluent)" },
+      { "name": "Adivasi (Fluent)" },
+      { "name": "Tamil (Basic Understanding)" }
+    ]
+  }
 ]

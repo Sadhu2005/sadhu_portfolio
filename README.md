@@ -1,81 +1,87 @@
-# Sadhu J — Aura Portfolio
+# Sadhu J — Signal Desk
 
-Cinematic reels-inspired portfolio built with **Next.js 15**, **JSON data files**, and **GitHub Pages** — no database required.
+Portfolio for an ML fullstack developer. Next.js reads a FastAPI + PostgreSQL API. Images, video, audio, and the resume PDF live on disk. An unlisted admin updates copy without a rebuild.
 
-**Live site:** [sadhu2005.github.io/sadhu_portfolio](https://sadhu2005.github.io/sadhu_portfolio/)
+The JSON files in `data/` are the seed source. The public site does not read them at runtime.
+
+**Legacy public URL:** [sadhu2005.github.io/sadhu_portfolio](https://sadhu2005.github.io/sadhu_portfolio/) still comes from [.github/workflows/github-pages.yml](.github/workflows/github-pages.yml). That workflow is legacy until this Pi deploy is the one you use. `npm run build:pages` still sets `BASE_PATH=/sadhu_portfolio` for that old path. The Pi site uses an empty base path.
 
 ## Stack
 
-- Next.js 15 (static export)
-- Framer Motion animations
-- JSON content in `data/`
-- GitHub Actions → GitHub Pages
+- Next.js (server, `output: "standalone"`)
+- FastAPI
+- PostgreSQL
+- Nginx
+- Media volume for image, video, audio, and PDF files
 
-## Local Development
+## Local development
+
+Copy the env file and start Postgres plus the API:
+
+```bash
+copy .env.example .env
+docker compose -f docker-compose.dev.yml up --build
+```
+
+In a second terminal:
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000 (no base path)
-npm run build:pages  # production build with /sadhu_portfolio base path
-npx serve out        # preview static export
+npm run dev
 ```
 
-## Editing Content
+Open [http://localhost:3000](http://localhost:3000). The API is on port 8000. The admin token in `.env.example` is `dev-admin-token`. Sign in at [http://localhost:3000/admin](http://localhost:3000/admin). That page is not in the public nav.
 
-All portfolio content lives in `data/`:
+Do not run `npm audit fix --force`.
+
+## Raspberry Pi
+
+Put the database volume and the media volume on a USB SSD when you can. An SD card wears out if it holds Postgres and video.
+
+```bash
+git clone <your-repo> sadhu_portfolio
+cd sadhu_portfolio
+copy .env.example .env
+# set ADMIN_TOKEN in .env
+docker compose up -d --build
+```
+
+Nginx listens on port 80 and routes `/` to Next.js, `/api` to FastAPI, and `/media` to the media volume (numeric ids are streamed by the API from that same volume).
+
+```bash
+docker compose up -d
+```
+
+Restart policy is `unless-stopped`, so the stack comes back after a reboot once Docker does.
+
+## Editing content
+
+Change live content in `/admin`, or edit `data/*.json` and re-seed an empty database. The seed command skips when a profile row already exists.
 
 | File | Content |
 |------|---------|
-| `profile.json` | Hero, about, intro video |
-| `contact.json` | Email, social links, resume path |
+| `profile.json` | Hero, about, intro video path |
+| `contact.json` | Email, social links |
 | `education.json` | Education timeline |
 | `experience.json` | Work experience |
-| `skills.json` | Skill categories |
+| `skills.json` | Skill categories, split into one row per skill |
 | `projects.json` | Project cards |
 | `tools.json` | Tool utilities |
-| `achievements.json` | Hackathons & events |
+| `achievements.json` | Hackathons and events |
 | `certificates.json` | Certification gallery |
-| `site.json` | Site metadata & navigation |
+| `site.json` | Title and description |
 
-### Add a certificate
+Missing image and video files from the old host show a placeholder until you upload them in admin.
 
-1. Add image to `public/certificates/cr36.jpg`
-2. Add entry to `data/certificates.json`
-3. Commit and push to `main` — auto-deploys in ~2 minutes
-
-### Add media from Hostinger
-
-Download remaining images via SFTP/File Manager into:
-
-```
-public/certificates/
-public/event-media/
-public/projects/
-public/video/
-```
-
-A full backup snapshot is in `backup/`.
-
-## Deployment
-
-Push to `main` triggers `.github/workflows/github-pages.yml`.
-
-**One-time setup:** GitHub repo → Settings → Pages → Source: **GitHub Actions**
-
-Build uses `BASE_PATH=/sadhu_portfolio` for project site hosting.
-
-## Design Tokens
+## Design tokens
 
 ```css
---aura-bg: #0a0a0f
---aura-primary: #8b5cf6
---aura-secondary: #06b6d4
---aura-glow: rgba(139, 92, 246, 0.35)
+--bg: #090b10
+--surface: #141820
+--text: #f3efe6
+--muted: #a39e93
+--copper: #d4894c
+--mint: #5ee0c3
 ```
 
-Animations respect `prefers-reduced-motion`.
-
-## Backup
-
-Pre-migration backup branch: `backup/pre-migration-2026-06-09`  
-Local backup folder: `backup/` (content JSON, legacy PHP, manifest)
+The name uses Fraunces. UI text uses Inter. Animations are limited to the hero and the workflow rail, and they stop when `prefers-reduced-motion` is set.

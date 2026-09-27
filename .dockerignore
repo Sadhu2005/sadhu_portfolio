@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+.git
+backend/media
+**/__pycache__
+**/.venv
+*.md
+agent-transcripts

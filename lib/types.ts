@@ -1,17 +1,24 @@
+export interface MediaRef {
+  id: number;
+  kind: "image" | "video" | "audio" | "pdf" | string;
+  url: string;
+  thumbUrl: string | null;
+  caption: string;
+  missing: boolean;
+  filename: string;
+}
+
 export interface Profile {
   name: string;
   tagline: string;
-  photo: string;
+  photo: MediaRef | null;
   about: {
     headline: string;
     paragraphs: string[];
     highlights: string[];
     goal: string;
   };
-  introVideo?: {
-    src: string;
-    poster: string;
-  };
+  introVideo: MediaRef | null;
 }
 
 export interface Contact {
@@ -24,17 +31,18 @@ export interface Contact {
   location: string;
   github: string;
   githubLabel: string;
-  resume: string;
-  resumeFilename: string;
+  resume: MediaRef | null;
 }
 
 export interface Education {
+  id: number;
   degree: string;
   institution: string;
-  university?: string;
+  university: string;
 }
 
 export interface Experience {
+  id: number;
   title: string;
   location: string;
   period: string;
@@ -42,53 +50,80 @@ export interface Experience {
   bullets: string[];
 }
 
-export interface Skill {
+export interface SkillLink {
+  slug: string;
+  title: string;
+}
+
+export interface SkillItem {
+  id: number;
+  name: string;
+  icon: string;
+  level: string;
+  projects: SkillLink[];
+}
+
+export interface SkillGroup {
   category: string;
-  items: string;
+  skills: SkillItem[];
+}
+
+export interface ProjectLink {
+  label: string;
+  url: string;
 }
 
 export interface Project {
+  id: number;
+  slug: string;
   title: string;
   description: string;
-  imageUrl?: string;
-  projectLink: string;
-  websiteLink?: string;
-  technologies: string[];
+  problem: string;
+  role: string;
+  outcome: string;
+  featured: boolean;
   status: string;
   stage: string;
   progress: number;
   category: string;
+  domain: string;
   impact: string;
   team: string;
-  icon: string;
+  technologies: string[];
+  links: ProjectLink[];
+  cover: MediaRef | null;
+  demoVideo: MediaRef | null;
+  gallery: MediaRef[];
 }
 
 export interface Tool {
+  id: number;
   title: string;
   description: string;
   features: string[];
   status: string;
   category: string;
-  icon: string;
   demoLink: string;
   githubLink: string;
 }
 
 export interface Achievement {
+  id: number;
   eventName: string;
   date: string;
   outcome: string;
   description: string;
   techUsed: string;
-  certificateUrl: string;
-  media: string[];
+  certificate: MediaRef | null;
+  media: MediaRef[];
 }
 
 export interface Certificate {
-  src: string;
+  id: number;
   alt: string;
   desc: string;
-  caption?: string;
+  caption: string;
+  image: MediaRef | null;
 }
 
 export interface NavItem {
@@ -96,14 +131,47 @@ export interface NavItem {
   href: string;
 }
 
+export interface SiteTheme {
+  background: string;
+  surface: string;
+  text: string;
+  muted: string;
+  copper: string;
+  mint: string;
+}
+
 export interface SiteConfig {
   title: string;
   description: string;
   copyright: string;
   nav: NavItem[];
-  theme: {
-    primary: string;
-    secondary: string;
-    background: string;
-  };
+  theme: SiteTheme;
+}
+
+export interface WorkflowStep {
+  id: number;
+  stepNumber: number;
+  title: string;
+  body: string;
+  exampleProjectSlug: string;
+  exampleProjectTitle: string;
+}
+
+export interface HomeStats {
+  projects: number;
+  achievements: number;
+  certificates: number;
+  currentRole: string;
+}
+
+export interface HomePayload {
+  profile: Profile;
+  contact: Contact | null;
+  stats: HomeStats;
+  featuredProjects: Project[];
+  skillGroups: SkillGroup[];
+  workflow: WorkflowStep[];
+  experiencePreview: Experience[];
+  certificates: Certificate[];
+  site: SiteConfig | null;
 }

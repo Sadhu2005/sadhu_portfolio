@@ -1,46 +1,45 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import Navbar from '@/components/Navbar';
-import AuraBackground from '@/components/AuraBackground';
-import MouseTrail from '@/components/MouseTrail';
-import { site, contact } from '@/lib/data';
+import type { Metadata } from "next";
+import { Fraunces, Inter } from "next/font/google";
+import "./globals.css";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import SiteProvider from "@/components/SiteProvider";
+import { getSite } from "@/lib/api";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-ui" });
+const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-display" });
 
-export const metadata: Metadata = {
-  title: site.title,
-  description: site.description,
-  icons: {
-    icon: [
-      { url: '/favicon.png' },
-      { url: '/favicon.ico' },
-    ],
-    apple: [{ url: '/apple-touch-icon.png' }],
-  },
-};
+export const dynamic = "force-dynamic";
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const site = await getSite();
+    return {
+      title: site.title,
+      description: site.description,
+      icons: { icon: [{ url: "/favicon.png" }] },
+    };
+  } catch {
+    return {
+      title: "Sadhu J - AI & ML Engineer",
+      description: "ML fullstack portfolio of Sadhu J.",
+      icons: { icon: [{ url: "/favicon.png" }] },
+    };
+  }
+}
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" style={{ scrollPaddingTop: '80px' }}>
+    <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
       <body className={inter.className}>
-        <AuraBackground />
-        <MouseTrail />
-        <Navbar />
-        {children}
-        <footer className="site-footer">
-          <p>
-            GitHub:{' '}
-            <a href={contact.github} target="_blank" rel="noopener noreferrer">
-              {contact.githubLabel}
-            </a>
-          </p>
-          <p>{site.copyright}</p>
-        </footer>
+        <SiteProvider>
+          <a className="skip" href="#content">
+            Skip to content
+          </a>
+          <Navbar />
+          <div id="content">{children}</div>
+          <Footer />
+        </SiteProvider>
       </body>
     </html>
   );

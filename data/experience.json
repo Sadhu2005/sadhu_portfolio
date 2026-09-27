@@ -1,14 +1,35 @@
 [
   {
-    "title": "Android Developer Intern, ODEE",
+    "title": "Software Engineer – Full Stack & DevOps | Team Lead, ODEE",
     "location": "Bengaluru, Karnataka, India",
-    "period": "Jan 2026 - Present",
-    "mode": "Hybrid",
+    "period": "Jun 2026 - Present",
+    "mode": "Full-time, Hybrid",
     "bullets": [
-      "Interning at ODEE, a fast-paced edtech startup building an AI-driven student platform.",
-      "Working in a startup culture with daily planning, rapid iterations, and close collaboration with US-based leadership.",
-      "Developing Android applications using Kotlin and Jetpack Compose.",
-      "Integrating backend services and authentication using Supabase."
+      "Leading a 5-member engineering team, including myself, in designing, developing, deploying, and maintaining scalable web and mobile applications serving real users.",
+      "Lead technical planning, task allocation, code reviews, Git workflows, and engineering execution across the team.",
+      "Own system architecture and key technical decisions across frontend, backend, database, and infrastructure.",
+      "Develop the cross-platform React Native app (Android and iOS from one codebase) plus the web platform with Node.js, TypeScript, React, Next.js, PostgreSQL, and Supabase.",
+      "Design and maintain CI/CD pipelines, Docker-based deployments, staging and production environments, and release workflows.",
+      "Collaborate with the team on debugging, performance optimization, security, and production reliability.",
+      "Drive development from requirements and architecture through implementation, testing, deployment, and production maintenance.",
+      "Supported a successful soft launch with 200+ active users.",
+      "Technologies: React Native, React, Next.js, Node.js, TypeScript, Supabase, PostgreSQL, Docker, GitHub Actions, CI/CD, DigitalOcean, PM2, Vercel, REST APIs, Git."
+    ]
+  },
+  {
+    "title": "Full Stack Developer Intern, ODEE",
+    "location": "Bengaluru, Karnataka, India",
+    "period": "Jan 2026 - Jun 2026",
+    "mode": "Internship",
+    "bullets": [
+      "Built a scalable Android and web platform from the ground up, and served as a primary engineer for architecture, backend, deployment, and development infrastructure.",
+      "Developed Android applications using Kotlin and Jetpack Compose with a focus on performance and user experience.",
+      "Designed and implemented backend services using Node.js, TypeScript, and Supabase.",
+      "Managed cloud infrastructure and production deployments on DigitalOcean, ensuring reliability and scalability.",
+      "Designed and implemented CI/CD pipelines for automated builds, testing, and deployments.",
+      "Established Git workflows, branching strategies, code review practices, and version control processes for the engineering team.",
+      "Managed staging and production environments, monitoring releases and resolving critical issues.",
+      "Collaborated with a US-based team in an agile development environment, participating in planning, stand-ups, and product discussions."
     ]
   },
   {

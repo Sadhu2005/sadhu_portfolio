@@ -1,29 +1,34 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-const defaultOptions: IntersectionObserverInit = {
-  root: null,
-  rootMargin: '0px',
-  threshold: 0.1,
-};
-
-export function useInView(options: Partial<IntersectionObserverInit> = {}) {
-  const ref = useRef<HTMLElement | null>(null);
+export function useInView<T extends Element = HTMLDivElement>(amount = 0.15) {
+  const ref = useRef<T>(null);
   const [isInView, setIsInView] = useState(false);
-  const opts = { ...defaultOptions, ...options };
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || isInView) return undefined;
+    if (typeof IntersectionObserver === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setIsInView(true);
+      return undefined;
+    }
 
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry?.isIntersecting) setIsInView(true);
-    }, opts);
-
+    // Blocks taller than the viewport never reach a 15% ratio, so also accept 15% of the viewport height.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        const viewport = entry.rootBounds?.height ?? window.innerHeight;
+        if (entry.intersectionRatio >= amount || entry.intersectionRect.height >= viewport * amount) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: [0, amount / 3, (amount * 2) / 3, amount] },
+    );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [opts.root, opts.rootMargin, opts.threshold]);
+  }, [amount, isInView]);
 
   return { ref, isInView };
 }

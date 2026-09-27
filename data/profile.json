@@ -1,18 +1,19 @@
 {
   "name": "Sadhu J",
-  "tagline": "AI & ML Engineering Student & Android Developer Intern | Building Cloud-Powered Apps with Computer Vision, NLP & CI/CD | Open to Global Opportunities",
+  "tagline": "B.E. AIML graduate and Software Engineer at ODEE, building toward agents, systems, and robots",
   "photo": "/certificates/sadu.jpg",
   "about": {
-    "headline": "Aspiring AI & ML Engineer | Android Developer | Cloud Enthusiast",
+    "headline": "Software Engineer at ODEE | AI systems, agents, and robotics",
     "paragraphs": [
-      "I am an 8th semester B.E. student in Artificial Intelligence and Machine Learning, currently working as an Android Developer Intern at ODEE, a fast-paced edtech startup. I enjoy building end-to-end products that combine machine learning, cloud services, and modern mobile development to solve real-world problems."
+      "I am a Software Engineer – Full Stack & DevOps and Team Lead at ODEE India Private Limited in Bengaluru. I lead a 5-member engineering team and ship a cross-platform React Native app plus the web platform with Next.js, Node.js, TypeScript, and Supabase, including a soft launch past 200 active users. Kotlin and Jetpack Compose were the earlier Android app. The longer path is the system around the model: the agent, the infrastructure, then the hardware."
     ],
     "highlights": [
-      "Hands-on experience with Kotlin, Jetpack Compose, Flutter, Firebase, Supabase and app testing through Google Play Console.",
+      "Leading a 5-member team on React Native, Next.js, Node.js, TypeScript, and Supabase. Earlier Android work used Kotlin and Jetpack Compose, with Flutter, Firebase, and Google Play Console.",
       "Comfortable working with TensorFlow, PyTorch, OpenCV and deploying ML-powered features backed by Azure and GCP.",
-      "Thrives in startup-style environments with daily planning, fast iterations, and close collaboration with cross-functional teams."
+      "Ships with GitHub Actions, Docker, and DigitalOcean, including a soft launch that reached 200+ active users.",
+      "Active computer vision and local-LLM work, with a deliberate path toward agentic systems and physical robots."
     ],
-    "goal": "To grow as an AI-driven Android engineer, building reliable, scalable products that blend machine learning, cloud, and mobile experiences for users at scale."
+    "goal": "Build intelligent autonomous systems end to end, from the model and agent through software and infrastructure to physical robots, and work toward the frontier of agentic AI and robotics."
   },
   "introVideo": {
     "src": "/video/VID_20250326_191540.mp4",

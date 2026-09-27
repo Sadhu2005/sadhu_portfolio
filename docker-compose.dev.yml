@@ -1,0 +1,40 @@
+# Dev override: Postgres and the API only.
+# Usage: docker compose -f docker-compose.dev.yml up
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio
+      POSTGRES_DB: portfolio
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portfolio -d portfolio"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  api:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://portfolio:portfolio@postgres:5432/portfolio
+      MEDIA_ROOT: /data/media
+      PORTFOLIO_ROOT: /portfolio
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-dev-admin-token}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost}
+    ports:
+      - "8000:8000"
+    volumes:
+      - media:/data/media
+      - ./data:/portfolio/data:ro
+      - ./public:/portfolio/public:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  media:
